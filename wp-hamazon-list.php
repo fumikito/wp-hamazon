@@ -106,8 +106,8 @@ class WP_Hamazon_List {
 				}
 				$output = <<<EOS
 <div class="tmkm-amazon-view">
+<p class="tmkm-amazon-title"><a href="{$url}"{$windowtarget}>{$Title}{$ProductGroup}</a></p>
 <p><a href="{$url}"{$windowtarget}><img src="{$mediumimage}" border="0" alt="{$Title}" /></a></p>
-<p><a href="{$url}"{$windowtarget}>{$Title}{$ProductGroup}</a></p>
 {$desc}
 <hr class="tmkm-amazon-clear" />
 </div>
