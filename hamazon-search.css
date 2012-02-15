@@ -1,0 +1,85 @@
+@charset "utf-8";
+
+body, html{
+	margin:0;
+	padding:0;
+}
+body{
+	background: #FFFFFF;
+	color: #404040;
+	font-family: "Optima", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", Arial, sans-serif;
+	font-size: 0.9em;
+	line-height: 1.8;
+	padding:1em;
+}
+h1 {
+	font-size: 1.1em;
+	line-height: 1.5;
+}
+h2 {
+	font-size: 100%;
+	line-height: 1.5;
+	float: left;
+	margin-right: 1em;
+}
+
+a{
+	color: #000000;
+}
+
+a.pagenation {
+	border: 1px solid #666666;
+	background-color: #dcdcdc;
+	padding: 0.3em 0.6em;
+}
+
+a.pagenation:hover {
+	background-color: #eaeaea;
+}
+
+ul.wp-tmkm-amazon-search-guide {
+	clear: both;
+	margin: 0;
+}
+
+ul.wp-tmkm-amazon-search-guide:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+ul.wp-tmkm-amazon-search-guide li {
+	display: inline;
+	float: left;
+	margin: 0 0.6em;
+}
+
+input, textarea {
+	background-color: #F8F8F8;
+	border: 1px solid #868686;
+	padding: 0.3em;
+}
+
+#amazon-search-result {
+	border-top : #666666 solid 1px;
+	clear: both;
+	padding: 8px;
+	margin-top: 8px;
+}
+	#amazon-search-result img {
+		float: left;
+		margin-right: 20px;
+		padding: 3px;
+		border: #C2C2C2 solid 1px;
+	}
+textarea {
+	width: 20em;
+}
+hr {
+	border: none;
+	border-bottom: 1px solid #868686;
+	background-color: #F8F8F8;
+	height: 1px;
+	margin: 2em 0;
+}
