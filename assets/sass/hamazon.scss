@@ -1,48 +1,47 @@
 
-/* ----------------------------------------------
+/*
+----------------------------------------------
 	1. div.tmkm-amazon-view
----------------------------------------------- */
+----------------------------------------------
+*/
 div.tmkm-amazon-view {
 	clear: both;
+	img {
+		float: left;
+		margin: 5px 10px 10px 0px;
+		padding: 5px;
+		border: solid 1px #C2C2C2;
+	}
+	p {
+		margin: 0;
+		em {
+			color: #8b0000;
+			font-style: normal;
+		}
+	}
+	&:after{
+		content: ".";
+		display: block;
+		height: 0;
+		clear: both;
+		visibility: hidden;
+	}
+	hr.tmkm-amazon-clear {
+		clear: both;
+		border: none;
+		height: 0;
+		margin: 0;
+		padding: 0;
+		visibility: hidden;
+	}
 }
 
-div.tmkm-amazon-view img {
-	float: left;
-	margin: 5px 10px 10px 0px;
-	padding: 5px;
-	border: solid 1px #C2C2C2;
-}
 
-div.tmkm-amazon-view p {
-	margin: 0;
-}
-
-div.tmkm-amazon-view p em {
-	color: #8b0000;
-	font-style: normal;
-}
-
-div.tmkm-amazon-view:after {
-	content: ".";
-	display: block;
-	height: 0;
-	clear: both;
-	visibility: hidden;
-}
-
-
-div.tmkm-amazon-view hr.tmkm-amazon-clear {
-	clear: both;
-	border: none;
-	height: 0;
-	margin: 0;
-	padding: 0;
-	visibility: hidden;
-}
-
-/* ----------------------------------------------
+/* 
+----------------------------------------------
 	2. div#amazonlist
----------------------------------------------- */
+----------------------------------------------
+*/
 div#amazonlist {
 	
 }

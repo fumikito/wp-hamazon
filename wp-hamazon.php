@@ -12,13 +12,15 @@ if( basename( $_SERVER['SCRIPT_FILENAME'] ) == 'wp-tmkm-amazon.php' ) {
 }
 
 /**
- * @var array Default Options
+ * Default Options
+ * @var array
  */
 $_hamazon_settings_default = array(
-	'version' => '1.0',
+	'version' => '2.0',
 	'associatesid' => '',
 	'accessKey' => '',
 	'secretKey' => '',
+	'linkshare_token' => '',
 	'windowtarget' => 'self',
 	'goodsimgsize' => 'small',
 	'layout_type' => '0',

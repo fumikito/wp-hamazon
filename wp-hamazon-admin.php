@@ -21,10 +21,12 @@ class WP_Hamazon_Admin {
 	 * @return void
 	 */
 	function __construct(){
-		//Add Options Page
+		// Add Options Page
 		add_action('admin_menu', array($this, 'add_menu'));
-		//Action Hook for admin_init
+		// Action Hook for admin_init
 		add_action('admin_init', array($this, 'admin_init'));
+		// Admin enqueue style
+		add_action('admin_enqueue_scripts', array($this, 'enqueue_script'));
 	}
 
 	/**
@@ -34,9 +36,9 @@ class WP_Hamazon_Admin {
 	function add_menu() {
 		// Add a new menu under Options:
 		add_options_page(
+			'WP Hamazon（アフィリエイト）設定',
 			'WP Hamazon',
-			'WP Hamazon',
-			8,
+			'manage_options',
 			$this->slug,
 			array($this, 'options_page')
 		);
@@ -56,8 +58,14 @@ class WP_Hamazon_Admin {
 	function media_button(){
 		global $hamazon_settings;
 		if(false !== array_search(get_post_type(), $hamazon_settings['post_types'])){
-			$url = plugin_dir_url(__FILE__)."wp-hamazon-search.php?TB_iframe=true";
-			echo '<a href="'.$url.'" id="add_video" class="thickbox" title="Amazon商品検索"><img src="' . esc_url( plugin_dir_url( __FILE__ ).'/amazon.png' ) . '" alt="Amazon商品検索" width="16" height="16" /></a>';
+			printf('<a href="%s" id="add_amazon" class="thickbox" title="Amazon商品検索"><img src="%s" alt="Amazon商品検索" width="16" height="16" /></a>', 
+					plugin_dir_url(__FILE__)."endpoint/amazon.php?TB_iframe=true",
+					esc_url( plugin_dir_url( __FILE__ ).'assets/img/amazon.png'));
+			if(!empty($hamazon_settings['linkshare_token'])){
+				printf('<a href="%s" id="add_linkshare" class="thickbox" title="リンクシェア商品検索"><img src="%s" alt="リンクシェア商品検索" width="16" height="16" /></a>', 
+					plugin_dir_url(__FILE__)."wp-hamazon-search.php?TB_iframe=true",
+					esc_url( plugin_dir_url( __FILE__ ).'assets/img/rakuten.gif' ));
+			}
 		}
 	}
 	
@@ -75,6 +83,7 @@ class WP_Hamazon_Admin {
 				'associatesid' => htmlspecialchars($_POST['associatesid']),
 				'accessKey' => (string)$_POST['accessKey'],
 				'secretKey' => (string)$_POST['secretKey'],
+				'linkshare_token' => (string)$_POST['linkshare_token'],
 				'windowtarget' => (string)$_POST['windowtarget'],
 				'goodsimgsize' => (string)$_POST['goodsimgsize'],
 				'layout_type' => intval($_POST['layout_type']),
@@ -114,11 +123,13 @@ class WP_Hamazon_Admin {
 
 		?>
 			<div class="wrap" id="footnote-options">
-			<h2>Wp Hamazon プラグイン設定</h2>
+			<h2>Wp Hamazon （アフィリエイト）設定</h2>
 			<?php do_action('admin_notice'); ?>
 			<form method="post">
 				<?php wp_nonce_field('hamazon_setting'); ?>
 				<input type="hidden" name="action" value="save_options" />
+				<h3>Amazon</h3>
+					
 				<table class="form-table">
 					<tr>
 						<th><label for="associatesid">あなたのアソシエイト ID</label></th>
@@ -196,11 +207,28 @@ class WP_Hamazon_Admin {
 							</label>
 						</td>
 					</tr>
+				</table>
+				
+				<h3>リンクシェア</h3>
+				<table class="form-table">
+					<tr>
+						<th><label for="linkshare_token">サイトアカウントのトークン</label></th>
+						<td>
+							<input type="text" class="regular-text" name="linkshare_token" id="linkshare_token" value="<?php echo esc_attr($hamazon_settings['linkshare_token']) ?>" />
+							<p class="description">
+								リンクシェアのトークンは<a href="http://cli.linksynergy.com/cli/publisher/links/webServices.php" target="_blank">こちら</a>で取得してください。
+							</p>
+						</td>
+					</tr>
+				</table>
+				
+				<h3>レイアウト</h3>
+				<table class="form-table">
 					<tr>
 						<th>CSSの読み込み</th>
 						<td>
-							<label><input type="radio" name="load_css" value="1" <?php if($hamazon_settings['load_css']) echo ' checked="checked"'; ?>/>読み込む</label>&nbsp;
-							<label><input type="radio" name="load_css" value="0" <?php if(!$hamazon_settings['load_css']) echo ' checked="checked"'; ?>/>読み込まない</label>
+							<label><input type="radio" name="load_css" value="1" <?php if($hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込む</label><br />
+							<label><input type="radio" name="load_css" value="0" <?php if(!$hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込まない</label>
 							<p class="description">
 								オリジナルのCSSを読み込みたい場合はテーマフォルダ内にtmkm-amazon.cssを配置してください。存在しない場合はデフォルトのものを読み込みます。「読み込まない」を選択した場合は何も読み込みません。
 							</p>
@@ -235,5 +263,14 @@ class WP_Hamazon_Admin {
 				</div>
 			<?php
 		}
+	}
+	
+	/**
+	 * 検索ページにCSSを読み込む
+	 * @global array $hamazon_settings
+	 */
+	function enqueue_script(){
+		global $hamazon_settings;
+		wp_enqueue_style('wp-hamazon-admin', plugin_dir_url(__FILE__).'assets/css/hamazon-search.css', array(), $hamazon_settings['version']);
 	}
 }

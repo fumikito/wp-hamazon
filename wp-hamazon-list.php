@@ -12,7 +12,7 @@ class WP_Hamazon_List {
 	function __construct() {
 		add_shortcode('tmkm-amazon-list', array ($this, 'tmkm_amazon_list'));
 		add_shortcode('tmkm-amazon', array($this, 'replace_strings'));
-		add_action('wp_print_styles', array($this, 'enqueue_style'));
+		add_action('wp_enqueue_scripts', array($this, 'enqueue_style'));
 	}
 	
 	/**
@@ -201,10 +201,20 @@ EOS;
 	public function enqueue_style(){
 		global $hamazon_settings;
 		if(!is_admin() && $hamazon_settings['load_css']){
-			if(file_exists(TEMPLATEPATH.'/tmkm-amazon.css')){
-				wp_enqueue_style('wp-hamazon', get_template_directory_uri().'/tmkm-amazon.css', array(), $hamazon_settings['version']);
+			if(file_exists(get_template_directory().'/tmkm-amazon.css')){
+				$css_url = get_template_directory_uri().'/tmkm-amazon.css';
 			}else{
-				wp_enqueue_style('wp-hamazon', plugin_dir_url(__FILE__).'hamazon.css', array(), $hamazon_settings['version']);
+				$css_url = plugin_dir_url(__FILE__).'assets/css/hamazon.css';
+			}
+			$args = apply_filters('wp_hamazon_css_args', array(
+				'handle' => 'wp-hamazon',
+				'src' => $css_url,
+				'deps' => array(),
+				'version' => $hamazon_settings['version'],
+				'media' => 'all'
+			));
+			if(is_array($args)){
+				wp_enqueue_style($args['handle'], $args['src'], $args['deps'], $args['version'], $args['media']);
 			}
 		}
 	}

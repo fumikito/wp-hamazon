@@ -229,13 +229,13 @@ class WP_Hamazon{
 	function get_image_src($item,$imgsize) {
 		switch($imgsize){
 			case 'medium':
-				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(__FILE__)."amazon_noimg.png";
+				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(__FILE__)."assets/img/amazon_noimg.png";
 				break;
 			case 'small':
-				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(__FILE__)."amazon_noimg_small.png";
+				$url = $item->SmallImage->URL ? $item->SmallImage->URL: plugin_dir_url(__FILE__)."assets/img/amazon_noimg_small.png";
 				break;
 			default:
-				$url = plugin_dir_url(__FILE__)."amazon_noimg.png";
+				$url = plugin_dir_url(__FILE__)."assets/img/amazon_noimg.png";
 				break;
 		}
 		return $url;
@@ -254,7 +254,7 @@ class WP_Hamazon{
 			'SearchIndex' => (string)$index,
 			'Keywords' => (string) $query,
 			'ItemPage' => $page,
-			'ResponseGroup' => 'Images,Small'
+			'ResponseGroup' => 'Offers,Images,Small'
 		);
 		return $this->send_request($param);
 	}

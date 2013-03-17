@@ -1,0 +1,59 @@
+@import "compass/utilities";
+@import "compass/css3/border-radius";
+
+.hamazon-search-form{
+	padding: 10px 20px;
+}
+
+.result-desc{
+	padding: 10px 20px;
+	.wp-hamazon-pagination{
+		text-align: right;
+		span, a{
+			padding: 2px 3px;
+			margin: 0 1px;
+			border: 1px solid #ccc;
+			background-color: #f9f9f9;
+			@include border-radius(3px);
+		}
+		span{
+			color: #aaa;
+		}
+		a{
+			&:link,
+			&:visited{
+				color: #21759b;
+				text-decoration: none;
+			}
+			&:hover{
+				color: orange;
+			}
+			&:active{
+				color: red;
+			}
+		}
+	}
+}
+
+.wp-hamazon-product-table{
+	width: 100%;
+	border-collpse: collapse;
+	tr:first-child{
+		th, td{
+			border-top: 1px solid #ddd;
+		}
+	}
+	th, td{
+		padding: 10px;
+		border-bottom: 1px solid #ddd;
+	}
+	th{
+		text-align: center;
+		img{
+			margin-bottom: 10px;
+		}
+	}
+	td{
+		
+	}
+}
