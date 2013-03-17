@@ -1,15 +1,16 @@
 === WP Hamazon ===
+
 Contributors: Takahashi_Fumiki
-Tags: amazon, affiliate, 
+Tags: amazon, affiliate, linkshare
 Requires at least: 3.0
-Tested up to: 3.4
-Stable tag: 1.0
+Tested up to: 3.5.1
+Stable tag: 2.0
 
 ともかめさん作のwp-tmkm-amazonの後継プラグインです。そのままの設定で使えます。
 
 == Description ==
 
-WordPressの投稿編集画面にAmazonアフィリエイトリンク用のボタンを追加します。
+WordPressの投稿編集画面にAmazonアフィリエイトおよびLinkShareのリンク挿入ボタンを追加します。
 
 == Installation ==
 
@@ -22,6 +23,10 @@ WordPressの投稿編集画面にAmazonアフィリエイトリンク用のボ�
 1. このようなボタンが追加されます
 
 == Changelog ==
+
+= 2.0 =
+
+* リンクシェアを追加
 
 = 1.0 =
 

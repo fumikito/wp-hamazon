@@ -47,11 +47,7 @@ class WP_Hamazon_List {
 	function format_amazon($asin) {
 		global $hamazon_settings, $tmkm_plugin_directory, $wp_hamazon_parser;
 		$output = '';
-        switch( $hamazon_settings['windowtarget']) {
-        	case 'newwin': $windowtarget = ' target="_blank"'; break;
-        	case 'self': $windowtarget = '';
-        }
-		
+        
 		$result = $wp_hamazon_parser->get_itme_by_asin($asin);
 
 		if(is_wp_error($result)){ 
@@ -67,26 +63,25 @@ class WP_Hamazon_List {
 				// results were found, so display the products
 				$item = $result->Items->Item[0];
 				$atts = $wp_hamazon_parser->get_atts($item);
-				$smallimage = $wp_hamazon_parser->get_image_src($item, 'small');
-				$mediumimage = $wp_hamazon_parser->get_image_src($item, 'medium');
+				$goodsimage = $wp_hamazon_parser->get_image_src($item, 'medium');
 
 				$url = $item->DetailPageURL;
 				$Title = $atts['Title'];
 				$ProductGroup = isset($wp_hamazon_parser->searchIndex[$atts['ProductGroup']]) ? $wp_hamazon_parser->searchIndex[$atts['ProductGroup']]: '不明' ;
-				if(isset($atts['ProductGroup']) && $atts['ProductGroup'] == 'Book'){
-					$ProductGroup = '書籍';
+				if(isset($atts['ProductGroup']) ){
+					switch($atts['ProductGroup']){
+						case 'Book':
+							$ProductGroup = '書籍';
+							break;
+						case 'eBooks':
+							$ProductGroup = 'Kindle本';
+							break;
+					}
 				}
 				$ProductGroup = " <small>[{$ProductGroup}]</small>";
 				$price = $atts['ListPrice']['FormattedPrice'];
 				
-
-				if( $hamazon_settings['layout_type'] != '3' ) {
-			        switch( $hamazon_settings['goodsimgsize'] ) {
-			        	case 'small': $goodsimage = $smallimage; break;
-			        	case 'medium': $goodsimage = $mediumimage; break;
-			        }
-				}
-				$desc = $price ? "<p><em>価格: </em>{$price}</p>" : '';
+				$desc = $price ? "<p>価格: <em>{$price}</em></p>" : '';
 				$filter = array(
 					'author' => array('Author', 'Director', 'Actor', 'Artist', 'Creator'),
 					'publisher' => array('Publisher', 'Studio', 'Label', 'Brand', 'Manufacturer'),
@@ -104,14 +99,15 @@ class WP_Hamazon_List {
 						}
 					}
 				}
-				$output = <<<EOS
-<div class="tmkm-amazon-view">
-<p class="tmkm-amazon-title"><a href="{$url}"{$windowtarget}>{$Title}{$ProductGroup}</a></p>
-<p><a href="{$url}"{$windowtarget}><img src="{$mediumimage}" border="0" alt="{$Title}" /></a></p>
+				$tag = <<<EOS
+<div class="tmkm-amazon-view wp-hamazon-amazon">
+<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$Title}{$ProductGroup}</a></p>
+<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goodsimage}" border="0" alt="{$Title}" /></a></p>
 {$desc}
 <hr class="tmkm-amazon-clear" />
 </div>
 EOS;
+				return apply_filters('wp_hamazon_amazon', $tag, $item);
 			}
 		}
 		return $output;

@@ -21,9 +21,6 @@ $_hamazon_settings_default = array(
 	'accessKey' => '',
 	'secretKey' => '',
 	'linkshare_token' => '',
-	'windowtarget' => 'self',
-	'goodsimgsize' => 'small',
-	'layout_type' => '0',
 	'post_types' => array('post'),
 	'load_css' => true
 );
@@ -58,6 +55,8 @@ if(!function_exists('tmkm_amazon_view')) {
 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-parser.php';
 $wp_hamazon_parser = new WP_Hamazon($hamazon_settings['accessKey'], $hamazon_settings['secretKey'], $hamazon_settings['associatesid']);
+require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-linkshare.php';
+$wp_hamazon_linkshare = new WP_Hamazon_Linkshare();
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-list.php';
 $hamazon_list =  new WP_Hamazon_List();
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-admin.php';

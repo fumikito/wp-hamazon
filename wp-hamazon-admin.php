@@ -63,7 +63,7 @@ class WP_Hamazon_Admin {
 					esc_url( plugin_dir_url( __FILE__ ).'assets/img/amazon.png'));
 			if(!empty($hamazon_settings['linkshare_token'])){
 				printf('<a href="%s" id="add_linkshare" class="thickbox" title="リンクシェア商品検索"><img src="%s" alt="リンクシェア商品検索" width="16" height="16" /></a>', 
-					plugin_dir_url(__FILE__)."wp-hamazon-search.php?TB_iframe=true",
+					plugin_dir_url(__FILE__)."endpoint/linkshare.php?TB_iframe=true",
 					esc_url( plugin_dir_url( __FILE__ ).'assets/img/rakuten.gif' ));
 			}
 		}
@@ -84,9 +84,6 @@ class WP_Hamazon_Admin {
 				'accessKey' => (string)$_POST['accessKey'],
 				'secretKey' => (string)$_POST['secretKey'],
 				'linkshare_token' => (string)$_POST['linkshare_token'],
-				'windowtarget' => (string)$_POST['windowtarget'],
-				'goodsimgsize' => (string)$_POST['goodsimgsize'],
-				'layout_type' => intval($_POST['layout_type']),
 				'post_types' => (isset($_POST['post_types']) && is_array($_POST['post_types'])) ? $_POST['post_types'] : array(),
 				'load_css' => (boolean)$_POST['load_css']
 			);
@@ -104,30 +101,43 @@ class WP_Hamazon_Admin {
 		
 		add_action('admin_notice', array($this, 'show_message'));
 
-		switch( $hamazon_settings['windowtarget']) {
-			case 'newwin':$newwindow = ' checked';$selfwindow = '';break;
-			case 'self':$newwindow = '';$selfwindow = ' checked';break;
-		}
-
-		switch( $hamazon_settings['goodsimgsize'] ) {
-			case 'medium': $m_goodssize = ' checked'; $s_goodssize = ''; break;
-			case 'small': $m_goodssize = ''; $s_goodssize = ' checked'; break;
-		}
-
-		switch( $hamazon_settings['layout_type'] ) {
-			case 0: $default_layout  = ' checked';$medium_layout = '';  $simple_layout = ''; $noimage_layout = ''; break;
-			case 1: $default_layout = ''; $medium_layout = ' checked'; $simple_layout = ''; $noimage_layout = ''; break;
-			case 2: $default_layout  = ''; $medium_layout = ''; $simple_layout = ' checked'; $noimage_layout = ''; break;
-			case 3: $default_layout  = ''; $medium_layout = ''; $simple_layout = ''; $noimage_layout = ' checked'; break;
-		}
-
 		?>
 			<div class="wrap" id="footnote-options">
 			<h2>Wp Hamazon （アフィリエイト）設定</h2>
 			<?php do_action('admin_notice'); ?>
+			
+			
+			
 			<form method="post">
 				<?php wp_nonce_field('hamazon_setting'); ?>
 				<input type="hidden" name="action" value="save_options" />
+				
+				
+				<h3>全般</h3>
+				<table class="form-table">
+					<tr>
+						<th><label for="post_types">ボタンを表示する投稿タイプ</label></th>
+						<td>
+							<?php foreach(get_post_types('', 'object') as $post_type): if(false === array_search($post_type->name, array('revision', 'nav_menu_item', 'page', 'attachment', 'lwp_notification')) && $post_type->public): ?>
+								<label>
+									<input type="checkbox" name="post_types[]" value="<?php echo $post_type->name; ?>" <?php if(false !== array_search($post_type->name, $hamazon_settings['post_types'])) echo 'checked="checked" '; ?>/>
+									<?php echo $post_type->labels->name; ?>
+								</label>&nbsp;
+							<?php endif; endforeach; ?>
+						</td>
+					</tr>
+					<tr>
+						<th>CSSの読み込み</th>
+						<td>
+							<label><input type="radio" name="load_css" value="1" <?php if($hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込む</label><br />
+							<label><input type="radio" name="load_css" value="0" <?php if(!$hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込まない</label>
+							<p class="description">
+								オリジナルのCSSを読み込みたい場合はテーマフォルダ内にtmkm-amazon.cssを配置してください。存在しない場合はデフォルトのものを読み込みます。「読み込まない」を選択した場合は何も読み込みません。
+							</p>
+						</td>
+					</tr>
+				</table>
+				<p>&nbsp;</p>
 				<h3>Amazon</h3>
 					
 				<table class="form-table">
@@ -149,66 +159,8 @@ class WP_Hamazon_Admin {
 							<input type="text" class="regular-text" id="secretKey" name="secretKey" value="<?php echo $hamazon_settings['secretKey']; ?>" />
 						</td>
 					</tr>
-					<tr>
-						<th><label for="post_types">ボタンを表示する投稿タイプ</label></th>
-						<td>
-							<?php foreach(get_post_types('', 'object') as $post_type): if(false === array_search($post_type->name, array('revision', 'nav_menu_item', 'page', 'attachment', 'lwp_notification')) && $post_type->public): ?>
-								<label>
-									<input type="checkbox" name="post_types[]" value="<?php echo $post_type->name; ?>" <?php if(false !== array_search($post_type->name, $hamazon_settings['post_types'])) echo 'checked="checked" '; ?>/>
-									<?php echo $post_type->labels->name; ?>
-								</label>&nbsp;
-							<?php endif; endforeach; ?>
-						</td>
-					</tr>
-					<tr>
-						<th>商品リンクの動作</th>
-						<td>
-							<label>
-								<input type="radio" name="windowtarget" value="self"<?php echo $selfwindow; ?> />
-								&nbsp;同じウィンドウ（ target 指定なし ）
-							</label><br />
-							<label>
-								<input type="radio" name="windowtarget" value="newwin"<?php echo $newwindow; ?> />
-								&nbsp;新規ウィンドウ（ target="_blank" ）
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<th>商品詳細の表示スタイル</th>
-						<td>
-							<label>
-								<input type="radio" name="layout_type" value="0"<?php echo $default_layout; ?> />
-								&nbsp;画像、タイトル、出版社、発売時期、著者、価格、本のタイプ、ページ数、ISBN（ 初期設定。本以外はこれに準ずる項目 ）
-							</label><br />
-							<label>
-								<input type="radio" name="layout_type" value="1"<?php echo $medium_layout; ?> />
-								&nbsp;画像、タイトル、出版社、著者、発売時期（ 初期設定から価格情報とコード情報を省略 ）<br />
-							</label><br />
-							<label>
-								<input type="radio" name="layout_type" value="2"<?php echo $simple_layout; ?> />
-								&nbsp;画像とタイトルのみ<br />
-							</label><br />
-							<label>
-								<input type="radio" name="layout_type" value="3"<?php echo $noimage_layout; ?> />
-								&nbsp;タイトルのみ
-							</label>
-						</td>
-					</tr>
-					<tr>
-						<th>商品画像サイズ</th>
-						<td>
-							<label>
-								<input type="radio" name="goodsimgsize" value="small"<?php echo $s_goodssize; ?> />
-								&nbsp;小サイズ（ 初期設定 ）
-							</label><br />
-							<label>
-								<input type="radio" name="goodsimgsize" value="medium"<?php echo $m_goodssize ; ?> />
-								&nbsp;中サイズ
-							</label>
-						</td>
-					</tr>
 				</table>
-				
+				<p>&nbsp;</p>
 				<h3>リンクシェア</h3>
 				<table class="form-table">
 					<tr>
@@ -221,20 +173,51 @@ class WP_Hamazon_Admin {
 						</td>
 					</tr>
 				</table>
-				
-				<h3>レイアウト</h3>
+				<p>&nbsp;</p>
+				<h3>表示のカスタマイズ</h3>
+				<p class="description">
+					フィルターフックを使ってショートコードの出力をカスタマイズしてください。
+					テーマファイルのfunctions.phpに次のように書くとカスタマイズできます。<br />
+					<code><?php echo get_stylesheet_directory(); ?>/functions.php</code>
+				</p>
+				<pre class="wp-hamazon-pre"><?php
+					$html = <<<EOS
+//フィルターフックを登録
+add_filter('wp_hamazon_amazon', '_my_amazon_tag', 10, 2);
+   
+/**
+ * ショートコードをカスタマイズする関数
+ * 
+ * @param string \$html 商品リンクのHTMLタグです
+ * @param SimpleXMLElement \$item 商品情報です。サービスによって異なります
+ * @return string HTMLタグを返します
+ */
+function _my_amazon_tag(\$html, \$item){
+	//ここで好きなHTMLを作成します。
+	\$my_html = '<div id="my_amazon"><a href="'.strval(\$item->DetailPageURL).'">'.strval(\$item->ItemAttributes->Title).'</a></div>';
+	return \$my_html;
+}
+EOS;
+					echo esc_html($html);
+				?></pre>
 				<table class="form-table">
 					<tr>
-						<th>CSSの読み込み</th>
+						<th>Amazonのフィルター名</th>
 						<td>
-							<label><input type="radio" name="load_css" value="1" <?php if($hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込む</label><br />
-							<label><input type="radio" name="load_css" value="0" <?php if(!$hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込まない</label>
-							<p class="description">
-								オリジナルのCSSを読み込みたい場合はテーマフォルダ内にtmkm-amazon.cssを配置してください。存在しない場合はデフォルトのものを読み込みます。「読み込まない」を選択した場合は何も読み込みません。
-							</p>
+							<code>wp_hamazon_amazon</code><br />
+							$itemはSimpleXMLElementオブジェクトのインスタンスです。かなり多くの情報が入っています。
+						</td>
+					</tr>
+					<tr>
+						<th>リンクシェアのフィルター名</th>
+						<td>
+							<code>wp_hamazon_linkshare</code><br />
+							$itemは連想配列です。
 						</td>
 					</tr>
 				</table>
+					
+				
 				<?php submit_button('設定を保存する')?>
 			</form>
 			</div>

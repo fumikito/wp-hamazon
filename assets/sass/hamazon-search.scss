@@ -51,9 +51,24 @@
 		text-align: center;
 		img{
 			margin-bottom: 10px;
+			max-width: 80px;
+			height: auto;
 		}
 	}
 	td{
-		
+		em{
+			color: orange;
+		}
+		textarea{
+			width: 90%;
+		}
 	}
+}
+
+.wp-hamazon-pre{
+	font-family: monospace;
+	padding: 1em;
+	margin: 1em 0;
+	border: 1px solid #ccc;
+	background-color: #f0f0f0;
 }

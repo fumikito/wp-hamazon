@@ -271,7 +271,7 @@ class WP_Hamazon{
 			'Operation' => 'ItemLookup',
 			'IdType' => 'ASIN',
 			'ItemId' => (string)$asin,
-			'ResponseGroup' => 'Medium,Images'
+			'ResponseGroup' => 'Medium,Offers,Images'
 		);
 		//Cash Result
 		$id = "asin_{$asin}";

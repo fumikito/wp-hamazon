@@ -130,22 +130,23 @@ function _wp_hamazon_search_form(){
 								</th>
 								<td>
 									<strong><?php echo $atts['Title']; ?></strong><br />
-									価格：<?php
+									価格：<em class="price"><?php
 										if($item->OfferSummary->LowestNewPrice->FormattedPrice){
 											echo esc_html((string)$item->OfferSummary->LowestNewPrice->FormattedPrice);
 										}else{
 											echo 'N/A';
 										}
-									?><br />
-									<label>コード: <input type="text" size="40" value="[tmkm-amazon]<?php echo $item->ASIN; ?>[/tmkm-amazon]" onclick="this.select();" /></label>
-									<br />
-									<?php
+									?></em><br />
+<?php
 										foreach(array('Actor', 'Artist', 'Author', 'Creator', 'Director', 'Manufacturer') as $key){
 											if(isset($atts[$key])){
 												echo $wp_hamazon_parser->atts_to_string($key).": ".$atts[$key]."<br />";
 											}
 										}
 									?>
+									<label>コード: <input type="text" size="40" value="[tmkm-amazon]<?php echo $item->ASIN; ?>[/tmkm-amazon]" onclick="this.select();" /></label>
+									<br />
+									<span class="description">ショートコードを投稿本文に貼り付けてください</span>
 								</td>
 							</tr>
 						<?php
