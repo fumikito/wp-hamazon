@@ -56,6 +56,7 @@ class WP_Hamazon{
 	var $searchIndex = array(
 		'Blended' => 'すべての商品',
 		'Books' => '和書',
+		'KindleStore' => 'Kindleストア',
 		'ForeignBooks' => '洋書',
 		'Electronics' => '家電',
 		'OfficeProducts' => 'オフィス用品',
