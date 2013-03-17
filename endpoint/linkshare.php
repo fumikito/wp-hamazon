@@ -13,7 +13,7 @@ if ( ! WP_NETWORK_ADMIN && ! WP_USER_ADMIN ) {
 }
 
 //DEBUG
-define('WP_DEBUG', true);
+//define('WP_DEBUG', true);
 
 require_once dirname(dirname(dirname(dirname(dirname(__FILE__))))).DIRECTORY_SEPARATOR."wp-load.php";
 require_once(ABSPATH . 'wp-admin/includes/admin.php');
