@@ -51,11 +51,15 @@ function _wp_hamazon_search_form(){
 	}
 	//提携企業リストを取得
 	$companies = $wp_hamazon_linkshare->get_company_list();
+	if(is_wp_error($companies)){
+		printf('<div class="error"><p>%s</p></div>', $companies->get_error_message());
+		$companies = $wp_hamazon_linkshare->get_company_list(false);
+	}
+	
 	if(empty($companies)){
 		$message = <<<EOS
 提携企業のリストを取得できませんでした。
 トークンが正しいか、提携企業が少なくとも一つ登録されているかご確認ください。
-なお、リンクシェア管理画面上での変更がWordPressに反映されるにはは少なくとも1時間かかります。
 EOS;
 		printf('<div class="error"><p>%s</p></div>', nl2br($message));
 		return;

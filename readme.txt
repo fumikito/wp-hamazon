@@ -4,7 +4,7 @@ Contributors: Takahashi_Fumiki
 Tags: amazon, affiliate, linkshare
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.0
+Stable tag: 2.1
 
 ともかめさん作のwp-tmkm-amazonの後継プラグインです。そのままの設定で使えます。
 
@@ -23,6 +23,10 @@ WordPressの投稿編集画面にAmazonアフィリエイトおよびLinkShare�
 1. このようなボタンが追加されます
 
 == Changelog ==
+
+= 2.1 =
+
+* リンクシェアのAPIがリクエストを返さないことがあるので、キャッシュ方法を変更
 
 = 2.0 =
 

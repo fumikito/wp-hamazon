@@ -4,7 +4,7 @@ Plugin Name: wp-hamazon
 Plugin URI: https://github.com/fumikito/WP-Hamazon
 Description: ともかめさん作のtmkm-amazon後継プラグインです。ASIN を指定して Amazon から個別商品の情報を取出します。BOOKS, DVD, CD は詳細情報を取り出せます。
 Author: Takahashi_Fumiki
-Version: 2.0
+Version: 2.1
 Author URI: http://hametuha.co.jp
 */
 if( basename( $_SERVER['SCRIPT_FILENAME'] ) == 'wp-tmkm-amazon.php' ) {

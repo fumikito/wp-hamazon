@@ -50,19 +50,29 @@ class WP_Hamazon_Linkshare{
 	 * リンクシェアの提携企業リストを取得する
 	 * @return array
 	 */
-	public function get_company_list(){
+	public function get_company_list($cash_update = true){
+		//規定値
 		$cash_key = 'linkshare_company_list';
+		$life_time_key = 'linkshare_cash_lifetime';
 		$liftime = 1800;
-		$list = get_transient($cash_key);
-		if(false === $list){
+		//保存された値を取得
+		$list = get_option($cash_key, array());
+		$saved = get_option($life_time_key, 0);
+		if(current_time('timestamp') > $saved + $liftime && $cash_update){
 			$list = array();
 			$result = $this->get_request(self::COMPANY_LIST, array('token' => $this->get_token()));
-			if(isset($result->midlist)){
+			if(is_wp_error($result)){
+				return $result;
+			}elseif(isset($result->Errors)){
+				return new WP_Error('error', strval($result->Errors->ErrorText));
+			}elseif(isset($result->midlist)){
 				foreach($result->midlist->merchant as $merchant){
 					$list[(string)$merchant->mid] = (string)$merchant->merchantname;
 				}
+				//値を保存
+				update_option($cash_key, $list);
+				update_option($life_time_key, current_time('timestamp'));
 			}
-			set_transient($cash_key, $list, $liftime);
 		}
 		return $list;
 	}
