@@ -37,7 +37,7 @@ class WP_Hamazon_Admin {
 		// Add a new menu under Options:
 		add_options_page(
 			'WP Hamazon（アフィリエイト）設定',
-			'WP Hamazon',
+			'アフィリエイト設定',
 			'manage_options',
 			$this->slug,
 			array($this, 'options_page')
@@ -71,18 +71,20 @@ class WP_Hamazon_Admin {
 	
 	/**
 	 * Create Admin Panel
-	 * @global type $hamazon_settings 
+	 * 
+	 * @global array $hamazon_settings 
 	 * @return void
 	 */
 	function options_page() {
 		global $hamazon_settings;
-
 		//Save options.
-		if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'hamazon_setting')){
+		if (isset($_POST['_wpnonce']) && wp_verify_nonce($_POST['_wpnonce'], 'hamazon_setting') && current_user_can('manage_options')){
 			$hamazon_settings = array(
 				'associatesid' => htmlspecialchars($_POST['associatesid']),
 				'accessKey' => (string)$_POST['accessKey'],
 				'secretKey' => (string)$_POST['secretKey'],
+				'rakuten_app_id' => (string)$_POST['rakuten_app_id'],
+				'rakuten_affiliate_id' => (string)$_POST['rakuten_affiliate_id'],
 				'linkshare_token' => (string)$_POST['linkshare_token'],
 				'post_types' => (isset($_POST['post_types']) && is_array($_POST['post_types'])) ? $_POST['post_types'] : array(),
 				'load_css' => (boolean)$_POST['load_css']
@@ -144,7 +146,7 @@ class WP_Hamazon_Admin {
 					<tr>
 						<th><label for="associatesid">あなたのアソシエイト ID</label></th>
 						<td>
-							<input type="text" class="regular-text" id="associatesid" name="associatesid" value="<?php echo $hamazon_settings['associatesid']; ?>" />
+							<input type="text" class="regular-text" id="associatesid" name="associatesid" value="<?php echo esc_attr($hamazon_settings['associatesid']); ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -157,6 +159,22 @@ class WP_Hamazon_Admin {
 						<th><label for="associatesid">あなたのAWS シークレットアクセス ID</label></th>
 						<td>
 							<input type="text" class="regular-text" id="secretKey" name="secretKey" value="<?php echo $hamazon_settings['secretKey']; ?>" />
+						</td>
+					</tr>
+				</table>
+				<p>&nbsp;</p>
+				<h3>楽天</h3>
+				<table class="form-table">
+					<tr>
+						<th><label for="rakuten_app_id">アプリID / デベロッパ—ID</label></th>
+						<td>
+							<input type="text" class="regular-text" id="rakuten_app_id" name="rakuten_app_id" value="<?php echo $hamazon_settings['rakuten_app_id']; ?>" />
+						</td>
+					</tr>
+					<tr>
+						<th><label for="rakuten_affiliate_id">アフィリエイトID</label></th>
+						<td>
+							<input type="text" class="regular-text" id="rakuten_affiliate_id" name="rakuten_affiliate_id" value="<?php echo $hamazon_settings['rakuten_affiliate_id']; ?>" />
 						</td>
 					</tr>
 				</table>
