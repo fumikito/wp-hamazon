@@ -7,59 +7,19 @@ Author: Takahashi_Fumiki
 Version: 2.1
 Author URI: http://hametuha.co.jp
 */
-if( basename( $_SERVER['SCRIPT_FILENAME'] ) == 'wp-tmkm-amazon.php' ) {
+if( basename( $_SERVER['SCRIPT_FILENAME'] ) == 'wp-hamazon.php' ) {
 	die();
 }
 
 /**
- * Default Options
+ * グローバル設定オプション
  * @var array
  */
-$_hamazon_settings_default = array(
-	'version' => '2.0',
-	'associatesid' => '',
-	'accessKey' => '',
-	'secretKey' => '',
-	'rakuten_app_id' => '',
-	'rakuten_affiliate_id' => '',
-	'linkshare_token' => '',
-	'post_types' => array('post'),
-	'load_css' => true
-);
+global $hamazon_settings;
 
-/**
- * Global Setting for tmkm Amazon
- * @var array
- */
-$hamazon_settings = get_option('wp_tmkm_admin_options', $_hamazon_settings_default);
-foreach($_hamazon_settings_default as $key => $val){
-	if(!isset($hamazon_settings[$key])){
-		$hamazon_settings[$key] = $val;
-	}
-}
+// メインコントローラーを読み込む
+require_once dirname(__FILE__).'/includes/wp-hamazon-controller.php';
+new WP_Hamazon_Controller('2.1');
 
-
-
-if(!function_exists('tmkm_amazon_view')) {
-	/**
-	 * Echo HTML strign with asin code.
-	 * @global WpTmkmAmazonView $wpTmkmAmazonView
-	 * @param string $asin ASIN code
-	 * @deprecated
-	 * @return void
-	 */
-	function tmkm_amazon_view($asin) {
-		global $hamazon_list;
-		$hamazon_list->amazon_view($asin);
-	}
-}
-
-
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-parser.php';
-$wp_hamazon_parser = new WP_Hamazon($hamazon_settings['accessKey'], $hamazon_settings['secretKey'], $hamazon_settings['associatesid']);
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-linkshare.php';
-$wp_hamazon_linkshare = new WP_Hamazon_Linkshare();
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-list.php';
-$hamazon_list =  new WP_Hamazon_List();
-require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'wp-hamazon-admin.php';
-$hamazon_admin =  new WP_Hamazon_Admin();
+// グローバル関数が記載されたファイルを読み込む
+require_once dirname(__FILE__).'/functions.php';

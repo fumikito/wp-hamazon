@@ -4,13 +4,30 @@
  * @since 1.0
  * @package wordpress
  */
-class WP_Hamazon{
+class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon_Service_Required{
 	
+	
+	/**
+	 * 検索ページで表示されるタイトル
+	 * @var string
+	 */
+	public $title = 'Amazonアソシエイト商品検索';
+	
+	
+	/**
+	 * アイコンファイル名
+	 * @var string
+	 */
+	protected $icon = 'amazon.png';
+
+
 	/**
 	 * Service Name
 	 * @var string
 	 */
 	const SERVICE = "AWSECommerceService";
+	
+	
 	
 	/**
 	 * API version
@@ -19,23 +36,31 @@ class WP_Hamazon{
 	 */
 	const VERSION = "2011-08-01";
 	
+	
+	
 	/**
 	 * Asocciate ID
 	 * @var string
 	 */
-	var $AssociatesID = '';
+	private $AssociatesID = '';
+	
+	
 	
 	/**
 	 * Developper Token (Access ID)
 	 * @var string
 	 */
-	var $DevToken = '';
+	private $DevToken = '';
+	
+	
 	
 	/**
 	 * Securiry Access ID
 	 * @var string
 	 */
-	var $SAK = '';
+	private $SAK = '';
+	
+	
 	
 	/**
 	 * URL of AWS endpoint
@@ -43,17 +68,21 @@ class WP_Hamazon{
 	 */
 	var $endpoint = '';
 	
+	
+	
 	/**
 	 * Mime Type of response
 	 * @var string
 	 */
 	var $mime = 'text/xml';
 	
+	
+	
 	/**
 	 * Search Index values for AWS
 	 * @var array
 	 */
-	var $searchIndex = array(
+	public $searchIndex = array(
 		'Blended' => 'すべての商品',
 		'Books' => '和書',
 		'KindleStore' => 'Kindleストア',
@@ -83,9 +112,8 @@ class WP_Hamazon{
 		'Toys' => 'おもちゃ',
 		'Marketplace' => 'マーケットプレイス'
 	);
-	var $getmode;
-	var $SearchString;
-	var $ResponseGroup;
+	
+	
 
 	/**
 	 * Constructor
@@ -94,12 +122,24 @@ class WP_Hamazon{
 	 * @param string $associatesid
 	 * @param string $locale Default JP
 	 */
-	function __construct($devToken, $sak, $associatesid, $locale = 'JP') {
-		$this->DevToken = $devToken;
-		$this->AssociatesID = $associatesid;
-		$this->SAK = $sak;
-		$this->setLocale($locale);
+	public function set_option() {
+		$this->DevToken = $this->get_option('accessKey');
+		$this->AssociatesID = $this->get_option('associatesid');
+		$this->SAK = $this->get_option('secretKey');
+		$this->setLocale('JP');
 	}
+	
+	
+	
+	/**
+	 * 有効か否かを返す
+	 * @return boolean
+	 */
+	public function is_valid() {
+		return (!empty($this->SAK) && !empty($this->DevToken) && !empty($this->AssociatesID));
+	}
+	
+	
 	
 	/**
 	 * Set up locale for amazon.
@@ -116,13 +156,15 @@ class WP_Hamazon{
             'CA' => 'http://ecs.amazonaws.ca/onca/xml',
         );
         $locale = strtoupper($locale);
-        if (empty($urls[$locale])) {
+        if (!isset($urls[$locale])) {
             return new WP_Error('', 'Amazonはそのロケールに対応していません。');
         }else{
 			$this->endpoint = $urls[$locale];
 			return true;
 		}
     }
+	
+	
 	
 	/**
 	 * Send Request and get XML Object
@@ -142,7 +184,7 @@ class WP_Hamazon{
 		if($cash_id){
 			$transient = get_transient($cash_id);
 		}
-		if($transient){
+		if($transient !== false){
 			$data = $transient;
 		}else{
 			// Make Request
@@ -152,7 +194,7 @@ class WP_Hamazon{
 					'timeout' => $timeout,
 				),
 			));
-			$data = @file_get_contents($url, false, $context);
+			$data = file_get_contents($url, false, $context);
 			if($cash_id){
 				set_transient($cash_id, $data, $cash_time);
 			}
@@ -163,6 +205,8 @@ class WP_Hamazon{
 			return simplexml_load_string($data);
 		}
 	}
+	
+	
 	
 	/**
 	 * Return request url to AWS REST Servicce
@@ -195,6 +239,8 @@ class WP_Hamazon{
 		}
 	}
 	
+	
+	
 	/**
 	 * Encode URL according to RFC 3986
 	 * @param string $str 
@@ -203,6 +249,8 @@ class WP_Hamazon{
 	function urlencode($str){
 		return str_replace('%7E', '~', rawurlencode($str));
 	}
+	
+	
 	
 	/**
 	 * Get signature for AWS
@@ -219,7 +267,9 @@ class WP_Hamazon{
 			return new WP_Error('error', 'hash_hmacまたはmhash関数がインストールされている必要があります');
 		}
 	}
-
+	
+	
+	
 	/**
 	 * Get Amazon Image.
 	 * 
@@ -230,17 +280,19 @@ class WP_Hamazon{
 	function get_image_src($item,$imgsize) {
 		switch($imgsize){
 			case 'medium':
-				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(__FILE__)."assets/img/amazon_noimg.png";
+				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
 				break;
 			case 'small':
-				$url = $item->SmallImage->URL ? $item->SmallImage->URL: plugin_dir_url(__FILE__)."assets/img/amazon_noimg_small.png";
+				$url = $item->SmallImage->URL ? $item->SmallImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg_small.png";
 				break;
 			default:
-				$url = plugin_dir_url(__FILE__)."assets/img/amazon_noimg.png";
+				$url = plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
 				break;
 		}
 		return $url;
 	}
+	
+	
 	
 	/**
 	 * Search item with string.
@@ -261,6 +313,7 @@ class WP_Hamazon{
 	}
 	
 	
+	
 	/**
 	 * Get Product detail with Asin
 	 * @param string $asin
@@ -277,8 +330,9 @@ class WP_Hamazon{
 		$id = "asin_{$asin}";
 		return $this->send_request($param, $id);
 	}
-
-
+	
+	
+	
 	/**
 	 * Get Amazon Text.
 	 * 
@@ -292,6 +346,8 @@ class WP_Hamazon{
 			return array();
 		}
 	}
+	
+	
 	
 	/**
 	 * Parse XMLElement to array
@@ -311,6 +367,8 @@ class WP_Hamazon{
 		}
 		return $vars;
 	}
+	
+	
 	
 	/**
 	 * Translate Attribute
@@ -561,6 +619,8 @@ class WP_Hamazon{
 		}
 	}
 	
+	
+	
 	/**
 	 * Returns timestamp.
 	 * @param boolean $with_suffix if set to true, return with suffix for query string. Default true.
@@ -572,5 +632,301 @@ class WP_Hamazon{
 			$timestamp = 'Timestamp='.$timestamp;
 		}
 		return $timestamp;
+	}
+	
+	
+	
+	/**
+	 * ショートコードを登録する
+	 */
+	public function set_shortcode() {
+		$this->short_codes = array('tmkm-amazon', 'tmkm-amazon-list');
+	}
+	
+	
+	
+	/**
+	 * Create HTML Source With Asin
+	 * @param string $asin
+	 * @return string 
+	 */
+	function format_amazon($asin) {
+        
+		$result = $this->get_itme_by_asin($asin);
+
+		if(is_wp_error($result)){ 
+			//// Amazon function was returned false, so AWS is down
+			return '<p class="message error">アマゾンのサーバでエラーが起こっているかもしれません。一度ページを再読み込みしてみてください。</p>';
+		}else{
+			// Amazon function returned XML data
+			$status = $result->Items->Request->IsValid;
+			if( $status == 'False' ){
+				// Request is invalid
+				$output = '<p>与えられたリクエストが正しくありません</p>';
+			}else{
+				// results were found, so display the products
+				$item = $result->Items->Item[0];
+				$atts = $this->get_atts($item);
+				$goodsimage = $this->get_image_src($item, 'medium');
+
+				$url = $item->DetailPageURL;
+				$Title = $atts['Title'];
+				$ProductGroup = isset($this->searchIndex[$atts['ProductGroup']]) ? $this->searchIndex[$atts['ProductGroup']]: '不明' ;
+				if(isset($atts['ProductGroup']) ){
+					switch($atts['ProductGroup']){
+						case 'Book':
+							$ProductGroup = '書籍';
+							break;
+						case 'eBooks':
+							$ProductGroup = 'Kindle本';
+							break;
+					}
+				}
+				$ProductGroup = " <small>[{$ProductGroup}]</small>";
+				$price = $atts['ListPrice']['FormattedPrice'];
+				
+				$desc = $price ? "<p>価格: <em>{$price}</em></p>" : '';
+				$filter = array(
+					'author' => array('Author', 'Director', 'Actor', 'Artist', 'Creator'),
+					'publisher' => array('Publisher', 'Studio', 'Label', 'Brand', 'Manufacturer'),
+					'Date' => array('PublicationDate'),
+					'allowable' => array('Binding', 'NumberOfPages', 'ISBN', 'Feature')
+				);
+				foreach($filter as $filter => $vals){
+					foreach($vals as $val){
+						if(isset($atts[$val])){
+							$key = $this->atts_to_string($val);
+							$desc .= "<p>{$key}: <em>{$atts[$val]}</em></p>";
+							if($filter != 'allowable' && $filter != 'author'){
+								break;
+							}
+						}
+					}
+				}
+				$tag = <<<EOS
+<div class="tmkm-amazon-view wp-hamazon-amazon">
+<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$Title}{$ProductGroup}</a></p>
+<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goodsimage}" border="0" alt="{$Title}" /></a></p>
+{$desc}
+<hr class="tmkm-amazon-clear" />
+</div>
+EOS;
+				return apply_filters('wp_hamazon_amazon', $tag, $item);
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * 記事本文中のショートコードを個別商品表示 HTML に置き換える
+	 * 
+	 * @param $content
+	 * @return $transformedstring
+	 */
+	public function shortcode_tmkm_amazon($atts, $content = null){
+		return $this->format_amazon($content);
+	}
+	
+	
+	
+	/**
+	 * 書籍の一覧を取得する
+	 * @global wpdb $wpdb
+	 * @param array $attr
+	 * @return string
+	 */
+	public function shortcode_tmkm_amazon_list($attr){
+		global $wpdb;
+
+		extract( shortcode_atts( array(
+			'orderby' 	=> 'post_id',
+			'order'		=> 'asc',
+		), $attr ));
+
+		$orderby = strval( $orderby );
+		$order = strtoupper(strval( $order ));
+
+		$output = '';
+
+		switch( $orderby ) {
+			case 'post_id': $ordersql = "ID " . $order; break;
+			case 'post_title': $ordersql = "post_title " . $order; break;
+			case 'modified_date': $ordersql = "post_modified " . $order; break;
+			default: $ordersql = "post_date " . $order; break;
+		}
+
+	    $sql = <<<EOS
+			SELECT SQL_CALC_FOUND_ROWS
+				ID, post_title, post_date, post_content
+			FROM
+				{$wpdb->posts}
+			WHERE
+				post_status = 'publish' AND
+				post_content LIKE '%[tmkm-amazon]%'
+			ORDER BY
+				$ordersql
+EOS;
+
+	    $PostRetainAsin = $wpdb->get_results($sql);
+	    $postcount = $wpdb->get_var('SELECT FOUND_ROWS()');
+	    $perpage = get_option("posts_per_page");
+	    if( $PostRetainAsin ) {
+			$heredoc = '';
+			$books = array();
+	    	foreach( $PostRetainAsin as $asinlist ) {
+				$matches = array();
+				if(!preg_match_all("/\[tmkm-amazon\]([0-9]+)\[\/tmkm-amazon\]/", $asinlist->post_content, $matches)){
+					continue;
+				}
+	    		$permalink = get_permalink($asinlist->ID);
+				$date = mysql2date(get_option('date_format'), $asinlist->post_date, false);
+				$asins = $matches[1];
+	    		foreach( $asins as $asin ) {
+	    			$display = $this->format_amazon($asin);
+					$tag = '<p class="tmkm-amazon-clear"><em><em></p>';
+					$books[] = <<<EOS
+					<dt><a href="{$permalink}">{$asinlist->post_title}</a><br /><small>（投稿日: {$date}）</small></dt>
+					<dd>{$display}</dd>
+EOS;
+	    		}
+	    	}
+			$heredoc .= '<dl>';
+			foreach($books as $book){
+				$heredoc .= $book;
+			}
+			$heredoc .= '</dl>';
+	    } else {
+	    	$heredoc = "<p>まだブログで書籍が紹介されていません。</p>\n";
+	    }
+
+		$output .= $heredoc;
+		return $output;
+	}
+	
+	
+	
+	/**
+	 * 検索フォームを出力する
+	 */
+	public function show_form() {
+		?>
+		<form method="get" class="hamazon-search-form search-amazon" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>endpoint/amazon.php">
+			<?php wp_nonce_field('amazon_search'); ?>
+			<p style="display: inline;"><a id="searchpagetop">Amazon 検索</a></p>&nbsp;
+			<select name="SearchIndex">
+				<?php foreach($this->searchIndex as $k => $v): ?>
+				<option value="<?php echo $k; ?>"<?php if((isset($_GET['SearchIndex']) && $_GET['SearchIndex'] == $k) || (!isset($_GET['SearchIndex']) && $k == 'Books')) echo ' selected="selected"'; ?>>
+					<?php echo $v; ?>
+				</option>
+				<?php endforeach; ?>
+			</select>
+			<input type="text" size="20" maxlength="50" value="<?php if(isset($_GET['keyword'])) echo esc_attr($_GET['keyword']); ?>" name="keyword" />&nbsp;
+			<input class="button-primary" type="submit" style="cursor:pointer;" value="検索" />
+		</form>
+		<?php
+	}
+	
+	
+	
+	/**
+	 * 商品検索結果を表示する
+	 */
+	public function show_results() {
+		// Get pagination
+		if( isset( $_GET['page'] ) ){
+			$page_num = max(1, (int) $_GET['page']);
+		}else{
+			$page_num = 1;
+		}
+		//Start Searching
+		if(isset($_GET['keyword'], $_GET['_wpnonce']) && !empty( $_GET['keyword']) && wp_verify_nonce($_GET['_wpnonce'], 'amazon_search')){
+			echo '<div id="amazon-search-result">';
+			$keyword = (string) $_GET['keyword'];
+			$searchindex = !empty( $_GET['SearchIndex'] ) ? $_GET['SearchIndex'] : 'Blended';
+			$result = $this->search_with($keyword, $page_num, $searchindex);
+
+			if(is_wp_error($result) ){
+				// Amazon function was returned false, so AWS is down
+				echo '<div class="error"><p>検索結果を取得できませんでした。amazonのサーバでエラーが起こっているかもしれません。</p></div>';
+			}else{
+				// Amazon function returned XML data
+				if($result->Items->Request->Errors){
+					printf('<div class="error"><p>%s</p></div>', $result->Items->Request->Errors->Error->Message);
+				}else{
+					// results were found, so display the products
+					$total_results = $result->Items->TotalResults;
+					$total_pages =  $result->Items->TotalPages;
+					$per_page = $searchindex == 'Blended' ? 3 : 10;
+
+					if( $total_results == 0 ){ // no result was found
+						printf('<div class="error"><p>「%s」の検索結果が見つかりませんでした。</p></div>', esc_html($keyword));
+					} else {
+						// Pagenation
+						if( $total_pages > 1 ) {
+							$pagination = $this->paginate($total_pages, $page_num, 1, array(
+								'SearchIndex' => $searchindex,
+								'keyword' => $keyword,
+								'_wpnonce' => wp_create_nonce('amazon_search'),
+							));
+						}else{
+							$pagination = '';
+						}
+						// results were found
+						$length = count($result->Items->Item);
+						?>
+							<div class="result-desc clearfix">
+								<h1>「<?php echo esc_html($keyword); ?>」の検索結果: <?php echo number_format((string)$total_results); ?>件</h1>
+								<?php echo $pagination; ?>
+							</div><!-- //.result-desc -->
+							<table class="wp-hamazon-product-table">
+						<?php
+						for($i = 0; $i < $length; $i++) {
+							$item = $result->Items->Item[$i];
+							$smallimage = $this->get_image_src($item,'small');
+							$atts = $this->get_atts($item);
+							?>
+								<tr class="amazon">
+									<th>
+										<?php if($searchindex !== 'Blended'): ?>
+										<em>No. <?php echo number_format( ($page_num - 1) * $per_page + $i + 1); ?></em><br />
+										<?php endif; ?>
+										<img src="<?php echo $smallimage; ?>" border="0" alt="" /><br />
+										<a class="button" href="<?php echo $item->DetailPageURL; ?>" target="_blank">Amazonで見る</a>
+									</th>
+									<td>
+										<strong><?php echo $atts['Title']; ?></strong><br />
+										価格：<em class="price"><?php
+											if($item->OfferSummary->LowestNewPrice->FormattedPrice){
+												echo esc_html((string)$item->OfferSummary->LowestNewPrice->FormattedPrice);
+											}else{
+												echo 'N/A';
+											}
+										?></em><br />
+	<?php
+											foreach(array('Actor', 'Artist', 'Author', 'Creator', 'Director', 'Manufacturer') as $key){
+												if(isset($atts[$key])){
+													echo $this->atts_to_string($key).": ".$atts[$key]."<br />";
+												}
+											}
+										?>
+										<label>コード: <input type="text" size="40" value="[tmkm-amazon]<?php echo $item->ASIN; ?>[/tmkm-amazon]" onclick="this.select();" /></label>
+										<br />
+										<span class="description">ショートコードを投稿本文に貼り付けてください</span>
+									</td>
+								</tr>
+							<?php
+						}
+						?>
+							</table>
+							<div class="result-desc clearfix">
+								<?php echo $pagination; ?>
+							</div><!-- //.result-desc -->
+						<?php 
+					}
+				}
+			}
+			echo '</div>';
+		}
 	}
 }
