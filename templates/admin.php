@@ -6,6 +6,7 @@ if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
 /* @var $this WP_Hamazon_Controller */
 ?>
 <div class="wrap" id="footnote-options">
+	<div id="icon-options-general" class="icon32"><br></div>
 	<h2>Wp Hamazon （アフィリエイト）設定</h2>
 
 	<form method="post">
@@ -37,58 +38,68 @@ if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
 				</td>
 			</tr>
 		</table>
-		<p>&nbsp;</p>
-		<h3>Amazon</h3>
-
-		<table class="form-table">
-			<tr>
-				<th><label for="associatesid">あなたのアソシエイト ID</label></th>
-				<td>
-					<input type="text" class="regular-text" id="associatesid" name="associatesid" value="<?php echo esc_attr($hamazon_settings['associatesid']); ?>" />
-				</td>
-			</tr>
-			<tr>
-				<th><label for="associatesid">あなたのAWS アクセス ID</label></th>
-				<td>
-					<input type="text" class="regular-text" id="accessKey" name="accessKey" value="<?php echo esc_attr($hamazon_settings['accessKey']); ?>" />
-				</td>
-			</tr>
-			<tr>
-				<th><label for="associatesid">あなたのAWS シークレットアクセス ID</label></th>
-				<td>
-					<input type="text" class="regular-text" id="secretKey" name="secretKey" value="<?php echo esc_attr($hamazon_settings['secretKey']); ?>" />
-				</td>
-			</tr>
-		</table>
-		<p>&nbsp;</p>
-		<h3>楽天</h3>
-		<table class="form-table">
-			<tr>
-				<th><label for="rakuten_app_id">アプリID / デベロッパ—ID</label></th>
-				<td>
-					<input type="text" class="regular-text" id="rakuten_app_id" name="rakuten_app_id" value="<?php echo esc_attr($hamazon_settings['rakuten_app_id']); ?>" />
-				</td>
-			</tr>
-			<tr>
-				<th><label for="rakuten_affiliate_id">アフィリエイトID</label></th>
-				<td>
-					<input type="text" class="regular-text" id="rakuten_affiliate_id" name="rakuten_affiliate_id" value="<?php echo esc_attr($hamazon_settings['rakuten_affiliate_id']); ?>" />
-				</td>
-			</tr>
-		</table>
-		<p>&nbsp;</p>
-		<h3>リンクシェア</h3>
-		<table class="form-table">
-			<tr>
-				<th><label for="linkshare_token">サイトアカウントのトークン</label></th>
-				<td>
-					<input type="text" class="regular-text" name="linkshare_token" id="linkshare_token" value="<?php echo esc_attr($hamazon_settings['linkshare_token']) ?>" />
-					<p class="description">
-						リンクシェアのトークンは<a href="http://cli.linksynergy.com/cli/publisher/links/webServices.php" target="_blank">こちら</a>で取得してください。
-					</p>
-				</td>
-			</tr>
-		</table>
+		<?php foreach($this->services as $service): ?>
+			<p>&nbsp;</p>
+			<h3><?php echo esc_html($this->{$service}->title); ?></h3>
+			<table class="form-table">
+				<tr>
+					<th>ステータス</th>
+					<td>
+						<?php if($this->{$service}->is_valid()): ?>
+							<strong style="color: green;">有効：</strong>
+						<?php else: ?>
+							<strong style="color: red;">無効：</strong>
+						<?php endif; ?>
+						<span class="description">
+							<?php
+								switch($service){
+									case 'amazon':
+										$link = 'https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html';
+										break;
+									case 'rakuten':
+										$link = 'http://webservice.rakuten.co.jp';
+										break;
+									case 'linkshare':
+										$link = 'http://www.linkshare.ne.jp';
+										break;
+								}
+								printf('認証に必要な情報は<a href="%s">こちら</a>で登録の上、入手してください。', $link);
+							?>
+						</span>
+					</td>
+				</tr>
+				<?php
+					switch($service){
+						case 'amazon':
+							$input = array(
+								'associatesid' => 'あなたのアソシエイト ID',
+								'accessKey' => 'あなたのAWS アクセス ID',
+								'secretKey' => 'あなたのAWS シークレットアクセス ID',
+							);
+							break;
+						case 'rakuten':
+							$input = array(
+								'rakuten_app_id' => 'アプリID / デベロッパ—ID',
+								'rakuten_affiliate_id' => 'アフィリエイトID',
+							);
+							break;
+						case 'linkshare':
+							$input = array(
+								'linkshare_token' => 'サイトアカウントのトークン',
+							);
+							break;
+					}
+					foreach($input as $name => $label):
+				?>
+				<tr>
+					<th><label for="<?php echo esc_attr($name); ?>"><?php echo esc_html($label); ?></label></th>
+					<td>
+						<input type="text" class="regular-text" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($hamazon_settings[$name]); ?>" />
+					</td>
+				</tr>
+					<?php endforeach; ?>
+			</table>
+		<?php endforeach; ?>
 		<p>&nbsp;</p>
 		<h3>表示のカスタマイズ</h3>
 		<p class="description">
@@ -109,8 +120,11 @@ add_filter('wp_hamazon_amazon', '_my_amazon_tag', 10, 2);
  * @return string HTMLタグを返します
  */
 function _my_amazon_tag(\$html, \$item){
-	//ここで好きなHTMLを作成します。
+	// ここで好きなHTMLを作成します。
 	\$my_html = '<div id="my_amazon"><a href="'.strval(\$item->DetailPageURL).'">'.strval(\$item->ItemAttributes->Title).'</a></div>';
+	// はじめてカスタマイズするときは\$itemがなんなのかわからないと思います。
+	// 一度var_dumpして確認してみると構造がよく理解できます。
+	var_dump(\$item); // 本番環境ではこの行を使わないでください
 	return \$my_html;
 }
 EOS;
@@ -122,6 +136,13 @@ EOS;
 				<td>
 					<code>wp_hamazon_amazon</code><br />
 					$itemはSimpleXMLElementオブジェクトのインスタンスです。かなり多くの情報が入っています。
+				</td>
+			</tr>
+			<tr>
+				<th>楽天のフィルター名</th>
+				<td>
+					<code>wp_hamazon_rakuten</code><br />
+					$itemはオブジェクトです。
 				</td>
 			</tr>
 			<tr>

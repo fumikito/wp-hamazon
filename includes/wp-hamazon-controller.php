@@ -112,6 +112,9 @@ class WP_Hamazon_Controller{
 		// 管理画面用メッセージの追加
 		add_action('admin_notices', array($this, 'admin_notices'));
 		
+		////Add Action links on plugin lists.
+		add_filter('plugin_action_links', array($this, 'plugin_page_link'), 500, 2);
+		
 		// 検索用iframeを出力するアクション
 		add_action('wp_hamazon_iframe', array($this, 'iframe'));
 		
@@ -143,6 +146,36 @@ class WP_Hamazon_Controller{
 		if(isset($_REQUEST['page'], $_REQUEST['action']) && $_REQUEST['page'] == $this->slug && $_REQUEST['action'] == 'save_options'){
 			$this->update_option();
 		}
+		//有効になっているサービスが一つもない場合はエラー
+		if(current_user_can('manage_options')){
+			$valid = false;
+			foreach($this->services as $service){
+				if($this->{$service}->is_valid()){
+					$valid = true;
+					break;
+				}
+			}
+			if(!$valid){
+				$this->message['error'][] = sprintf('アフィリエイトサービスが一つも有効になっていません。<a href="%s">設定画面</a>で入力してください。', admin_url('admin.php?page='.$this->slug));
+			}
+		}
+	}
+	
+	
+	
+	/**
+	 * プラグイン一覧で設定へのリンクを追加
+	 * 
+	 * @param array $links
+	 * @param string $file
+	 * @return array
+	 */
+	public function plugin_page_link($links, $file){
+		if(false !== strpos($file, "hamazon")){
+			$link = sprintf('<a href="%s">%s</a>', admin_url('admin.php?page='.$this->slug), '設定');
+			array_unshift( $links, $link);
+		}
+		return $links;
 	}
 	
 	
