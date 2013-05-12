@@ -4,13 +4,13 @@ Contributors: Takahashi_Fumiki
 Tags: amazon, affiliate, linkshare
 Requires at least: 3.0
 Tested up to: 3.5.1
-Stable tag: 2.1
+Stable tag: 2.2
 
-ともかめさん作のwp-tmkm-amazonの後継プラグインです。そのままの設定で使えます。
+ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア です。 
 
 == Description ==
 
-WordPressの投稿編集画面にAmazonアフィリエイトおよびLinkShareのリンク挿入ボタンを追加します。
+WordPressの投稿編集画面にAmazonアフィリエイトおよび楽天、LinkShareのリンク挿入ボタンを追加します。
 
 == Installation ==
 
@@ -23,6 +23,11 @@ WordPressの投稿編集画面にAmazonアフィリエイトおよびLinkShare�
 1. このようなボタンが追加されます
 
 == Changelog ==
+
+= 2.2 =
+
+* 楽天をサービスとして追加
+* マークアップをドラスティックに変更しました。これまで利用していた方は注意してください。
 
 = 2.1 =
 
