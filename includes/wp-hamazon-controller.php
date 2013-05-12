@@ -50,7 +50,7 @@ class WP_Hamazon_Controller{
 	 * 実装されているサービスの名称リスト
 	 * @var string
 	 */
-	private $services = array('amazon', 'linkshare');
+	private $services = array('amazon', 'rakuten', 'linkshare');
 	
 	
 	

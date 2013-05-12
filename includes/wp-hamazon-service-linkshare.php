@@ -188,11 +188,11 @@ class WP_Hamazon_Service_Linkshare extends WP_Hamazon_Service implements WP_Hama
 		$cat = implode(' &gt; ', explode(',', $cat));
 		$template = <<<EOS
 <div class="tmkm-amazon-view wp-hamazon-linkshare">
-	<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$title}</a></p>
 	<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$src}" border="0" alt="{$title}" /></a></p>
-	<p>価格: <em>&yen;{$price}</em></p>
+	<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$title}</a></p>
+	<p class="price">価格: <em>&yen;{$price}</em></p>
 	<p>カテゴリー: {$cat}</p>
-	<hr class="tmkm-amazon-clear" />
+	<p class="vendor"><a href="http://www.linkshare.ne.jp">Supported by リンクシェア</a></p>
 </div>
 EOS;
 		return apply_filters('wp_hamazon_linkshare', $template, $atts);
@@ -204,7 +204,7 @@ EOS;
 	 * @param SimpleXMLElement $item
 	 * @return string
 	 */
-	public function get_short_code($item){
+	public function get_shortcode($item){
 		$title = strval($item->productname);
 		$url = strval($item->linkurl);
 		$src = strval($item->imageurl);
@@ -216,8 +216,8 @@ EOS;
 		if($item->category->secondary){
 			$cat[] = strval($item->category->secondary);
 		}
-		return sprintf('[%s title="%s" url="%s" src="%s" price="%s" cat="%s" /]',
-			current($this->short_codes), $title, $url, $src, $price, implode(',', $cat));
+		return sprintf('[hamazon_linkshare title="%s" url="%s" src="%s" price="%s" cat="%s" /]',
+			$title, $url, $src, $price, implode(',', $cat));
 	}
 	
 	
@@ -234,7 +234,7 @@ EOS;
 			));
 		}
 		?>
-		<form method="get" class="hamazon-search-form search-amazon" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/linkshare.php">
+		<form method="get" class="hamazon-search-form search-linkshare" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/linkshare.php">
 			<?php wp_nonce_field('linkshare_nonce'); ?>
 			<p style="display: inline;"><a id="searchpagetop">リンクシェア 検索</a></p>&nbsp;
 			<select name="mid">
@@ -309,7 +309,7 @@ EOS;
 									価格：<em class="price">&yen;<?php echo number_format(strval($item->price)); ?></em><br />
 									ストア：<?php echo strval($item->merchantname); ?><br />
 									カテゴリー： <?php echo strval($item->category->primary); ?> &gt; <?php echo strval($item->category->secondary); ?><br />
-									<textarea rows="3" onclick="this.select();"><?php echo ($this->get_short_code($item)); ?></textarea><br />
+									<textarea rows="3" onclick="this.select();"><?php echo ($this->get_shortcode($item)); ?></textarea><br />
 									<span class="description">ショートコードを投稿本文に貼り付けてください</span>
 								</td>
 							</tr>

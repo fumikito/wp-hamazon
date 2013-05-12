@@ -685,7 +685,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				$ProductGroup = " <small>[{$ProductGroup}]</small>";
 				$price = $atts['ListPrice']['FormattedPrice'];
 				
-				$desc = $price ? "<p>価格: <em>{$price}</em></p>" : '';
+				$desc = $price ? "<p class=\"price\">価格: <em>{$price}</em></p>" : '';
 				$filter = array(
 					'author' => array('Author', 'Director', 'Actor', 'Artist', 'Creator'),
 					'publisher' => array('Publisher', 'Studio', 'Label', 'Brand', 'Manufacturer'),
@@ -705,10 +705,10 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				}
 				$tag = <<<EOS
 <div class="tmkm-amazon-view wp-hamazon-amazon">
-<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$Title}{$ProductGroup}</a></p>
 <p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goodsimage}" border="0" alt="{$Title}" /></a></p>
+<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$Title}{$ProductGroup}</a></p>
 {$desc}
-<hr class="tmkm-amazon-clear" />
+<p class="vendor"><a href="https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html">Supported by amazon Product Advertising API</a></p>
 </div>
 EOS;
 				return apply_filters('wp_hamazon_amazon', $tag, $item);

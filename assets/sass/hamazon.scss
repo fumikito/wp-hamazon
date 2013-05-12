@@ -6,17 +6,48 @@
 */
 div.tmkm-amazon-view {
 	clear: both;
+	margin: 1em auto;
+	padding: 1em;
+	border-top: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
+	font-size: 14px;
+	p a{
+		&:link, &:visited{
+			text-decoration: none;
+		}
+		&:hover{
+			text-decoration: underline;;
+		}
+	}
+	
+	.tmkm-amazon-title{
+		font-size: 1.2em;
+		line-height: 1.2;
+		font-weight: bold;
+	}
 	img {
-		float: left;
-		margin: 5px 10px 10px 0px;
-		padding: 5px;
+		float: right;
+		margin: 0 0 1em 1em;
+		padding: 0.5em;
 		border: solid 1px #C2C2C2;
+		background-color: #fff;
 	}
 	p {
 		margin: 0;
 		em {
-			color: #8b0000;
-			font-style: normal;
+			font-weight: bold;
+		}
+		&.vendor{
+			clear: both;
+			font-size: 0.85em;
+			text-align: right;
+			a{
+				color: #999;
+			}
+		}
+		&.description{
+			font-size: 0.85em;
+			line-height: 1.2;
 		}
 	}
 	&:after{
