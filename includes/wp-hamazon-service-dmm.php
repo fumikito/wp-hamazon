@@ -5,14 +5,14 @@
  * 
  * @since 2.0
  */
-class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazon_Service_Required
+class WP_Hamazon_Service_Dmm extends WP_Hamazon_Service implements WP_Hamazon_Service_Required
 {
 	
 	/**
 	 * 検索タイトル
 	 * @var string
 	 */
-	public $title = '楽天商品検索API2';
+	public $title = 'DMM アフィエイト';
 	
 	
 	
@@ -20,7 +20,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * アイコンファイル名
 	 * @var string
 	 */
-	protected $icon = 'rakuten.gif';
+	protected $icon = 'dmm.png';
 
 	
 
@@ -28,7 +28,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * アプリケーションID
 	 * @var string
 	 */
-	private $app_id = '';
+	private $api_id = '';
 	
 	
 	
@@ -41,20 +41,12 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	
 	
 	/**
-	 * 楽天商品検索API2のエンドポイント
-	 * http://webservice.rakuten.co.jp/api/ichibaitemsearch/
+	 * DMMアフィリエイトのエンドポイント
+	 * @see https://affiliate.dmm.com/api/reference/com/all/
 	 */
-	const SEARCH_API = 'https://app.rakuten.co.jp/services/api/IchibaItem/Search/20130424';
+	const SEARCH_API = 'http://affiliate-api.dmm.com/';
 	
-	
-	
-	/**
-	 * 楽天ジャンル検索API2のエンドポイント
-	 * http://webservice.rakuten.co.jp/api/ichibagenresearch/
-	 */
-	const GENRE_API = 'https://app.rakuten.co.jp/services/api/IchibaGenre/Search/20120723';
-	
-	
+
 	
 	/**
 	 * ページング
@@ -67,8 +59,8 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * オプションを設定する
 	 */
 	public function set_option() {
-		$this->app_id = $this->get_option('rakuten_app_id');
-		$this->affiliate_id = $this->get_option('rakuten_affiliate_id');
+		$this->api_id = $this->get_option('dmm_api_id');
+		$this->affiliate_id = $this->get_option('dmm_affiliate_id');
 	}
 	
 	
@@ -78,7 +70,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * @return boolean
 	 */
 	public function is_valid() {
-		return !empty($this->app_id) && !empty($this->affiliate_id);
+		return !empty($this->api_id) && !empty($this->affiliate_id);
 	}
 	
 	
@@ -168,7 +160,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * ショートコードを登録
 	 */
 	public function set_shortcode() {
-		$this->short_codes = array('rakuten');
+		$this->short_codes = array('dmm');
 	}
 
 	
@@ -179,7 +171,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * @return string
 	 */
 	public function get_shortcode($item_code){
-		return sprintf('[rakuten id="%s"][/rakuten]', $item_code);
+		return sprintf('[dmm id="%s"][/dmm]', $item_code);
 	}
 	
 	
@@ -253,7 +245,7 @@ EOS;
 	public function show_form() {
 		$genres = $this->get_genre();
 		?>
-		<form method="get" class="hamazon-search-form search-rakuten" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/rakuten.php">
+		<form method="get" class="hamazon-search-form search-rakuten" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/dmm.php">
 			<?php wp_nonce_field('rakuten_nonce'); ?>
 			<p style="display: inline;"><a id="searchpagetop"><?php echo esc_html($this->title); ?></a></p>&nbsp;
 			<select name="genreId">

@@ -31,53 +31,59 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 	
 	/**
 	 * API version
-	 * @link http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/
+	 * @see http://docs.amazonwebservices.com/AWSECommerceService/latest/DG/
 	 * @var string
 	 */
 	const VERSION = "2011-08-01";
-	
-	
-	
+
+
+
 	/**
 	 * Asocciate ID
 	 * @var string
 	 */
 	private $AssociatesID = '';
-	
-	
-	
+
+
+
 	/**
 	 * Developper Token (Access ID)
 	 * @var string
 	 */
 	private $DevToken = '';
-	
-	
-	
+
+
+
 	/**
 	 * Securiry Access ID
 	 * @var string
 	 */
 	private $SAK = '';
-	
-	
-	
+
+
+	/**
+	 * Whether to show review
+	 * @var bool
+	 */
+	private $show_review = false;
+
+
 	/**
 	 * URL of AWS endpoint
 	 * @var string
 	 */
 	var $endpoint = '';
-	
-	
-	
+
+
+
 	/**
 	 * Mime Type of response
 	 * @var string
 	 */
 	var $mime = 'text/xml';
-	
-	
-	
+
+
+
 	/**
 	 * Search Index values for AWS
 	 * @var array
@@ -112,8 +118,8 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		'Toys' => 'おもちゃ',
 		'Marketplace' => 'マーケットプレイス'
 	);
-	
-	
+
+
 
 	/**
 	 * Constructor
@@ -126,11 +132,12 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		$this->DevToken = $this->get_option('accessKey');
 		$this->AssociatesID = $this->get_option('associatesid');
 		$this->SAK = $this->get_option('secretKey');
+		$this->show_review = $this->get_option('show_review');
 		$this->setLocale('JP');
 	}
-	
-	
-	
+
+
+
 	/**
 	 * 有効か否かを返す
 	 * @return boolean
@@ -138,13 +145,13 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 	public function is_valid() {
 		return (!empty($this->SAK) && !empty($this->DevToken) && !empty($this->AssociatesID));
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Set up locale for amazon.
 	 * @param string $locale JP, US, UK, DE, FR, CA
-	 * @return WP_Error|true 
+	 * @return WP_Error|true
 	 */
 	function setLocale($locale){
         $urls = array(
@@ -163,15 +170,15 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return true;
 		}
     }
-	
-	
-	
+
+
+
 	/**
 	 * Send Request and get XML Object
 	 * @param array $param
 	 * @param string $cash_id
 	 * @param int $cash_time
-	 * @return WP_Error|SimpleXMLElement 
+	 * @return WP_Error|SimpleXMLElement
 	 */
 	function send_request($param, $cash_id = false, $cash_time = 86400){
 		// Build URL and Check it.
@@ -205,13 +212,13 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return simplexml_load_string($data);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Return request url to AWS REST Servicce
 	 * @param array $params
-	 * @return string 
+	 * @return string
 	 */
 	function build_url($params){
 		//Add Default query
@@ -238,25 +245,25 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return $this->endpoint."?".$query_string."&Signature=".$this->urlencode(base64_encode($signature));
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Encode URL according to RFC 3986
-	 * @param string $str 
+	 * @param string $str
 	 * @return string
 	 */
 	function urlencode($str){
 		return str_replace('%7E', '~', rawurlencode($str));
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get signature for AWS
 	 * @param string $string_to_sign
 	 * @param string $secret_access_key
-	 * @return WP_Error|string 
+	 * @return WP_Error|string
 	 */
 	function get_signature($string_to_sign, $secret_access_key){
 		if (function_exists('hash_hmac')) {
@@ -267,33 +274,36 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return new WP_Error('error', 'hash_hmacまたはmhash関数がインストールされている必要があります');
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get Amazon Image.
-	 * 
+	 *
 	 * @param SimpleXMLElement $item (Amazon Xml)
 	 * @param string $size (Image Size)
 	 * @return string
 	 */
-	function get_image_src($item,$imgsize) {
+	function get_image_src($item, $imgsize = 'medium') {
 		switch($imgsize){
+			case 'large':
+				$url = (string)$item->LargeImage->URL ? $item->LargeImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
+				break;
 			case 'medium':
-				$url = $item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
+				$url = (string)$item->MediumImage->URL ? $item->MediumImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
 				break;
 			case 'small':
-				$url = $item->SmallImage->URL ? $item->SmallImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg_small.png";
+				$url = (string)$item->SmallImage->URL ? $item->SmallImage->URL: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg_small.png";
 				break;
 			default:
 				$url = plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
 				break;
 		}
-		return $url;
+		return (string)$url;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Search item with string.
 	 * @param string $query
@@ -311,9 +321,9 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		);
 		return $this->send_request($param);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get Product detail with Asin
 	 * @param string $asin
@@ -324,18 +334,18 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			'Operation' => 'ItemLookup',
 			'IdType' => 'ASIN',
 			'ItemId' => (string)$asin,
-			'ResponseGroup' => 'Medium,Offers,Images'
+			'ResponseGroup' => 'Medium,Offers,Images,Reviews'
 		);
 		//Cash Result
 		$id = "asin_{$asin}";
 		return $this->send_request($param, $id);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Get Amazon Text.
-	 * 
+	 *
 	 * @param SimpleXMLElement $item
 	 * @return array
 	 */
@@ -346,9 +356,9 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return array();
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Parse XMLElement to array
 	 * @param SimpleXMLElement $object
@@ -367,12 +377,12 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		}
 		return $vars;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Translate Attribute
-	 * @param string $key 
+	 * @param string $key
 	 * @return string
 	 */
 	function atts_to_string($key){
@@ -618,9 +628,9 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			return $key;
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Returns timestamp.
 	 * @param boolean $with_suffix if set to true, return with suffix for query string. Default true.
@@ -633,28 +643,39 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		}
 		return $timestamp;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * ショートコードを登録する
 	 */
 	public function set_shortcode() {
 		$this->short_codes = array('tmkm-amazon', 'tmkm-amazon-list');
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Create HTML Source With Asin
 	 * @param string $asin
-	 * @return string 
+	 * @return string
 	 */
-	function format_amazon($asin) {
-        
+	public function format_amazon($asin, $extra_atts = array()) {
+
+		if($this->is_asin($asin)){
+			// Old format like [tmkm-amazon]000000000[/tmkm-amazon]
+			$content = $extra_atts['description'];
+		}elseif($this->is_asin($extra_atts['asin'])){
+			// New format
+			$content = $asin;
+			$asin = $extra_atts['asin'];
+		}else{
+			return '<p class="message error">該当する商品情報を取得できませんでした。</p>';
+		}
+
 		$result = $this->get_itme_by_asin($asin);
 
-		if(is_wp_error($result)){ 
+		if(is_wp_error($result)){
 			//// Amazon function was returned false, so AWS is down
 			return '<p class="message error">アマゾンのサーバでエラーが起こっているかもしれません。一度ページを再読み込みしてみてください。</p>';
 		}else{
@@ -667,7 +688,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				// results were found, so display the products
 				$item = $result->Items->Item[0];
 				$atts = $this->get_atts($item);
-				$goodsimage = $this->get_image_src($item, 'medium');
+				$goodsimage = $this->get_image_src($item, 'large');
 
 				$url = $item->DetailPageURL;
 				$Title = $atts['Title'];
@@ -684,8 +705,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				}
 				$ProductGroup = " <small>[{$ProductGroup}]</small>";
 				$price = $atts['ListPrice']['FormattedPrice'];
-				
-				$desc = $price ? "<p class=\"price\">価格: <em>{$price}</em></p>" : '';
+				$desc = $price ? "<p class=\"price\"><span class=\"label\">価格</span><em>{$price}</em></p>" : '';
 				$filter = array(
 					'author' => array('Author', 'Director', 'Actor', 'Artist', 'Creator'),
 					'publisher' => array('Publisher', 'Studio', 'Label', 'Brand', 'Manufacturer'),
@@ -696,22 +716,31 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 					foreach($vals as $val){
 						if(isset($atts[$val])){
 							$key = $this->atts_to_string($val);
-							$desc .= "<p>{$key}: <em>{$atts[$val]}</em></p>";
+							$value = esc_html(preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $atts[$val]) ? mysql2date(get_option('date_format'), $atts[$val]) : $atts[$val]);
+							$desc .= "<p><span class=\"label\">{$key}</span><em>{$value}</em></p>";
 							if($filter != 'allowable' && $filter != 'author'){
 								break;
 							}
 						}
 					}
 				}
+				if($this->show_review && 'true' === (string)$item->CustomerReviews->HasReviews){
+					$review = sprintf('<p class="review"><iframe src="%s"></iframe></p>', $item->CustomerReviews->IFrameURL);
+				}else{
+					$review = '';
+				}
+				if(!empty($content)){
+					$desc .= sprintf('<p class="additional-description">%s</p>', $content);
+				}
 				$tag = <<<EOS
 <div class="tmkm-amazon-view wp-hamazon-amazon">
 <p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goodsimage}" border="0" alt="{$Title}" /></a></p>
 <p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$Title}{$ProductGroup}</a></p>
-{$desc}
+{$desc}{$review}
 <p class="vendor"><a href="https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html">Supported by amazon Product Advertising API</a></p>
 </div>
 EOS;
-				return apply_filters('wp_hamazon_amazon', $tag, $item);
+				return apply_filters('wp_hamazon_amazon', $tag, $item, $extra_atts, $content);
 			}
 		}
 	}
@@ -724,11 +753,23 @@ EOS;
 	 * @param $content
 	 * @return $transformedstring
 	 */
-	public function shortcode_tmkm_amazon($atts, $content = null){
-		return $this->format_amazon($content);
+	public function shortcode_tmkm_amazon($atts = array(), $content = null){
+		$atts = shortcode_atts(array(
+			'description' => '',
+			'asin' => '0',
+		), $atts);
+		return $this->format_amazon($content, $atts);
 	}
-	
-	
+
+	/**
+	 * 文字列がASINコードであるかを検索
+	 *
+	 * @param $asin
+	 * @return bool
+	 */
+	private function is_asin($asin){
+		return (boolean)preg_match('/^[0-9a-zA-Z]{10,13}$/', trim($asin));
+	}
 	
 	/**
 	 * 書籍の一覧を取得する
@@ -910,7 +951,8 @@ EOS;
 												}
 											}
 										?>
-										<label>コード: <input type="text" size="40" value="[tmkm-amazon]<?php echo $item->ASIN; ?>[/tmkm-amazon]" onclick="this.select();" /></label>
+										<label>コード: <input type="text" class="hamazon-target" size="40" value="[tmkm-amazon asin='<?php echo $item->ASIN; ?>'][/tmkm-amazon]" onclick="this.select();" /></label>
+										<a class="button-primary hamazon-insert" data-target=".hamazon-target" href="#">挿入</a>
 										<br />
 										<span class="description">ショートコードを投稿本文に貼り付けてください</span>
 									</td>

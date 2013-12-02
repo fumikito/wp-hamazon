@@ -19,7 +19,7 @@ global $hamazon_settings;
 
 // メインコントローラーを読み込む
 require_once dirname(__FILE__).'/includes/wp-hamazon-controller.php';
-new WP_Hamazon_Controller('2.2');
+new WP_Hamazon_Controller('2.3');
 
 // グローバル関数が記載されたファイルを読み込む
 require_once dirname(__FILE__).'/functions.php';
