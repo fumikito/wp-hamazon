@@ -137,7 +137,7 @@ class WP_Hamazon_Service{
 		global $hamazon_settings;
 		$cap = ($this->is_valid() && (false !== array_search(get_post_type(), $hamazon_settings['post_types'])));
 		if(apply_filters('wp_hamazon_show_media_button', $cap, $this->name, $editor_id)){
-			printf('<a href="%1$s" id="%2$s" class="thickbox" title="%3$s"><img src="%4$s" alt="%3$s" /></a>',
+			printf('<a href="%1$s" id="%2$s" class="thickbox add-hamazon button" title="%3$s"><img src="%4$s" alt="%3$s" /></a>',
 				esc_url(plugin_dir_url(dirname(__FILE__)).'endpoint/'.$this->name.'.php?TB_iframe=true&amp;width=400&amp;height=350'),
 				'add_'.$this->name,
 				esc_attr($this->title),
@@ -181,6 +181,20 @@ class WP_Hamazon_Service{
 						'current' => $current_page
 					)).'</div>';
 		}
+	}
+
+
+	/**
+	 * Returns error message
+	 *
+	 * @param string $message
+	 * @return string
+	 */
+	protected function error_message($message = ''){
+		if(empty($message)){
+			$message = '商品情報を取得できませんでした';
+		}
+		return sprintf('<p class="hamazon-message message error">%s</p>', $message);
 	}
 }
 

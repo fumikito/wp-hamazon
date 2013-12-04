@@ -5,6 +5,11 @@
 	padding: 10px 20px;
 }
 
+.add-hamazon{
+    background: #fff !important;
+
+}
+
 .result-desc{
 	padding: 10px 20px;
 	.wp-hamazon-pagination{
@@ -71,4 +76,16 @@
 	margin: 1em 0;
 	border: 1px solid #ccc;
 	background-color: #f0f0f0;
+}
+
+.search-dmm{
+    select{
+        max-width: 150px;
+    }
+    select[name^=floor]{
+        display: none;
+        &.active{
+            display: inline;
+        }
+    }
 }

@@ -176,7 +176,7 @@ class WP_Hamazon_Service_Linkshare extends WP_Hamazon_Service implements WP_Hama
 	 * @param SimpleXMLElement $item
 	 * @return string
 	 */
-	public function shortcode_hamazon_linkshare($atts){
+	public function shortcode_hamazon_linkshare($atts, $content = ''){
 		extract(shortcode_atts(array(
 			'title' => '',
 			'url' => '',
@@ -186,12 +186,13 @@ class WP_Hamazon_Service_Linkshare extends WP_Hamazon_Service implements WP_Hama
 		), $atts));
 		$price = number_format($price);
 		$cat = implode(' &gt; ', explode(',', $cat));
+		$desc = empty($content) ? '' : sprintf('<p class="additional-description">%s</p>', $content);
 		$template = <<<EOS
 <div class="tmkm-amazon-view wp-hamazon-linkshare">
 	<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$src}" border="0" alt="{$title}" /></a></p>
 	<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$title}</a></p>
-	<p class="price">価格: <em>&yen;{$price}</em></p>
-	<p>カテゴリー: {$cat}</p>
+	<p class="price"><span class="label">価格</span><em>&yen;{$price}</em></p>
+	<p><span class="label">カテゴリー</span><em>{$cat}</em></p>{$desc}
 	<p class="vendor"><a href="http://www.linkshare.ne.jp">Supported by リンクシェア</a></p>
 </div>
 EOS;
@@ -216,7 +217,7 @@ EOS;
 		if($item->category->secondary){
 			$cat[] = strval($item->category->secondary);
 		}
-		return sprintf('[hamazon_linkshare title="%s" url="%s" src="%s" price="%s" cat="%s" /]',
+		return sprintf('[hamazon_linkshare title="%s" url="%s" src="%s" price="%s" cat="%s"][/hamazon_linkshare]',
 			$title, $url, $src, $price, implode(',', $cat));
 	}
 	
@@ -235,7 +236,7 @@ EOS;
 		}
 		?>
 		<form method="get" class="hamazon-search-form search-linkshare" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/linkshare.php">
-			<?php wp_nonce_field('linkshare_nonce'); ?>
+			<?php wp_nonce_field('linkshare_nonce', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop">リンクシェア 検索</a></p>&nbsp;
 			<select name="mid">
 				<?php foreach($companies as $mid => $name): ?>
@@ -309,7 +310,8 @@ EOS;
 									価格：<em class="price">&yen;<?php echo number_format(strval($item->price)); ?></em><br />
 									ストア：<?php echo strval($item->merchantname); ?><br />
 									カテゴリー： <?php echo strval($item->category->primary); ?> &gt; <?php echo strval($item->category->secondary); ?><br />
-									<textarea rows="3" onclick="this.select();"><?php echo ($this->get_shortcode($item)); ?></textarea><br />
+									<textarea rows="3" class="hamazon-target" onclick="this.select();"><?php echo ($this->get_shortcode($item)); ?></textarea><br />
+									<a class="button-primary hamazon-insert" data-target=".hamazon-target" href="#">挿入</a>
 									<span class="description">ショートコードを投稿本文に貼り付けてください</span>
 								</td>
 							</tr>

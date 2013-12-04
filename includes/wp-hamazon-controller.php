@@ -38,9 +38,13 @@ class WP_Hamazon_Controller{
 		'associatesid' => '',
 		'accessKey' => '',
 		'secretKey' => '',
+		'show_review' => false,
 		'rakuten_app_id' => '',
 		'rakuten_affiliate_id' => '',
+		'dmm_affiliate_id' => '',
+		'dmm_api_id' => '',
 		'linkshare_token' => '',
+		'phg_id' => '',
 		'post_types' => array('post'),
 		'load_css' => true
 	);
@@ -50,7 +54,7 @@ class WP_Hamazon_Controller{
 	 * 実装されているサービスの名称リスト
 	 * @var string
 	 */
-	private $services = array('amazon', 'rakuten', 'linkshare');
+	private $services = array('amazon', 'rakuten', 'linkshare', 'phg', 'dmm');
 	
 	
 	
@@ -58,9 +62,11 @@ class WP_Hamazon_Controller{
 	 * @var WP_Hamazon_Service_Amazon
 	 */
 	public $amazon = null;
-	
-	
-	
+
+
+	/**
+	 * @var WP_Hamazon_Service_Rakuten
+	 */
 	public $rakuten = null;
 	
 	
@@ -69,8 +75,13 @@ class WP_Hamazon_Controller{
 	 * @var WP_Hamazon_Service_Linkshare
 	 */
 	public $linkshare = null;
-	
-	
+
+
+	/**
+	 * @var WP_Hamazon_Service_Phg
+	 */
+	public $phg = null;
+
 	
 	/**
 	 * コンストラクタ
@@ -222,6 +233,7 @@ class WP_Hamazon_Controller{
 							$hamazon_settings[$key] = is_array($_POST[$key]) ? $_POST[$key] : array('post');
 							break;
 						case 'load_css':
+						case 'show_review':
 							$hamazon_settings[$key] = (boolean)$_POST[$key];
 							break;
 						default:
@@ -283,6 +295,7 @@ class WP_Hamazon_Controller{
 	 */
 	public function enqueue_admin_script(){
 		wp_enqueue_style('wp-hamazon-admin', plugin_dir_url(dirname(__FILE__)).'assets/css/hamazon-search.css', array(), $this->version);
+		wp_enqueue_script('wp-hamazon-admin', plugin_dir_url(dirname(__FILE__)).'assets/js/iframe-helper.js', array('jquery'), $this->version);
 	}
 	
 	

@@ -62,6 +62,12 @@ if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
 									case 'linkshare':
 										$link = 'http://www.linkshare.ne.jp';
 										break;
+									case 'phg':
+										$link = 'http://www.apple.com/jp/itunes/affiliates/';
+										break;
+									case 'dmm':
+										$link = 'https://affiliate.dmm.com/account/index/';
+										break;
 								}
 								printf('認証に必要な情報は<a href="%s">こちら</a>で登録の上、入手してください。', $link);
 							?>
@@ -75,6 +81,7 @@ if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
 								'associatesid' => 'あなたのアソシエイト ID',
 								'accessKey' => 'あなたのAWS アクセス ID',
 								'secretKey' => 'あなたのAWS シークレットアクセス ID',
+								'show_review' => 'レビューの表示',
 							);
 							break;
 						case 'rakuten':
@@ -88,18 +95,37 @@ if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
 								'linkshare_token' => 'サイトアカウントのトークン',
 							);
 							break;
+						case 'phg':
+							$input = array(
+								'phg_id' => 'PHG アフィリエイト・トークン:'
+							);
+							break;
+						case 'dmm':
+							$input = array(
+								'dmm_affiliate_id' => 'アフィリエイトID',
+								'dmm_api_id' => 'API ID',
+							);
+							break;
 					}
 					foreach($input as $name => $label):
 				?>
 				<tr>
 					<th><label for="<?php echo esc_attr($name); ?>"><?php echo esc_html($label); ?></label></th>
 					<td>
-						<input type="text" class="regular-text" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($hamazon_settings[$name]); ?>" />
+						<?php switch($name): case 'show_review'?>
+							<select name="<?php echo esc_attr($name); ?>" id="<?php echo esc_attr($name); ?>">
+								<option value="0"<?php selected($hamazon_settings[$name] == false) ?>>オフ</option>
+								<option value="1"<?php selected($hamazon_settings[$name] == true) ?>>オン</option>
+							</select>
+						<?php break; default: ?>
+							<input type="text" class="regular-text" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($hamazon_settings[$name]); ?>" />
+						<?php endswitch; ?>
 					</td>
 				</tr>
 					<?php endforeach; ?>
 			</table>
 		<?php endforeach; ?>
+		<?php submit_button('設定を保存する')?>
 		<p>&nbsp;</p>
 		<h3>表示のカスタマイズ</h3>
 		<p class="description">
@@ -152,9 +178,23 @@ EOS;
 					$itemは連想配列です。
 				</td>
 			</tr>
+			<tr>
+				<th>PHGのフィルター名</th>
+				<td>
+					<code>wp_hamazon_phg</code><br />
+					$itemはオブジェクト、第3引数に$urlを取ります。
+				</td>
+			</tr>
+			<tr>
+				<th>DMMのフィルター名</th>
+				<td>
+					<code>wp_hamazon_dmm</code><br />
+					$itemは連想配列です。
+				</td>
+			</tr>
 		</table>
 
 
-		<?php submit_button('設定を保存する')?>
+
 	</form>
 </div>

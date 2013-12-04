@@ -1,3 +1,4 @@
+@import "compass";
 
 /*
 ----------------------------------------------
@@ -25,18 +26,25 @@ div.tmkm-amazon-view {
 		line-height: 1.2;
 		font-weight: bold;
 	}
-	img {
+	.tmkm-amazon-img img {
 		float: right;
 		margin: 0 0 1em 1em;
 		padding: 0.5em;
 		border: solid 1px #C2C2C2;
 		background-color: #fff;
+        max-width: 200px;
+        height: auto;
 	}
 	p {
-		margin: 0;
+		margin: 0.5em 0;
+        font-size: 0.85em;
 		em {
 			font-weight: bold;
 		}
+        span.label{
+            @include inline-block();
+            width: 8em;
+        }
 		&.vendor{
 			clear: both;
 			font-size: 0.85em;
@@ -49,6 +57,18 @@ div.tmkm-amazon-view {
 			font-size: 0.85em;
 			line-height: 1.2;
 		}
+        &.additional-description{
+            font-size: 1em;
+            line-height: 1.4m;
+            margin: 1em 0;
+        }
+        &.review{
+            clear: both;
+            iframe{
+                width: 100%;
+                height: 180px;
+            }
+        }
 	}
 	&:after{
 		content: ".";

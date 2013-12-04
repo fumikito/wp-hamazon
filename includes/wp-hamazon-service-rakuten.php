@@ -179,44 +179,77 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	 * @return string
 	 */
 	public function get_shortcode($item_code){
-		return sprintf('[rakuten]%s[/rakuten]', $item_code);
+		return sprintf('[rakuten id="%s"][/rakuten]', $item_code);
 	}
-	
-	
-	
-	
+
+
+	/**
+	 * Do Shortcode
+	 *
+	 * @param $atts
+	 * @param string $content
+	 * @return mixed|string|void
+	 */
 	public function shortcode_rakuten($atts, $content = ''){
+
+		$atts = shortcode_atts(array(
+			'id' => '',
+			'description' => '',
+		), $atts);
+
+		if($this->is_id($content)){
+			// Old format [rakuten]id[/rakuten]
+			$takuten_id = $content;
+			$description = $atts['description'];
+		}elseif($this->is_id($atts['id'])){
+			$rakuten_id = $atts['id'];
+			$description = !empty($content) ? $content : $atts['description'];
+		}else{
+			return '';
+		}
+
 		$item_code = '';
-		if(!empty($content)){
-			$product = get_transient($content);
+		if(!empty($rakuten_id)){
+			$product = get_transient($rakuten_id);
 			if(false === $product){
-				$item = $this->search('', 0, 1, $content);
+				$item = $this->search('', 0, 1, $rakuten_id);
 				if(is_wp_error($item) || $item->count < 1){
-					return '<p class="message error">商品情報を取得できませんでした。</p>';
+					return $this->error_message();
 				}else{
 					$product = $item->Items[0]->Item;
-					set_transient($content, $product, 60*60*24);
+					set_transient($rakuten_id, $product, 60*60*24);
 				}
 			}
 			$price = number_format($product->itemPrice);
-			$src = $product->imageFlag
+			$src = '1' == (string)$product->imageFlag
 					? $product->mediumImageUrls[0]->imageUrl
 					: plugin_dir_url(dirname(__FILE__))."assets/img/amazon_noimg.png";
+
 			$catch = nl2br(mb_substr($product->itemCaption, 0, 140, 'utf-8').'&hellip;');
+			$desc = !empty($description) ? sprintf('<p class="additional-description">%s</p>', $description) : '';
 			$out = <<<EOS
 <div class="tmkm-amazon-view wp-hamazon-rakuten">
 	<p class="tmkm-amazon-img"><a href="{$product->affiliateUrl}" target="_blank"><img src="{$src}" border="0" alt="{$product->itemName}" /></a></p>
 	<p class="tmkm-amazon-title"><a href="{$product->affiliateUrl}" target="_blank">{$product->itemName}</a></p>
-	<p class="shop">ショップ名: <a href="{$product->shopUrl}"><em>{$product->shopName}</em></a></p>
-	<p class="price">価格: <em>&yen;{$price}</em></p>
-	<p class="review">レビュー: <em>平均{$product->reviewAverage}点</em></p>
-	<p class="description">{$catch}</p>
+	<p class="shop"><span class="label">ショップ名</span><a href="{$product->shopUrl}"><em>{$product->shopName}</em></a></p>
+	<p class="price"><span class="label">価格</span><em>&yen;{$price}</em></p>
+	<p class="review-average"><span class="label">レビュー</span><em>平均{$product->reviewAverage}点</em></p>
+	<p class="description">{$catch}</p>{$desc}
 	<p class="vendor"><a href="http://webservice.rakuten.co.jp/">Supported by 楽天ウェブサービス</a></p>
 </div>
 EOS;
 			$item_code = apply_filters('wp_hamazon_rakuten', $out, $product);
 		}
 		return $item_code;
+	}
+
+	/**
+	 * Detect if given string is id
+	 * @param string $id
+	 * @return bool
+	 */
+	private function is_id($id){
+		return (boolean)preg_match('/^[0-9a-zA-Z]+:[0-9a-zA-Z]+$/', $id);
 	}
 	
 	/**
@@ -226,7 +259,7 @@ EOS;
 		$genres = $this->get_genre();
 		?>
 		<form method="get" class="hamazon-search-form search-rakuten" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/rakuten.php">
-			<?php wp_nonce_field('rakuten_nonce'); ?>
+			<?php wp_nonce_field('rakuten_nonce', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop"><?php echo esc_html($this->title); ?></a></p>&nbsp;
 			<select name="genreId">
 				<option value="0"<?php if(!isset($_REQUEST['genreId']) || $_REQUEST['genreId'] == '0') ?>>すべてのジャンル</option>
@@ -303,8 +336,8 @@ EOS;
 									価格：<em class="price">&yen;<?php echo number_format(strval($item->Item->itemPrice)); ?></em><br />
 									ショップ：<?php printf('<a href="%s">%s</a>', $item->Item->shopUrl, strval($item->Item->shopName)); ?><br />
 									レビュー： <?php echo $item->Item->reviewAverage; ?><br />
-									<label>コード: <input type="text" size="40" value="<?php echo esc_attr($this->get_shortcode($item->Item->itemCode)); ?>" onclick="this.select();" /></label>
-									<br />
+									<label>コード: <input class="hamazon-target" type="text" size="40" value="<?php echo esc_attr($this->get_shortcode($item->Item->itemCode)); ?>" onclick="this.select();" /></label>
+									<a class="button-primary hamazon-insert" data-target=".hamazon-target" href="#">挿入</a><br />
 									<span class="description">ショートコードを投稿本文に貼り付けてください</span>
 								</td>
 							</tr>
