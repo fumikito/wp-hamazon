@@ -5,7 +5,7 @@ Plugin URI: https://github.com/fumikito/WP-Hamazon
 Description: ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア PHG(iTunesアフィリエイト) DMMです。
 Author: Takahashi_Fumiki
 Version: 2.3
-Author URI: http://hametuha.co.jp
+Author URI: http://takahashifumiki.com
 */
 
 // Do not load directly

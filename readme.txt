@@ -1,28 +1,43 @@
 === WP Hamazon ===
 
-Contributors: Takahashi_Fumiki
-Tags: amazon, affiliate, linkshare
-Requires at least: 3.0
-Tested up to: 3.5.1
-Stable tag: 2.2
+Contributors: Takahashi_Fumiki  
+Tags: amazon, affiliate, linkshare, rakuten, dmm  
+Requires at least: 3.0  
+Tested up to: 3.8-beta1  
+Stable tag: 2.3  
 
-ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア です。 
+ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア PHG DMM です。 
 
 == Description ==
 
-WordPressの投稿編集画面にAmazonアフィリエイトおよび楽天、LinkShareのリンク挿入ボタンを追加します。
+WordPressの投稿編集画面にアフィリエイトリンク挿入ショートコードを追加することができます。  
+メディアアップローダーボタンの脇に各アフィリエイトサービスのボタンが表示されるようになるので、そちらをクリックしてください。
+クリックすると検索画面になるので、該当する商品を探し、ショートコードを挿入してください。
 
 == Installation ==
 
 1. `wp-hamazon`フォルダーを`/wp-content/plugins/`ディレクトリにアップロードしてください。
 1. プラグインを有効化してください。
-1. 設定ページへ行き、必要な情報を入力してください。
+1. 設定 > アフィリエト設定へ移動し、必要な情報を入力してください。
 
 == Screenshots ==
 
 1. このようなボタンが追加されます
 
 == Changelog ==
+
+= 2.3 =
+
+* ショートコード挿入ボタンをつけました。
+* ショートコード内の情報を出力できるようにしました。一言コピーのようなものが入れられます。後方互換は取っているので、いままでのコンテンツはそのまま表示されます。
+* サービスにPHG（iTuensアフィリエイト）とDMMを追加しました。
+
+```
+// これまで
+[tmkm-amazon]00000000[/tmkm-amazon]
+// これから
+[tmkm-amazon asin='00000000']この本は最高ですよ！[/tmkm-amazon]
+```
 
 = 2.2 =
 
@@ -39,4 +54,4 @@ WordPressの投稿編集画面にAmazonアフィリエイトおよび楽天、Li
 
 = 1.0 =
 
-* 初公開
+* はじめてのリリース
