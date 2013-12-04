@@ -236,7 +236,7 @@ EOS;
 		}
 		?>
 		<form method="get" class="hamazon-search-form search-linkshare" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/linkshare.php">
-			<?php wp_nonce_field('linkshare_nonce'); ?>
+			<?php wp_nonce_field('linkshare_nonce', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop">リンクシェア 検索</a></p>&nbsp;
 			<select name="mid">
 				<?php foreach($companies as $mid => $name): ?>

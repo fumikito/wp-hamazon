@@ -275,7 +275,7 @@ class WP_Hamazon_Service_Phg extends WP_Hamazon_Service implements WP_Hamazon_Se
 		if(false === $product){
 			$product = $this->lookup($atts['media'], $atts['id']);
 			if(is_wp_error($product) ){
-				return '<p class="message error">商品情報を取得できませんでした。</p>';
+				return $this->error_message();
 			}else{
 				set_transient('phg_'.$atts['media'].'_'.$atts['id'], $product, 60*60*24);
 			}
@@ -340,7 +340,7 @@ EOS;
 		$genres = $this->get_genre();
 		?>
 		<form method="get" class="hamazon-search-form search-phg" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/phg.php">
-			<?php wp_nonce_field('phg_nonce'); ?>
+			<?php wp_nonce_field('phg_nonce', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop"><?php echo esc_html($this->title); ?></a></p>&nbsp;
 			<select name="media">
 				<option value="all"<?php selected(!isset($_REQUEST['media']) || $_REQUEST['media'] == 'all'); ?>>すべてのジャンル</option>

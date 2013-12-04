@@ -18,7 +18,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 	 * アイコンファイル名
 	 * @var string
 	 */
-	protected $icon = 'amazon.png';
+	protected $icon = 'amazon-bk.png';
 
 
 	/**
@@ -202,7 +202,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				),
 			));
 			$data = file_get_contents($url, false, $context);
-			if($cash_id){
+			if($cash_id && $data){
 				set_transient($cash_id, $data, $cash_time);
 			}
 		}
@@ -670,20 +670,20 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 			$content = $asin;
 			$asin = $extra_atts['asin'];
 		}else{
-			return '<p class="message error">該当する商品情報を取得できませんでした。</p>';
+			return $this->error_message();
 		}
 
 		$result = $this->get_itme_by_asin($asin);
 
 		if(is_wp_error($result)){
 			//// Amazon function was returned false, so AWS is down
-			return '<p class="message error">アマゾンのサーバでエラーが起こっているかもしれません。一度ページを再読み込みしてみてください。</p>';
+			return $this->error_message('アマゾンのサーバでエラーが起こっているかもしれません。一度ページを再読み込みしてみてください。');
 		}else{
 			// Amazon function returned XML data
 			$status = $result->Items->Request->IsValid;
 			if( $status == 'False' ){
 				// Request is invalid
-				$output = '<p>与えられたリクエストが正しくありません</p>';
+				return $this->error_message('与えられたリクエストが正しくありません');
 			}else{
 				// results were found, so display the products
 				$item = $result->Items->Item[0];
@@ -853,7 +853,7 @@ EOS;
 	public function show_form() {
 		?>
 		<form method="get" class="hamazon-search-form search-amazon" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>endpoint/amazon.php">
-			<?php wp_nonce_field('amazon_search'); ?>
+			<?php wp_nonce_field('amazon_search', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop">Amazon 検索</a></p>&nbsp;
 			<select name="SearchIndex">
 				<?php foreach($this->searchIndex as $k => $v): ?>

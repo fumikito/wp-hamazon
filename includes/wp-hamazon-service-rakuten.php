@@ -181,10 +181,15 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 	public function get_shortcode($item_code){
 		return sprintf('[rakuten id="%s"][/rakuten]', $item_code);
 	}
-	
-	
-	
-	
+
+
+	/**
+	 * Do Shortcode
+	 *
+	 * @param $atts
+	 * @param string $content
+	 * @return mixed|string|void
+	 */
 	public function shortcode_rakuten($atts, $content = ''){
 
 		$atts = shortcode_atts(array(
@@ -209,7 +214,7 @@ class WP_Hamazon_Service_Rakuten extends WP_Hamazon_Service implements WP_Hamazo
 			if(false === $product){
 				$item = $this->search('', 0, 1, $rakuten_id);
 				if(is_wp_error($item) || $item->count < 1){
-					return '<p class="message error">商品情報を取得できませんでした。</p>';
+					return $this->error_message();
 				}else{
 					$product = $item->Items[0]->Item;
 					set_transient($rakuten_id, $product, 60*60*24);
@@ -254,7 +259,7 @@ EOS;
 		$genres = $this->get_genre();
 		?>
 		<form method="get" class="hamazon-search-form search-rakuten" action="<?php echo plugin_dir_url(dirname(__FILE__)); ?>/endpoint/rakuten.php">
-			<?php wp_nonce_field('rakuten_nonce'); ?>
+			<?php wp_nonce_field('rakuten_nonce', '_wpnonce', false); ?>
 			<p style="display: inline;"><a id="searchpagetop"><?php echo esc_html($this->title); ?></a></p>&nbsp;
 			<select name="genreId">
 				<option value="0"<?php if(!isset($_REQUEST['genreId']) || $_REQUEST['genreId'] == '0') ?>>すべてのジャンル</option>
