@@ -82,7 +82,8 @@ class WP_Hamazon_Service_Phg extends WP_Hamazon_Service implements WP_Hamazon_Se
 			'music' => 'ミュージック',
 			'musicVideo' => 'ミュージックビデオ',
 			'audiobook' => 'オーディオブック',
-			'software' => 'iOアプリ',
+			'software' => 'iOSアプリ',
+			'macSoftware' => 'Macアプリ',
 			'ebook' => '電子書籍',
 		);
 	}
@@ -109,10 +110,15 @@ class WP_Hamazon_Service_Phg extends WP_Hamazon_Service implements WP_Hamazon_Se
 			case 'software':
 				return 'iOSアプリ';
 				break;
+			case 'iPadSoftware':
+				return 'iPadアプリ';
+				break;
+			case 'mac-software':
+				return 'Macアプリ';
+				break;
 			case 'podcast':
 				return 'ポッドキャスト';
 				break;
-
 			default:
 				return '映画';
 				break;
@@ -132,10 +138,12 @@ class WP_Hamazon_Service_Phg extends WP_Hamazon_Service implements WP_Hamazon_Se
 				break;
 			case 'song':
 			case 'music':
-			case 'musicvideo':
+			case 'music-video':
 				return 'アーティスト';
 				break;
 			case 'software':
+			case 'iPadSoftware':
+			case 'mac-software':
 				return '開発者';
 				break;
 			default:

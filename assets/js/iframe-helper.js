@@ -5,10 +5,14 @@ jQuery(document).ready(function($){
         var targetClass = $(this).attr('data-target'),
             shortCode = $(this).parents('td').find(targetClass).val();
         if(shortCode && window.parent){
-            if(!window.parent.tinyMCE.activeEditor){
-                window.parent.QTags.insertContent(shortCode);
+            if( window.parent.tinyMCE.activeEditor && !window.parent.tinyMCE.activeEditor.isHidden() ){
+                // TinyMCEがオープンならそれを使う
+                window.parent.tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, shortCode )
             }else{
-                window.parent.tinyMCE.activeEditor.execCommand( 'mceInsertContent', false, shortCode );
+                // なければQTag
+                if(window.parent.QTags){
+                    window.parent.QTags.insertContent(shortCode);
+                }
             }
             // ThickBoxを閉じる
             window.parent.tb_remove();
@@ -17,7 +21,6 @@ jQuery(document).ready(function($){
     // セレクトボックス
     $('select[name=service]').change(function(){
         var service = $(this).val();
-        console.log($(this).nextAll('select'));
         $(this).nextAll('select').each(function(index, elt){
            if('floor[' + service + ']' == $(elt).attr('name')){
                $(elt).css('display', 'inline').addClass('active');
