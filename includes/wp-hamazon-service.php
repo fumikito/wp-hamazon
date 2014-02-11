@@ -8,7 +8,7 @@
  * 
  * @since 2.2
  */
-class WP_Hamazon_Service{
+abstract class WP_Hamazon_Service{
 	
 	
 	

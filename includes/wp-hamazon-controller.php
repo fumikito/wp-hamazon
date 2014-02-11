@@ -183,7 +183,7 @@ class WP_Hamazon_Controller{
 	 */
 	public function plugin_page_link($links, $file){
 		if(false !== strpos($file, "hamazon")){
-			$link = sprintf('<a href="%s">%s</a>', admin_url('admin.php?page='.$this->slug), '設定');
+			$link = sprintf('<a href="%s">%s</a>', admin_url('options-general.php?page='.$this->slug), '設定');
 			array_unshift( $links, $link);
 		}
 		return $links;
