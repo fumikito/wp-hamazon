@@ -1,10 +1,10 @@
 #  WP Hamazon
 
 Contributors: Takahashi_Fumiki  
-Tags: amazon, affiliate, linkshare, rakuten, dmm  
+Tags: amazon, affiliate, linkshare, rakuten, dmm, phg  
 Requires at least: 3.0  
-Tested up to: 3.9-beta1
-Stable tag: 2.3  
+Tested up to: 3.9-beta1  
+Stable tag: 2.3.1
 
 ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア PHG DMM です。 
 
@@ -25,6 +25,11 @@ WordPressの投稿編集画面にアフィリエイトリンク挿入ショー�
 1. このようなボタンが追加されます
 
 ##  Changelog
+
+### 2.3.1
+
+* 関数`tmkm_amazon_view`が動かなくなっていたので、直しました。
+* HTMLリンクを出力する`hamazon_asin_link`を追加しました。
 
 ###  2.3
 

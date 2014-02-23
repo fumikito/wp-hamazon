@@ -6,7 +6,14 @@
  * @since 2.2
  */
 class WP_Hamazon_Controller{
-	
+
+    /**
+     * Instance holder
+     *
+     * @var self
+     */
+    private static $instance = null;
+
 	/**
 	 * Page slug on admin panel
 	 * @var string
@@ -82,13 +89,25 @@ class WP_Hamazon_Controller{
 	 */
 	public $phg = null;
 
+    /**
+     * インスタンス取得
+     *
+     * @param string $version
+     * @return WP_Hamazon_Controller
+     */
+    public static function get_instance($version = ''){
+        if( is_null(self::$instance) ){
+            self::$instance = new self($version);
+        }
+        return self::$instance;
+    }
 	
 	/**
 	 * コンストラクタ
 	 * @global array $hamazon_settings
 	 * @param string $version
 	 */
-	public function __construct($version) {
+	private function __construct($version) {
 		global $hamazon_settings;
 		
 		// バージョン番号を設定
