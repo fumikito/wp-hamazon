@@ -1,9 +1,9 @@
 === WP Hamazon ===
 
 Contributors: Takahashi_Fumiki  
-Tags: amazon, affiliate, linkshare, rakuten, dmm, phg
+Tags: amazon, affiliate, linkshare, rakuten, dmm, phg  
 Requires at least: 3.0  
-Tested up to: 3.9-beta1
+Tested up to: 3.9-beta1  
 Stable tag: 2.3.1
 
 ともかめさん作のtmkm-amazon後継プラグインです。投稿にアフィリエイトの商品リンクを出力できます。対応しているアフィリエイトサービスはいまのところ Amazon 楽天 リンクシェア PHG DMM です。 
