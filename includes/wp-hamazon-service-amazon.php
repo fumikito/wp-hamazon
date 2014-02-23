@@ -123,10 +123,6 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 
 	/**
 	 * Constructor
-	 * @param string $devToken
-	 * @param string $sak
-	 * @param string $associatesid
-	 * @param string $locale Default JP
 	 */
 	public function set_option() {
 		$this->DevToken = $this->get_option('accessKey');
@@ -175,15 +171,16 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 
 	/**
 	 * Send Request and get XML Object
+     *
 	 * @param array $param
-	 * @param string $cash_id
+	 * @param string|false $cash_id
 	 * @param int $cash_time
 	 * @return WP_Error|SimpleXMLElement
 	 */
-	function send_request($param, $cash_id = false, $cash_time = 86400){
+	function send_request(array $param, $cash_id = false, $cash_time = 86400){
 		// Build URL and Check it.
 		$url = $this->build_url($param);
-		if(is_wp_error($url)){
+		if( is_wp_error($url) ){
 			return $url;
 		}
 		//Cash Request if required.
@@ -658,6 +655,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 	/**
 	 * Create HTML Source With Asin
 	 * @param string $asin
+     * @param array $extra_atts
 	 * @return string
 	 */
 	public function format_amazon($asin, $extra_atts = array()) {
