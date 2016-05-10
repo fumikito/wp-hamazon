@@ -66,7 +66,8 @@ abstract class WP_Hamazon_Service{
 	 */
 	public function __construct(){
 		//サービス名設定
-		$this->name = strtolower(end(explode('_', get_class($this))));
+		$names = explode('_', get_class($this));
+		$this->name = strtolower($names[count($names) - 1]);
 		//オプション設定
 		if(method_exists($this, 'set_option')){
 			$this->set_option();

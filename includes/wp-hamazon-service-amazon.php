@@ -688,7 +688,8 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 				$atts = $this->get_atts($item);
 				$goodsimage = $this->get_image_src($item, 'large');
 
-				$url = $item->DetailPageURL;
+				$url = esc_url($item->DetailPageURL);
+
 				$Title = $atts['Title'];
 				$ProductGroup = isset($this->searchIndex[$atts['ProductGroup']]) ? $this->searchIndex[$atts['ProductGroup']]: '不明' ;
 				if(isset($atts['ProductGroup']) ){
@@ -702,7 +703,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 					}
 				}
 				$ProductGroup = " <small>[{$ProductGroup}]</small>";
-				$price = $atts['ListPrice']['FormattedPrice'];
+				$price = isset($atts['ListPrice']) ? $atts['ListPrice']['FormattedPrice'] : false;
 				$desc = $price ? "<p class=\"price\"><span class=\"label\">価格</span><em>{$price}</em></p>" : '';
 				$filter = array(
 					'author' => array('Author', 'Director', 'Actor', 'Artist', 'Creator'),
