@@ -116,7 +116,7 @@ class WP_Hamazon_Service_Amazon extends WP_Hamazon_Service implements WP_Hamazon
 		'Automotive' => 'カー用品',
 		'Hobbies' => 'ホビー',
 		'Toys' => 'おもちゃ',
-		'Marketplace' => 'マーケットプレイス'
+		'Marketplace' => 'マーケットプレイス',
 	);
 
 
