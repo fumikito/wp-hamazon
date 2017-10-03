@@ -1,200 +1,164 @@
-<?php
+<div class="wrap">
 
-if(basename($_SERVER['SCRIPT_FILENAME']) == 'admin.php'){
-	die();
-}
-/* @var $this WP_Hamazon_Controller */
-?>
-<div class="wrap" id="footnote-options">
-	<div id="icon-options-general" class="icon32"><br></div>
-	<h2>Wp Hamazon （アフィリエイト）設定</h2>
+	<script>(function (d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/ja_JP/all.js#xfbml=1&appId=983379265125123";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));</script>
 
-	<form method="post">
-		<?php wp_nonce_field('hamazon_setting'); ?>
-		<input type="hidden" name="action" value="save_options" />
+	<h1 class="wp-heading-inline">
+		<?php echo esc_html__( 'Hamazon Affiliate Setting', 'hamazon' ) ?>
+	</h1>
+
+	<div class="hamazon-wrapper">
+
+		<div class="hamazon-row">
+
+			<div class="hamazon-main">
+				<form method="post" action="<?php echo admin_url( 'options.php' ) ?>">
+					<?php
+					settings_fields( 'wp-hamazon' );
+					do_settings_sections( 'wp-hamazon' );
+					submit_button();
+					?>
+				</form>
+			</div>
+
+			<div class="hamazon-sidebar">
+				<img src="<?= hamazon_asset_url( '/img/admin-banner.jpg' ) ?>" alt="Hamazon" class="hamazon-sidebar-banner">
 
 
-		<h3>全般</h3>
-		<table class="form-table">
-			<tr>
-				<th><label for="post_types">ボタンを表示する投稿タイプ</label></th>
-				<td>
-					<?php foreach(get_post_types('', 'object') as $post_type): if(false === array_search($post_type->name, array('revision', 'nav_menu_item', 'page', 'attachment', 'lwp_notification')) && $post_type->public): ?>
-						<label>
-							<input type="checkbox" name="post_types[]" value="<?php echo $post_type->name; ?>" <?php if(false !== array_search($post_type->name, $hamazon_settings['post_types'])) echo 'checked="checked" '; ?>/>
-							<?php echo $post_type->labels->name; ?>
-						</label>&nbsp;
-					<?php endif; endforeach; ?>
-				</td>
-			</tr>
-			<tr>
-				<th>CSSの読み込み</th>
-				<td>
-					<label><input type="radio" name="load_css" value="1" <?php if($hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込む</label><br />
-					<label><input type="radio" name="load_css" value="0" <?php if(!$hamazon_settings['load_css']) echo ' checked="checked"'; ?>/> 読み込まない</label>
-					<p class="description">
-						オリジナルのCSSを読み込みたい場合はテーマフォルダ内にtmkm-amazon.cssを配置してください。存在しない場合はデフォルトのものを読み込みます。「読み込まない」を選択した場合は何も読み込みません。
-					</p>
-				</td>
-			</tr>
-		</table>
-		<?php foreach($this->services as $service): ?>
-			<p>&nbsp;</p>
-			<h3><?php echo esc_html($this->{$service}->title); ?></h3>
-			<table class="form-table">
-				<tr>
-					<th>ステータス</th>
-					<td>
-						<?php if($this->{$service}->is_valid()): ?>
-							<strong style="color: green;">有効：</strong>
-						<?php else: ?>
-							<strong style="color: red;">無効：</strong>
-						<?php endif; ?>
-						<span class="description">
-							<?php
-								switch($service){
-									case 'amazon':
-										$link = 'https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html';
-										break;
-									case 'rakuten':
-										$link = 'http://webservice.rakuten.co.jp';
-										break;
-									case 'linkshare':
-										$link = 'http://www.linkshare.ne.jp';
-										break;
-									case 'phg':
-										$link = 'http://www.apple.com/jp/itunes/affiliates/';
-										break;
-									case 'dmm':
-										$link = 'https://affiliate.dmm.com/account/index/';
-										break;
-								}
-								printf('認証に必要な情報は<a href="%s">こちら</a>で登録の上、入手してください。', $link);
-							?>
-						</span>
-					</td>
-				</tr>
+
+				<h3 class="hamazon-sidebar-title">
+					<?php esc_html_e( 'Related Links', 'hamazon' ) ?>
+				</h3>
+
+				<ul class="hamazon-sidebar-list">
+					<li>
+						<?php echo wp_kses_post( __( 'This plugin is hosted on <a href="%s" target="_blank">github</a>. Any pull requests are welcomed!', 'https://github.com/fumikito/wp-hamazon' ) )?>
+					</li>
+					<li>
+						<?php echo wp_kses_post( __( '<a href="%s" target="_blank">Gisnism.info</a> has lots of tips. Please touch it and join us.', 'https://gianism.info' ) )?>
+					</li>
+					<li>
+						<?php echo wp_kses_post( __( 'Please review our plugin at <a href="%s" target="_blank">WordPress.org</a>. Feedback will grow us.', 'https://wordpress.org/support/plugin/wp-hamazon/reviews/#new-post' ) )?>
+					</li>
+				</ul>
+
+				<hr />
+
+				<h3 class="hamazon-sidebar-title">
+					<?php esc_html_e( 'Public Resources', 'hamazon' ) ?>
+				</h3>
+
+				<ul class="hamazon-sidebar-list">
+
+				</ul>
+
+				<hr />
+
 				<?php
-					switch($service){
-						case 'amazon':
-							$input = array(
-								'associatesid' => 'あなたのアソシエイト ID',
-								'accessKey' => 'あなたのAWS アクセス ID',
-								'secretKey' => 'あなたのAWS シークレットアクセス ID',
-								'show_review' => 'レビューの表示',
-							);
-							break;
-						case 'rakuten':
-							$input = array(
-								'rakuten_app_id' => 'アプリID / デベロッパ—ID',
-								'rakuten_affiliate_id' => 'アフィリエイトID',
-							);
-							break;
-						case 'linkshare':
-							$input = array(
-								'linkshare_token' => 'サイトアカウントのトークン',
-							);
-							break;
-						case 'phg':
-							$input = array(
-								'phg_id' => 'PHG アフィリエイト・トークン:'
-							);
-							break;
-						case 'dmm':
-							$input = array(
-								'dmm_affiliate_id' => 'アフィリエイトID',
-								'dmm_api_id' => 'API ID',
-							);
-							break;
-					}
-					foreach($input as $name => $label):
+				$locale = get_locale();
+				$user = get_userdata( get_current_user_id() );
 				?>
-				<tr>
-					<th><label for="<?php echo esc_attr($name); ?>"><?php echo esc_html($label); ?></label></th>
-					<td>
-						<?php switch($name): case 'show_review'?>
-							<select name="<?php echo esc_attr($name); ?>" id="<?php echo esc_attr($name); ?>">
-								<option value="0"<?php selected($hamazon_settings[$name] == false) ?>>オフ</option>
-								<option value="1"<?php selected($hamazon_settings[$name] == true) ?>>オン</option>
-							</select>
-						<?php break; default: ?>
-							<input type="text" class="regular-text" id="<?php echo esc_attr($name); ?>" name="<?php echo esc_attr($name); ?>" value="<?php echo esc_attr($hamazon_settings[$name]); ?>" />
-						<?php endswitch; ?>
-					</td>
-				</tr>
-					<?php endforeach; ?>
-			</table>
-		<?php endforeach; ?>
-		<?php submit_button('設定を保存する')?>
-		<p>&nbsp;</p>
-		<h3>表示のカスタマイズ</h3>
-		<p class="description">
-			フィルターフックを使ってショートコードの出力をカスタマイズしてください。
-			テーマファイルのfunctions.phpに次のように書くとカスタマイズできます。<br />
-			<code><?php echo get_stylesheet_directory(); ?>/functions.php</code>
-		</p>
-		<pre class="wp-hamazon-pre"><?php
-			$html = <<<EOS
-//フィルターフックを登録
-add_filter('wp_hamazon_amazon', '_my_amazon_tag', 10, 2);
 
-/**
- * ショートコードをカスタマイズする関数
- * 
- * @param string \$html 商品リンクのHTMLタグです
- * @param SimpleXMLElement \$item 商品情報です。サービスによって異なります
- * @return string HTMLタグを返します
- */
-function _my_amazon_tag(\$html, \$item){
-	// ここで好きなHTMLを作成します。
-	\$my_html = '<div id="my_amazon"><a href="'.strval(\$item->DetailPageURL).'">'.strval(\$item->ItemAttributes->Title).'</a></div>';
-	// はじめてカスタマイズするときは\$itemがなんなのかわからないと思います。
-	// 一度var_dumpして確認してみると構造がよく理解できます。
-	var_dump(\$item); // 本番環境ではこの行を使わないでください
-	return \$my_html;
-}
-EOS;
-		echo esc_html($html);
-		?></pre>
-		<table class="form-table">
-			<tr>
-				<th>Amazonのフィルター名</th>
-				<td>
-					<code>wp_hamazon_amazon</code><br />
-					$itemはSimpleXMLElementオブジェクトのインスタンスです。かなり多くの情報が入っています。
-				</td>
-			</tr>
-			<tr>
-				<th>楽天のフィルター名</th>
-				<td>
-					<code>wp_hamazon_rakuten</code><br />
-					$itemはオブジェクトです。
-				</td>
-			</tr>
-			<tr>
-				<th>リンクシェアのフィルター名</th>
-				<td>
-					<code>wp_hamazon_linkshare</code><br />
-					$itemは連想配列です。
-				</td>
-			</tr>
-			<tr>
-				<th>PHGのフィルター名</th>
-				<td>
-					<code>wp_hamazon_phg</code><br />
-					$itemはオブジェクト、第3引数に$urlを取ります。
-				</td>
-			</tr>
-			<tr>
-				<th>DMMのフィルター名</th>
-				<td>
-					<code>wp_hamazon_dmm</code><br />
-					$itemは連想配列です。
-				</td>
-			</tr>
-		</table>
+				<!-- Begin MailChimp Signup Form -->
+				<div id="mc_embed_signup">
+					<!-- Begin MailChimp Signup Form -->
+					<div id="mc_embed_signup">
+						<form
+								action="//gianism.us14.list-manage.com/subscribe/post?u=9b5777bb4451fb83373411d34&amp;id=1e82da4148&amp;SINGUP=WordPress"
+								method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
+								target="_blank" novalidate>
+							<div id="mc_embed_signup_scroll">
+								<h4><?php esc_html_e( 'Join our News Letter!', 'hamazon' ) ?></h4>
+								<p class="description">
+									<?php esc_html_e( 'We provide pragmatic information and tips. Not often, No span.', 'hamazon' ) ?>
+								</p>
+								<div class="mc-field-group">
+									<label for="mce-EMAIL">
+										<?php esc_html_e( 'Email' , 'hamazon' ) ?>
+										<span class="asterisk">*</span>
+									</label>
+									<input type="email" name="EMAIL" class="required email" id="mce-EMAIL" value="<?php echo esc_attr( $user->user_email ) ?>">
+								</div>
+								<div class="mc-field-2col mc-field-name-<?php echo esc_attr( get_locale() ) ?>">
+									<div>
+										<div class="mc-field-group first-name">
+											<label for="mce-FNAME"><?php esc_html_e( 'First Name' , 'hamazon' ) ?></label>
+											<input type="text" value="<?php echo esc_attr( get_user_meta( $user->ID, 'first_name', true ) ) ?>" name="FNAME" class="" id="mce-FNAME">
+										</div>
+									</div>
+									<div>
+										<div class="mc-field-group last-name">
+											<label for="mce-LNAME"><?php esc_html_e( 'Last Name' , 'hamazon' ) ?></label>
+											<input type="text" value="<?php echo esc_attr( get_user_meta( $user->ID, 'last_name', true ) ) ?>" name="LNAME" class="" id="mce-LNAME">
+										</div>
+									</div>
+									<div style="clear:both;"></div>
+								</div>
+								<p>
+									<label class="inline" for="mce-group[1111]-1111-0">
+										<input type="checkbox" value="1" name="group[1111][1]"
+											   id="mce-group[1111]-1111-0" <?php checked( 'ja' != $locale ) ?>>
+										<?php esc_html_e( 'English' , 'hamazon' ) ?>
+									</label>
+									<label class="inline" for="mce-group[1111]-1111-1">
+										<input type="checkbox" value="2" name="group[1111][2]"
+											   id="mce-group[1111]-1111-1" <?php checked( 'ja' == $locale ) ?>>
+										<?php esc_html_e( 'Japanese' , 'hamazon' ) ?>
+									</label>
+								</p>
+								<input type="hidden" name="group[1115]" value="16"/>
+								<input type="hidden" name="b_9b5777bb4451fb83373411d34_1e82da4148" value="">
+							</div>
+							<p class="submit">
+								<input type="submit" value="<?php esc_html_e( 'Subscribe' , 'hamazon' ) ?>" name="subscribe"
+									   id="mc-embedded-subscribe" class="button-primary">
+							</p>
+						</form>
+					</div>
+				</div>
+
+				<hr />
+
+				<h3 class="hamazon-sidebar-title">
+					<?php esc_html_e( 'Social Links', 'hamazon' ) ?>
+				</h3>
+
+				<div class="fb-page" data-href="https://www.facebook.com/gianism.info" data-small-header="true"
+					 data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true"
+					 data-show-posts="false">
+					<div class="fb-xfbml-parse-ignore">
+						<blockquote cite="https://www.facebook.com/gianism.info"><a
+									href="https://www.facebook.com/gianism.info">Gianism</a></blockquote>
+					</div>
+				</div>
+				<p class="social-link">
+					<a href="https://twitter.com/intent/tweet?screen_name=wpGianism" class="twitter-mention-button"
+					   data-lang="ja" data-related="takahashifumiki">Tweet to @wpGianism</a>
+					<script>!function (d, s, id) {
+                        var js, fjs = d.getElementsByTagName(s)[0];
+                        if (!d.getElementById(id)) {
+                          js = d.createElement(s);
+                          js.id = id;
+                          js.src = "//platform.twitter.com/widgets.js";
+                          fjs.parentNode.insertBefore(js, fjs);
+                        }
+                      }(document, "script", "twitter-wjs");</script>
+				</p>
+
+				<p class="hamazon-sidebar-desc description">
+					<?php esc_html_e( 'Please visit our social media to make us more powerful!', 'hamazon' ) ?>
+				</p>
+
+			</div>
+		</div>
+
+	</div>
 
 
-
-	</form>
 </div>

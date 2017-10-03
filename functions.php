@@ -19,6 +19,7 @@ if(!function_exists('tmkm_amazon_view')) {
 /**
  * Echo Product link HTML with asin code.
  *
+ * @package hamazon
  * @param string $asin ASIN code
  */
 function hamazon_asin_link($asin){
@@ -26,4 +27,24 @@ function hamazon_asin_link($asin){
     if( $instance->amazon ){
         echo $instance->amazon->format_amazon($asin);
     }
+}
+
+/**
+ * Get root directory
+ *
+ * @return string
+ */
+function hamazon_root_dir() {
+	return __DIR__;
+}
+
+/**
+ * Get asset URL
+ *
+ * @param string $path
+ *
+ * @return string
+ */
+function hamazon_asset_url( $path ) {
+	return plugin_dir_url( __FILE__ ) . 'assets/' . ltrim( $path, '/' );
 }

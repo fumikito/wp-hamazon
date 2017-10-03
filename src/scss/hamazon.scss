@@ -1,5 +1,3 @@
-@import "compass";
-
 /*
 ----------------------------------------------
 	1. div.tmkm-amazon-view
@@ -42,7 +40,7 @@ div.tmkm-amazon-view {
 			font-weight: bold;
 		}
         span.label{
-            @include inline-block();
+			display: inline-block;
             width: 8em;
         }
 		&.vendor{
