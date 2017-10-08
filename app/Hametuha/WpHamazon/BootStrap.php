@@ -14,6 +14,13 @@ use Hametuha\WpHamazon\Pattern\Singleton;
 class BootStrap extends Singleton {
 
 	/**
+	 * Active services
+	 *
+	 * @var array
+	 */
+	protected $active_services = [];
+
+	/**
 	 * Singleton constructor.
 	 */
 	protected function __construct() {
@@ -30,7 +37,6 @@ class BootStrap extends Singleton {
 		// Scan all services and enables
 		$dir = __DIR__ . '/Service';
 		$name_space_root = 'Hametuha\\WpHamazon\\Service\\';
-		$has_service = false;
 		foreach ( scandir( $dir ) as $file ) {
 			if ( preg_match( '#^([^._].*)\.php$#u', $file, $matches ) ) {
 				$class_name = $name_space_root . $matches[1];
@@ -38,14 +44,22 @@ class BootStrap extends Singleton {
 					/** @var AbstractService $class_name */
 					$service = $class_name::get_instance();
 					if ( $service->is_valid() ) {
-						$has_service = true;
+						$this->active_services[ $service->name ] = $service->title;
 					}
 				}
 			}
 		}
-		if ( $has_service ) {
-			add_action( 'media_buttons', [ $this, 'action_media_buttons' ] );
+		if ( $this->active_services ) {
+			// O.K, let's initiate media frame!
+			$this->init_media_frame();
 		}
+	}
+
+	/**
+	 * Initialize media frame
+	 */
+	public function init_media_frame() {
+		add_action( 'media_buttons', [ $this, 'action_media_buttons' ] );
 	}
 
 	/**
@@ -146,6 +160,11 @@ class BootStrap extends Singleton {
 	 */
 	public function register_assets() {
 		wp_register_style( 'hamazon-admin', hamazon_asset_url( '/css/hamazon-admin.css' ), [], hamazon_info( 'version' ) );
+		wp_register_style( 'hamazon-editor', hamazon_asset_url( '/css/hamazon-editor.css' ), [ 'dashicons' ], hamazon_info( 'version' ) );
+		$editor_js = 'js/editor/hamazon-editor' . ( WP_DEBUG ? '' : '.min' ) . '.js';
+		wp_register_script( 'hamazon-editor', hamazon_asset_url( $editor_js ), [], hamazon_info( 'version' ), true );
+        wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/iframe-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
+
 	}
 
 	/**
@@ -171,7 +190,7 @@ class BootStrap extends Singleton {
 	}
 
 	/**
-	 * CSSを読み込む
+	 * Load CSS
 	 * @global array $hamazon_settings
 	 */
 	public function enqueue_script() {
@@ -209,23 +228,54 @@ class BootStrap extends Singleton {
 	 * @param string $editor_id
 	 */
 	public function action_media_buttons( $editor_id ) {
-		if ( ! is_admin() ) {
-			return;
+		static $counter = 0;
+		if ( is_admin() && ( $screen = get_current_screen() ) && $screen->post_type && 'content' == $editor_id ) {
+			$post_types = get_option( 'hamazon_post_types', [ 'post' ] );
+			if ( false === array_search( $screen->post_type, $post_types ) ) {
+				return;
+			}
 		}
-		$screen = get_current_screen();
-		if ( ! $screen ) {
-			return;
-		}
-		$post_types = get_option( 'hamazon_post_types', [ 'post' ] );
-		if ( false === array_search( $screen->post_type, $post_types ) ) {
-			return;
-		}
-		printf(
-			'<button type="button" class="button hamazon-insert-button" data-editor="%s"><img width="26" height="26" class="hamazon-editor-button" src="%s" alt="%s" /></button>',
-			esc_attr( $editor_id ),
-			hamazon_asset_url( 'img/button-icon.png' ),
-			esc_html__( 'Add Hamazon', 'hamazon' )
-		);
+		// O.K. Let's move.
+		$counter++;
+		wp_enqueue_style( 'hamazon-editor' );
+		wp_enqueue_script( 'hamazon-editor-helper' );
+		wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
+            'endpoint' => rest_url( '/hamazon/v3/' ),
+			'nonce'    => wp_create_nonce( 'wp_rest' ),
+			'icon'     => hamazon_asset_url( 'img/button-icon.png' ),
+			'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
+			'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
+			'invalid' => __( 'This service is not available.', 'hamazon' ),
+			'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
+			'insert' => __( 'Insert', 'hamazon' ),
+            'copyCode' => __( 'Copy Code', 'hamazon' ),
+            'copyLink' => __( 'Copy Link', 'hamazon' ),
+            'view' => __( 'View', 'hamazon' ),
+            'previousPage' => __( 'Previous', 'hamazon' ),
+			'nextPage' => __( 'Next', 'hamazon' ),
+			'services' => array_map( function( $key, $value ) {
+				$service = [
+					'key'   => $key,
+					'label' => $value,
+				];
+				/**
+				 * hamazon_service_variables
+				 *
+				 * Add service instance passed to react.
+				 *
+				 * @param mixed  $data
+				 * @param string $key
+				 */
+				$data = apply_filters( 'hamazon_service_variables', null, $key );
+				$service['data'] = $data;
+				return $service;
+			}, array_keys( $this->active_services ), array_values( $this->active_services ) ),
+		] );
+
+		?>
+		<div class="hamazon-btn-component" style="display: inline-block" id="hamazon-selector-<?php echo esc_attr( $counter ) ?>" data-editor-id="<?php echo esc_attr( $editor_id ) ?>">
+		</div>
+		<?php
 	}
 
 }

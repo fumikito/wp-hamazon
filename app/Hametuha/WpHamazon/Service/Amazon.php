@@ -67,6 +67,25 @@ class Amazon extends AbstractService {
 		return $this->get_option( 'associatesid' ) && $this->get_option( 'accessKey' ) && $this->get_option( 'secretKey' );
 	}
 
+
+    /**
+     * Filter data passed to react.
+     *
+     * @param $data
+     * @return array|\stdClass
+     */
+    protected function filter_data( $data ) {
+        $constants = AmazonConstants::get_search_index();
+        return [
+            'options' => array_map( function( $key, $value ) {
+                return [
+                    'key' => $key,
+                    'label' => $value,
+                ];
+            }, array_keys( $constants ), array_values( $constants ) ),
+        ];
+    }
+
 	/**
 	 * Get rest arguments.
 	 *

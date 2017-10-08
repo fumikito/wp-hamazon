@@ -1,8 +1,11 @@
 var gulp        = require('gulp'),
     fs          = require('fs'),
     $           = require('gulp-load-plugins')(),
+    browserify  = require('browserify'),
+    vinylSource = require('vinyl-source-stream'),
     pngquant    = require('imagemin-pngquant'),
-    eventStream = require('event-stream');
+    eventStream = require('event-stream'),
+    runSequence = require('run-sequence');
 
 // Include Path for Scss
 var includesPaths = [
@@ -16,7 +19,8 @@ var srcDir = {
     ],
     js: [
         './src/js/**/*.js',
-        '!./src/js/**/_*.js'
+        '!./src/js/**/_*.js',
+        '!./src/js/editor/**/*.js'
     ],
     jsHint: [
         './src/js/**/*.js'
@@ -82,6 +86,42 @@ gulp.task('jshint', function () {
 // JS task
 gulp.task('js', ['jshint', 'jsconcat']);
 
+gulp.task('reactify', function(callback){
+  return runSequence('browserify', 'reactMinify', callback);
+});
+
+// Babelify
+gulp.task('browserify', function(callback){
+  return browserify('./src/js/editor/hamazon-editor.jsx', {debug: true})
+    .transform('babelify', {
+      presets: ['es2015', 'react']
+    })
+    .bundle(function(err){
+      if (err) {
+        return callback(err);
+      }
+    })
+    .on('error', function(err){
+      console.log( '[JS ERROR]:', err.message, err.stack );
+    })
+    .pipe(vinylSource('hamazon-editor.js'))
+    .pipe($.plumber({
+      errorHandler: $.notify.onError("Error: <%= error.message %>")
+    }))
+    .pipe(gulp.dest('./assets/js/editor'));
+});
+
+gulp.task('reactMinify', function(){
+ return  gulp.src([
+    './assets/js/editor/hamazon-editor.js'
+  ])
+    .pipe($.plumber({
+      errorHandler: $.notify.onError("Error: <%= error.message %>")
+    }))
+    .pipe($.uglify())
+    .pipe($.rename({ extname: ".min.js" }))
+    .pipe(gulp.dest('./assets/js/editor'));
+});
 
 // Build Libraries.
 gulp.task('copylib', function () {
@@ -108,12 +148,15 @@ gulp.task('watch', function () {
   gulp.watch(srcDir.scss, ['sass']);
   // Uglify all
   gulp.watch(srcDir.jsHint, ['js']);
+  // Babel
+  gulp.watch('./src/js/editor/**/*.jsx', ['browserify']);
+  gulp.watch('./assets/js/editor/hamazon-editor.js', ['reactMinify']);
   // Minify Image
   gulp.watch(srcDir.img, ['imagemin']);
 });
 
 // Build
-gulp.task('build', ['copylib', 'js', 'sass', 'imagemin']);
+gulp.task('build', ['copylib', 'js', 'sass', 'imagemin', 'reactify']);
 
 // Default Tasks
 gulp.task('default', ['watch']);

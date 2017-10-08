@@ -69,7 +69,24 @@ abstract class AbstractService extends Singleton {
 		add_action( 'admin_init', [ $this, 'register_options' ], 11 );
 		// Register REST API
 		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
+		// Add data filter
+        add_filter( 'hamazon_service_variables', function( $data, $key ) {
+            if ( $this->name == $key ) {
+                $data = $this->filter_data( $data );
+            }
+            return $data;
+        }, 1, 2 );
 	}
+
+    /**
+     * Filter data passed to react.
+     *
+     * @param $data
+     * @return array|\stdClass
+     */
+	protected function filter_data( $data ) {
+	    return $data;
+    }
 
 	/**
 	 * Register options

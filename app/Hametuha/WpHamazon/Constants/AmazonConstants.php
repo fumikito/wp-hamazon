@@ -45,52 +45,102 @@ class AmazonConstants {
 		return $locales[ $locale ];
 	}
 
+    /**
+     * Get search index
+     *
+     * @param string $search_index
+     * @return string
+     */
+	public static function index_label( $search_index ) {
+	    switch ( $search_index ) {
+            case 'eBooks':
+                return __( 'eBook', 'hamazon' );
+                break;
+            case 'Pharmacy':
+                return __( 'Pharmacy', 'hamazon' );
+                break;
+            case 'Health and Beauty':
+                return __( 'Health & Beauty', 'hamazon' );
+                break;
+            case 'TV Series Episode Video on Demand':
+                return __( 'On Demand Video', 'hamazon' );
+                break;
+            default:
+	            $convered_index = str_replace( ' ', '', $search_index );
+                $filter = [
+                    'Baby Product' => 'Baby',
+                    'Book' => 'Books',
+                    'CE' => 'Electronics',
+                    'Home Theater' => 'Electronics',
+                    'Home' => 'HomeImprovement',
+                    'Movie' => 'Video',
+                    'OfficeProduct' => 'OfficeProducts',
+                    'DigitalMusicAlbum' => 'Music',
+                    'Hobby' => 'Hobbies',
+                    'Sports' => 'SportingGoods',
+                    'Toy' => 'Toys',
+                    'VHS' => 'Video',
+                    'Watch' => 'Watches',
+                ];
+                if ( isset( $filter[ $convered_index ] ) ) {
+                    $search_index = $filter[ $convered_index ];
+                }
+	            $index = self::get_search_index();
+	            return isset( $index[ $convered_index ] ) ? $index[ $convered_index ] : __( $search_index, 'hamazon' ) ;
+                break;
+        }
+    }
+
 	/**
 	 * Search Index values for AWS
 	 *
 	 * @return array
 	 */
 	public static function get_search_index() {
-		return [
-			'All'                => __( 'All', 'hamazon' ),
-			'Apparel'            => __( 'Apparel', 'hamazon' ),
-			'Appliances'         => __( 'Appliances', 'hamazon' ),
-			'Automotive'         => __( 'Automotive', 'hamazon' ),
-			'Baby'               => __( 'Baby', 'hamazon' ),
-			'Beauty'             => __( 'Beauty', 'hamazon' ),
-			'Blended'            => __( 'Blended', 'hamazon' ),
-			'Books'              => __( 'Books', 'hamazon' ),
-			'Classical'          => __( 'Classical', 'hamazon' ),
-			'CreditCards'        => __( 'CreditCards', 'hamazon' ),
-			'DVD'                => __( 'DVD', 'hamazon' ),
-			'Electronics'        => __( 'Electronics', 'hamazon' ),
-			'ForeignBooks'       => __( 'ForeignBooks', 'hamazon' ),
-			'GiftCards'          => __( 'GiftCards', 'hamazon' ),
-			'Grocery'            => __( 'Grocery', 'hamazon' ),
-			'HealthPersonalCare' => __( 'HealthPersonalCare', 'hamazon' ),
-			'Hobbies'            => __( 'Hobbies', 'hamazon' ),
-			'HomeImprovement'    => __( 'HomeImprovement', 'hamazon' ),
-			'Industrial'         => __( 'Industrial', 'hamazon' ),
-			'Jewelry'            => __( 'Jewelry', 'hamazon' ),
-			'KindleStore'        => __( 'Kindle Store', 'hamazon' ),
-			'Kitchen'            => __( 'Kitchen', 'hamazon' ),
-			'Marketplace'        => __( 'Marketplace', 'hamazon' ),
-			'MobileApps'         => __( 'MobileApps', 'hamazon' ),
-			'MP3Downloads'       => __( 'MP3Downloads', 'hamazon' ),
-			'Music'              => __( 'Music', 'hamazon' ),
-			'MusicalInstruments' => __( 'Musical Instruments', 'hamazon' ),
-			'OfficeProducts'     => __( 'Office Products', 'hamazon' ),
-			'PCHardware'         => __( 'PC Hardware', 'hamazon' ),
-			'PetSupplies'        => __( 'Pet Supplies', 'hamazon' ),
-			'Shoes'              => __( 'Shoes', 'hamazon' ),
-			'Software'           => __( 'Software', 'hamazon' ),
-			'SportingGoods'      => __( 'Sporting Goods', 'hamazon' ),
-			'Toys'               => __( 'Toys', 'hamazon' ),
-			'Video'              => __( 'Video', 'hamazon' ),
-			'VideoDownload'      => __( 'Video Download', 'hamazon' ),
-			'VideoGames'         => __( 'Video Games', 'hamazon' ),
-			'Watches'            => __( 'Watches', 'hamazon' ),
-		];
+	    static $search_index =  null;
+	    if (is_null($search_index) ){
+	        $search_index = [
+                'All'                => __( 'All', 'hamazon' ),
+                'Apparel'            => __( 'Apparel', 'hamazon' ),
+                'Appliances'         => __( 'Appliances', 'hamazon' ),
+                'Automotive'         => __( 'Automotive', 'hamazon' ),
+                'Baby'               => __( 'Baby', 'hamazon' ),
+                'Beauty'             => __( 'Beauty', 'hamazon' ),
+                'Blended'            => __( 'Blended', 'hamazon' ),
+                'Books'              => __( 'Books', 'hamazon' ),
+                'Classical'          => __( 'Classical', 'hamazon' ),
+                'CreditCards'        => __( 'CreditCards', 'hamazon' ),
+                'DVD'                => __( 'DVD', 'hamazon' ),
+                'Electronics'        => __( 'Electronics', 'hamazon' ),
+                'ForeignBooks'       => __( 'Foreign Books', 'hamazon' ),
+                'GiftCards'          => __( 'Gift Cards', 'hamazon' ),
+                'Grocery'            => __( 'Grocery', 'hamazon' ),
+                'HealthPersonalCare' => __( 'Health Personal Care', 'hamazon' ),
+                'Hobbies'            => __( 'Hobbies', 'hamazon' ),
+                'HomeImprovement'    => __( 'Home Improvement', 'hamazon' ),
+                'Industrial'         => __( 'Industrial', 'hamazon' ),
+                'Jewelry'            => __( 'Jewelry', 'hamazon' ),
+                'KindleStore'        => __( 'Kindle Store', 'hamazon' ),
+                'Kitchen'            => __( 'Kitchen', 'hamazon' ),
+                'Marketplace'        => __( 'Marketplace', 'hamazon' ),
+                'MobileApps'         => __( 'MobileApps', 'hamazon' ),
+                'MP3Downloads'       => __( 'MP3Downloads', 'hamazon' ),
+                'Music'              => __( 'Music', 'hamazon' ),
+                'MusicalInstruments' => __( 'Musical Instruments', 'hamazon' ),
+                'OfficeProducts'     => __( 'Office Products', 'hamazon' ),
+                'PCHardware'         => __( 'PC Hardware', 'hamazon' ),
+                'PetSupplies'        => __( 'Pet Supplies', 'hamazon' ),
+                'Shoes'              => __( 'Shoes', 'hamazon' ),
+                'Software'           => __( 'Software', 'hamazon' ),
+                'SportingGoods'      => __( 'Sporting Goods', 'hamazon' ),
+                'Toys'               => __( 'Toys', 'hamazon' ),
+                'Video'              => __( 'Video', 'hamazon' ),
+                'VideoDownload'      => __( 'Video Download', 'hamazon' ),
+                'VideoGames'         => __( 'Video Games', 'hamazon' ),
+                'Watches'            => __( 'Watches', 'hamazon' ),
+            ];
+        }
+	    return $search_index;
 	}
 
 
@@ -257,7 +307,7 @@ class AmazonConstants {
 		];
 		foreach ( $result->Items->Item as $item ) {
 			$atts = self::get_attributes( $item );
-			$small_image = self::get_image_src( $item, 'small' );
+			$image = self::get_image_src( $item, 'medium' );
 			$price = 'N/A';
 			if ( isset( $item->OfferSummary->LowestNewPrice ) ) {
 				$price = (string) $item->OfferSummary->LowestNewPrice->FormattedPrice;
@@ -266,10 +316,11 @@ class AmazonConstants {
 			}
 			$data = [
 				'title' => (string) $atts['Title'],
-				'asing' => (string) $item->ASIN,
+                'category' => self::index_label( isset( $atts['ProductGroup'] ) ? $atts['ProductGroup'] : '' ),
+				'asin' => (string) $item->ASIN,
 				'price' => $price,
 				'attributes' => $atts,
-				'image' => $small_image,
+				'image' => $image,
 				'url' => (string) $item->DetailPageURL,
 			];
 			$response['items'][] = $data;
