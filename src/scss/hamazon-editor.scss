@@ -197,13 +197,17 @@
         &.input{
           flex-grow: 1;
         }
-
+      }
+      &-label{
+        display: block;
+        margin-bottom:5px;
+        color: #aaa;
       }
     }
 
     &-input{
       &-text{
-        width: 500px;
+        width: 200px;
         max-width: 100%;
       }
     }

@@ -1,6 +1,8 @@
 import React from 'react';
 import {FormBase} from "./form-base.jsx";
 
+/* global HamazonEditor: false */
+
 export class FormAmazon extends FormBase {
 
   constructor(params) {
@@ -36,7 +38,8 @@ export class FormAmazon extends FormBase {
       <div className="hamazon-modal-form-wrapper">
         <div className="hamazon-modal-form">
           <div className="hamazon-modal-form-item">
-            <select value={this.state.selectedOption} onChange={(e) => {
+            <label htmlFor="hamazon-input-amazon-category" className="hamazon-modal-form-label">{HamazonEditor.category}</label>
+            <select id="hamazon-input-amazon-category" value={this.state.selectedOption} onChange={(e) => {
               this.onSelectChange(e)
             }}>
               {this.props.service.data.options.map((option) => {
@@ -45,13 +48,14 @@ export class FormAmazon extends FormBase {
             </select>
           </div>
           <div className="hamazon-modal-form-item input">
-            <input className="regular-text hamazon-modal-input-text" value={this.state.query}
+            <label htmlFor="hamazon-input-amazon-query" className="hamazon-modal-form-label">{HamazonEditor.searchKeyword}</label>
+            <input id="hamazon-input-amazon-query" className="regular-text hamazon-modal-input-text" value={this.state.query}
                    onChange={(e) => this.onInputChange(e)}/>
           </div>
           <div className="hamazon-modal-form-item">
             <button onClick={(e) => {
               this.submitHandler(e)
-            }} className="button-primary">Submit
+            }} className="button-primary">{HamazonEditor.search}
             </button>
           </div>
         </div>

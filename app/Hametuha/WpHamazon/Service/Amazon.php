@@ -137,4 +137,40 @@ class Amazon extends AbstractService {
 		return new \WP_REST_Response( $response );
 	}
 
+	/**
+	 * Get setting
+	 *
+	 * @return array
+	 */
+	protected function short_code_setting() {
+		return [
+			'tmkm-amazon' => [
+				[
+					'label' => 'ASIN',
+					'type'  => 'text',
+					'attr'  => 'asin',
+				],
+			],
+		];
+	}
+
+	/**
+	 * Get short code
+	 *
+	 * @param string $short_code
+	 * @param array $attributes
+	 * @param string $content
+	 * @return string
+	 */
+	protected function short_code_callback( $short_code, array $attributes = [], $content = '' ){
+		switch ( $short_code ) {
+			case 'tmkm-amazon':
+				return AmazonConstants::format_amazon( $content, $attributes );
+				break;
+			default:
+				return '';
+				break;
+		}
+	}
+
 }

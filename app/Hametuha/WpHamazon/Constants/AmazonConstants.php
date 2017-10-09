@@ -301,9 +301,7 @@ class AmazonConstants {
 		$response = [
 			'total_page' => (int) $result->Items->TotalPages,
 			'total_result' => (int) $result->Items->TotalResults,
-			'items' => [
-
-			],
+			'items' => [],
 		];
 		foreach ( $result->Items->Item as $item ) {
 			$atts = self::get_attributes( $item );
@@ -390,122 +388,155 @@ class AmazonConstants {
 		return $vars;
 	}
 
+	/**
+	 * Get item from ASIN code.
+	 *
+	 * @param string $asin
+	 * @return \SimpleXMLElement|\WP_Error
+	 */
+	public static function get_item_by_asin( $asin ) {
+		$param = [
+			'Operation' => 'ItemLookup',
+			'IdType' => 'ASIN',
+			'ItemId' => (string)$asin,
+			'ResponseGroup' => 'Medium,Offers,Images,Reviews'
+		];
+		$id = "asin_{$asin}";
+		return self::send_request($param, $id);
+	}
 
+	/**
+	 * Detect if string is ASIN
+	 *
+	 * @param $asin
+	 * @return bool
+	 */
+	private static function is_asin( $asin ) {
+		return (boolean) preg_match( '/^[0-9a-zA-Z]{10,13}$/', trim( $asin ) );
+	}
 
 
 	/**
-	 * Display
+	 * Create HTML Source With Asin
 	 *
+	 * @since 3.0.0 May return WP_Error
+	 * @param string $asin
+	 * @param array $extra_atts
+	 * @return string|\WP_Error
 	 */
-	public static function format_search_result() {
-		// Get pagination
-		if ( isset( $_GET['page'] ) ) {
-			$page_num = max( 1, (int) $_GET['page'] );
-		} else {
-			$page_num = 1;
-		}
-		//Start Searching
-		if ( isset( $_GET['keyword'], $_GET['_wpnonce'] ) && ! empty( $_GET['keyword'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'amazon_search' ) ) {
-			echo '<div id="amazon-search-result">';
-			$keyword     = (string) $_GET['keyword'];
-			$searchindex = ! empty( $_GET['SearchIndex'] ) ? $_GET['SearchIndex'] : 'Blended';
-			$result      = $this->search_with( $keyword, $page_num, $searchindex );
+	public static function format_amazon( $asin, $extra_atts = [] ) {
+
+		try {
+			if ( self::is_asin( $asin ) ) {
+				// Old format like [tmkm-amazon]000000000[/tmkm-amazon]
+				$content = $extra_atts[ 'description' ];
+			} elseif ( self::is_asin( $extra_atts[ 'asin' ] ) ) {
+				// New format
+				$content = $asin;
+				$asin = $extra_atts[ 'asin' ];
+			} else {
+				throw new \Exception( __( 'ASIN format is wrong.', 'hamazon' ), 400 );
+			}
+
+			$result = self::get_item_by_asin( $asin );
 
 			if ( is_wp_error( $result ) ) {
-				// Amazon function was returned false, so AWS is down
-				echo '<div class="error"><p>検索結果を取得できませんでした。amazonのサーバでエラーが起こっているかもしれません。</p></div>';
+				return $result;
 			} else {
 				// Amazon function returned XML data
-				if ( $result->Items->Request->Errors ) {
-					printf( '<div class="error"><p>%s</p></div>', $result->Items->Request->Errors->Error->Message );
+				$status = $result->Items->Request->IsValid;
+				if ( $status == 'False' ) {
+					throw new \Exception( __( 'Request for Amazon is invalid.', 'hamazon' ), 400 );
 				} else {
 					// results were found, so display the products
-					$total_results = $result->Items->TotalResults;
-					$total_pages   = $result->Items->TotalPages;
-					$per_page      = $searchindex == 'Blended' ? 3 : 10;
+					$item = $result->Items->Item[ 0 ];
+					$attributes = self::get_attributes( $item );
+					$goods_image = self::get_image_src( $item, 'large' );
 
-					if ( $total_results == 0 ) { // no result was found
-						printf( '<div class="error"><p>「%s」の検索結果が見つかりませんでした。</p></div>', esc_html( $keyword ) );
-					} else {
-						// Pagenation
-						if ( $total_pages > 1 ) {
-							$pagination = $this->paginate( $total_pages, $page_num, 1, array(
-								'SearchIndex' => $searchindex,
-								'keyword'     => $keyword,
-								'_wpnonce'    => wp_create_nonce( 'amazon_search' ),
-							) );
-						} else {
-							$pagination = '';
-						}
-						// results were found
-						$length = count( $result->Items->Item );
-						?>
-						<div class="result-desc clearfix">
-							<h1>「<?php echo esc_html( $keyword ); ?>
-								」の検索結果: <?php echo number_format( (string) $total_results ); ?>件</h1>
-							<?php echo $pagination; ?>
-						</div><!-- //.result-desc -->
-						<table class="wp-hamazon-product-table">
-							<?php
-							for ( $i = 0; $i < $length; $i ++ ) {
-								$item       = $result->Items->Item[ $i ];
-								$smallimage = $this->get_image_src( $item, 'small' );
-								$atts       = $this->get_atts( $item );
-								?>
-								<tr class="amazon">
-									<th>
-										<?php if ( $searchindex !== 'Blended' ): ?>
-											<em>No. <?php echo number_format( ( $page_num - 1 ) * $per_page + $i + 1 ); ?></em>
-											<br/>
-										<?php endif; ?>
-										<img src="<?php echo $smallimage; ?>" border="0" alt=""/><br/>
-										<a class="button" href="<?php echo $item->DetailPageURL; ?>" target="_blank">Amazonで見る</a>
-									</th>
-									<td>
-										<strong><?php echo $atts['Title']; ?></strong><br/>
-										価格：<em class="price"><?php
-											if ( $item->OfferSummary->LowestNewPrice->FormattedPrice ) {
-												echo esc_html( (string) $item->OfferSummary->LowestNewPrice->FormattedPrice );
-											} else {
-												echo 'N/A';
-											}
-											?></em><br/>
-										<?php
-										foreach (
-											array(
-												'Actor',
-												'Artist',
-												'Author',
-												'Creator',
-												'Director',
-												'Manufacturer'
-											) as $key
-										) {
-											if ( isset( $atts[ $key ] ) ) {
-												echo $this->atts_to_string( $key ) . ": " . $atts[ $key ] . "<br />";
-											}
-										}
-										?>
-										<label>コード: <input type="text" class="hamazon-target" size="40"
-														   value="[tmkm-amazon asin='<?php echo $item->ASIN; ?>'][/tmkm-amazon]"
-														   onclick="this.select();"/></label>
-										<a class="button-primary hamazon-insert" data-target=".hamazon-target" href="#">挿入</a>
-										<br/>
-										<span class="description">ショートコードを投稿本文に貼り付けてください</span>
-									</td>
-								</tr>
-								<?php
+					$url = esc_url( $item->DetailPageURL );
+
+					$title = $attributes[ 'Title' ];
+					$product_group = sprintf( '<small>%s</small>', self::index_label( $attributes[ 'ProductGroup' ] ) );
+					$price = isset( $attributes[ 'ListPrice' ] ) ? $attributes[ 'ListPrice' ][ 'FormattedPrice' ] : false;
+					$desc = $price ? sprintf( "<p class=\"price\"><span class=\"label\">%s</span><em>{$price}</em></p>", __( 'Price', 'hamazon' ) ) : '';
+					$filter = [
+						'author' => [ 'Author', 'Director', 'Actor', 'Artist', 'Creator' ],
+						'publisher' => [ 'Publisher', 'Manufacturer', 'Label', 'Brand', 'Studio' ],
+						'Date' => [ 'PublicationDate' ],
+						'allowable' => [ 'Binding', 'NumberOfPages', 'ISBN', 'Feature' ]
+					];
+					foreach($filter as $f => $values){
+						foreach($values as $val){
+							if(isset($attributes[$val]) && ( $label = self::atts_to_string( $val ) )  ){
+								$key = self::atts_to_string($val);
+								$value = esc_html(preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $attributes[$val]) ? mysql2date(get_option('date_format'), $attributes[$val]) : $attributes[$val]);
+								$desc .= "<p><span class=\"label\">{$key}</span><em>{$value}</em></p>";
+								if( false === array_search( $f, [ 'allowable', 'author' ] ) ) {
+									break;
+								}
 							}
-							?>
-						</table>
-						<div class="result-desc clearfix">
-							<?php echo $pagination; ?>
-						</div><!-- //.result-desc -->
-						<?php
+						}
 					}
+					if ( get_option( 'hamazon_show_review', false ) && 'true' === (string) $item->CustomerReviews->HasReviews ) {
+						$review = sprintf( '<p class="review"><iframe src="%s"></iframe></p>', $item->CustomerReviews->IFrameURL );
+					} else {
+						$review = '';
+					}
+					if ( !empty( $content ) ) {
+						$desc .= sprintf( '<p class="additional-description">%s</p>', $content );
+					}
+					$tag = <<<EOS
+<div class="tmkm-amazon-view wp-hamazon-amazon">
+<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goods_image}" border="0" alt="{$title}" /></a></p>
+<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$title}{$product_group}</a></p>
+{$desc}{$review}
+<p class="vendor"><a href="https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html">Supported by amazon Product Advertising API</a></p>
+</div>
+EOS;
+					/**
+					 * wp_hamazon_amazon
+					 *
+					 * Filter output of amazon
+					 *
+					 * @param string $html
+					 * @param \SimpleXMLElement $item
+					 * @param array $extra_atts
+					 * @param string $content
+					 * @return string
+					 */
+					return apply_filters( 'wp_hamazon_amazon', $tag, $item, $extra_atts, $content );
 				}
 			}
-			echo '</div>';
+		} catch ( \Exception $e ) {
+			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
 	}
+
+
+	/**
+	 * Translate Attribute
+	 *
+	 * @param string $key
+	 * @return string
+	 */
+	public static function atts_to_string($key){
+		$attributes = [
+			'Actor' => __( 'Actor', 'hamazon' ),
+			'Artist' => __( 'Artist', 'hamazon' ),
+			'Author' => __( 'Author', 'hamazon' ),
+			'Binding' => __( 'Category', 'hamazon' ),
+			'Brand' => __( 'Brand', 'hamazon' ),
+			'Creator' => __( 'Creator', 'hamazon' ),
+			'Director' => __( 'Director', 'hamazon' ),
+			'ISBN' => 'ISBN',
+			'Label' => __( 'Label', 'hamazon' ),
+			'Manufacturer' => __( 'Actor', 'hamazon' ),
+			'NumberOfPages' => _x( 'No. of Pages', 'item_attributes', 'hamazon' ),
+			'PublicationDate' => __( 'Published', 'hamazon' ),
+			'Publisher' => _x( 'Publisher', 'item_attributes', 'hamazon' ),
+			'Studio' => __( 'Studio', 'hamazon' ),
+		];
+		return isset( $attributes[ $key ] ) ? $attributes[ $key ] : '';
+	}
+
 }

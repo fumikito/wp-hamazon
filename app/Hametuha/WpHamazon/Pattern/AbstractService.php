@@ -76,7 +76,82 @@ abstract class AbstractService extends Singleton {
             }
             return $data;
         }, 1, 2 );
+        add_action( 'init', [ $this, 'short_code_set_up' ]);
 	}
+
+    /**
+     * Register short codes
+     */
+    public function short_code_set_up(){
+	    if ( ! $this->is_valid() ) {
+	        return;
+        }
+        /**
+         * hamazon_shortcode_settings
+         *
+         * Filters shortcode setting
+         *
+         * @param array  $settings
+         * @param string $service
+         * @return array
+         */
+        $short_codes = apply_filters( 'hamazon_shortcode_settings', $this->short_code_setting(), $this->name );
+	    foreach ( $short_codes as $short_code => $setting ) {
+	    	// Register short code
+	    	add_shortcode( $short_code, function( $atts, $content = '' ) use ( $short_code, $setting ) {
+	    		$default = [];
+	    		foreach ( $setting as $attribute ) {
+	    			$default[$attribute['attr']] = isset( $attribute['default'] ) ? $attribute['default'] : '';
+				}
+				$atts = shortcode_atts( $default, $atts, $short_code );
+	    		$result = $this->short_code_callback( $short_code, $atts, $content );
+	    		if ( is_wp_error( $result ) ) {
+	    			$html = wp_kses_post( sprintf( '<p class="hamazon">%s</p>', $result->get_error_message() ) );
+					/**
+					 * hamazon_error_message_html
+					 *
+					 * Filter error message for hamazon.
+					 *
+					 * @param string    $html
+					 * @param \WP_Error $result
+					 * @param string    $service
+					 * @return string
+					 */
+					return apply_filters( 'hamazon_error_message_html', $html, $result, $this->name );
+				} else {
+	    			return $result;
+				}
+	    	} );
+	    	// Add for shortcake
+			add_action( 'register_shortcode_ui', function() use ( $short_code, $setting ) {
+				shortcode_ui_register_for_shortcode( $short_code, [
+					'label' => sprintf( __( '%s Affiliate Tag', 'hamazon' ), $this->title ),
+					'listItemImage' => 'dashicons-money',
+					'inner_content' => [
+						'label'       => __( 'Content', 'hamazon' ),
+					],
+					'attrs' => $setting,
+				] );
+			} );
+        }
+    }
+
+    /**
+     * Handle short code format
+     *
+     * @param $short_code_name
+     * @param array $attributes
+     * @param string $content
+     * @return string|\WP_Error
+     */
+    abstract protected function short_code_callback( $short_code_name, array $attributes = [], $content = '' );
+
+    /**
+     * Return short code settings
+     *
+     * @return string
+     */
+    abstract protected function short_code_setting();
 
     /**
      * Filter data passed to react.
