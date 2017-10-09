@@ -29,6 +29,7 @@ export class FormAmazon extends FormBase {
 
   onInputChange(event) {
     this.setState({
+      page: 1,
       query: event.target.value,
     });
   }

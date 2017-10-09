@@ -48,3 +48,13 @@ function hamazon_root_dir() {
 function hamazon_asset_url( $path ) {
 	return plugin_dir_url( __FILE__ ) . 'assets/' . ltrim( $path, '/' );
 }
+
+/**
+ * Default no image URL.
+ *
+ * @return string
+ */
+function hamazon_no_image(){
+	$default = hamazon_asset_url( 'img/hamazon-no-image.svg' );
+	return apply_filters( 'hamazon_default_no_image', $default );
+}

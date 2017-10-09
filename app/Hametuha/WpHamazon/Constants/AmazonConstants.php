@@ -169,11 +169,13 @@ class AmazonConstants {
 		} else {
 			// Make Request
 			/**
-			 * hamazon_timeout_amazon
+			 * hamazon_default_timeout
 			 *
 			 * Filter for timeout
+			 * @param array $param
+			 * @param string $service
 			 */
-			$default_time_out = apply_filters( 'hamazon_timeout_amazon', 10, $param );
+			$default_time_out = apply_filters( 'hamazon_default_timeout', 10, $param, 'amazon' );
 			$response = wp_remote_get( $url, [
 				'timeout' => $default_time_out,
 			] );
@@ -337,16 +339,16 @@ class AmazonConstants {
 	protected static function get_image_src( $item, $size = 'small' ) {
 		switch ( $size ) {
 			case 'large':
-				$url = (string) $item->LargeImage->URL ?: '' ;
+				$url = (string) $item->LargeImage->URL ?: hamazon_no_image() ;
 				break;
 			case 'medium':
-				$url = (string) $item->MediumImage->URL ?: '';
+				$url = (string) $item->MediumImage->URL ?: hamazon_no_image();
 				break;
 			case 'small':
-				$url = (string) $item->SmallImage->URL ?: '';
+				$url = (string) $item->SmallImage->URL ?: hamazon_no_image();
 				break;
 			default:
-				$url = '';
+				$url = hamazon_no_image();
 				break;
 		}
 		return $url;

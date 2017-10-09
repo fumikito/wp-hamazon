@@ -4,6 +4,8 @@ import React from 'react';
 // Services
 import {AmazonRenderer} from './renderer/amazon-renderer.jsx';
 import {FormAmazon} from './form/form-amazon.jsx';
+import {DmmRenderer} from "./renderer/dmm-renderer.jsx";
+import {FormDmm} from "./form/form-dmm.jsx";
 
 /* global HamazonEditor:false */
 
@@ -44,6 +46,10 @@ export class SearchBox extends React.Component{
       case 'amazon':
         Renderer = AmazonRenderer;
         SearchForm = FormAmazon;
+        break;
+      case 'dmm':
+        Renderer = DmmRenderer;
+        SearchForm = FormDmm;
         break;
     }
     if ( Renderer ) {

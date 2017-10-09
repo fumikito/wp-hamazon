@@ -214,7 +214,7 @@ abstract class AbstractService extends Singleton {
 							break;
 					}
 					if ( $option['description'] ) {
-						printf( '<p class="description">%s</p>', wp_kses_post( $option['descriptoin'] ) );
+						printf( '<p class="description">%s</p>', wp_kses_post( $option['description'] ) );
 					}
 				},
 				'wp-hamazon',
