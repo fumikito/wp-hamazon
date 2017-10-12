@@ -52,6 +52,8 @@ class BootStrap extends Singleton {
 		if ( $this->active_services ) {
 			// O.K, let's initiate media frame!
 			$this->init_media_frame();
+			// Add editor style.
+            add_filter( 'mce_css', [ $this, 'mce_css' ], 10, 2 );
 		}
 	}
 
@@ -221,6 +223,48 @@ class BootStrap extends Singleton {
 			}
 		}
 	}
+
+	/**
+     * Get style sheet
+     *
+	 * @return array [ $url, $version ]
+	 */
+	protected function stylesheet_url() {
+	    if ( ! get_option( 'hamazon_load_css', 1 ) ) {
+	        return [];
+        }
+	    $style = [
+            hamazon_asset_url( '/css/hamazon.css' ),
+            hamazon_info( 'version' ),
+        ];
+        foreach ( [
+            get_template_directory() => get_template_directory_uri(),
+            get_stylesheet_directory() => get_stylesheet_directory_uri(),
+        ] as $dir => $url ) {
+            $path = $dir .= '/tmkm-amazon.css';
+            if ( file_exists( $path ) ) {
+                $style = [
+                    $url . '/tmkm-amazon.css',
+                    filemtime( $path ),
+                ];
+            }
+        }
+        return $style;
+    }
+
+	/**
+     * Register tinymce css.
+     *
+	 * @param string $styles
+	 * @param string $glue
+	 * @return string
+	 */
+    public function mce_css( $styles, $glue = ' ,' ) {
+	    if ( $css = $this->stylesheet_url() ) {
+	        $styles .= $glue . $css[0];
+        }
+	    return $styles;
+    }
 
 	/**
 	 * Show media buttons

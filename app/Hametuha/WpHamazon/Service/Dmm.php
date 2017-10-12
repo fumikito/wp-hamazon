@@ -217,14 +217,14 @@ class Dmm extends AbstractService {
 			return $search_result;
 		}
 		$site = $request['site'];
-//		print_r( $search_result->result->items );
-//		exit;
+		$site = 'DMM.R18' === $request['site'] ? $request['site'] : 'DMM.com';
 		return new \WP_REST_Response( [
 			'total_page' => ceil( $search_result->result->total_count / $this->per_page ),
 			'total_result' => (int) $search_result->result->total_count,
-			'items' => array_map( function( $item ) {
+			'items' => array_map( function( $item ) use ( $site ) {
 				return [
 					'title' => $item->title,
+                    'site'  => $site,
 					'category' => $item->category_name,
 					'asin' => $item->content_id,
 					'floor' => $item->floor_code,

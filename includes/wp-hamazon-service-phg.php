@@ -100,10 +100,10 @@ class WP_Hamazon_Service_Phg extends WP_Hamazon_Service implements WP_Hamazon_Se
 				return '電子書籍';
 				break;
 			case 'song':
+			case 'musicvideo':
 			case 'music':
 				return 'ミュージック';
 				break;
-			case 'musicvideo':
 			case 'music-video':
 				return 'ミュージックビデオ';
 				break;

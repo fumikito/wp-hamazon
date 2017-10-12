@@ -6,7 +6,7 @@ import {AmazonRenderer} from "./amazon-renderer.jsx";
 export class DmmRenderer extends AmazonRenderer{
 
   getCode(){
-    return '[dmm service="' + this.props.item.service + '" floor="' + this.props.item.floor + '" id="' + this.props.item.asin + '"][/dmm]';
+    return '[dmm site="' + this.props.item.site + '" id="' + this.props.item.asin + '"][/dmm]';
   }
 
   getMeta(){
