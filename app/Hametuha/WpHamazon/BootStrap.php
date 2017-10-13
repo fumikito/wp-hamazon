@@ -57,6 +57,8 @@ class BootStrap extends Singleton {
 			$this->init_media_frame();
 			// Add editor style.
             add_filter( 'mce_css', [ $this, 'mce_css' ], 10, 2 );
+            // Add CSS
+            add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ] );
 		}
 		$this->backward_compats();
 	}
@@ -199,13 +201,8 @@ class BootStrap extends Singleton {
 	 * @global array $hamazon_settings
 	 */
 	public function enqueue_script() {
-		global $hamazon_settings;
-		if ( ! is_admin() && $hamazon_settings['load_css'] ) {
-			if ( file_exists( get_stylesheet_directory() . '/tmkm-amazon.css' ) ) {
-				$css_url = get_stylesheet_directory_uri() . '/tmkm-amazon.css';
-			} else {
-				$css_url = plugin_dir_url( dirname( __FILE__ ) ) . 'assets/css/hamazon.css';
-			}
+		if ( ! is_admin() && get_option( 'hamazon_load_css' ) ) {
+		    list( $url, $version ) = $this->stylesheet_url();
 			/**
 			 * wp_hamazon_css_args
 			 *
@@ -216,9 +213,9 @@ class BootStrap extends Singleton {
 			 */
 			$args = apply_filters( 'wp_hamazon_css_args', array(
 				'handle'  => 'wp-hamazon',
-				'src'     => $css_url,
-				'deps'    => array(),
-				'version' => $this->version,
+				'src'     => $url,
+				'deps'    => [],
+				'version' => $version,
 				'media'   => 'all',
 			) );
 			if ( is_array( $args ) ) {

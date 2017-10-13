@@ -5,7 +5,7 @@ Tags: amazon, affiliate, dmm, phg
 Requires at least: 4.7  
 Tested up to: 4.8.2  
 Requires PHP: 5.4  
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 
 You can add affiliate link in post content via Amazon, iTunes, DMM.
 
