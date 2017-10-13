@@ -1,16 +1,16 @@
 <?php
 
-if(!function_exists('tmkm_amazon_view')) {
+if ( !function_exists( 'tmkm_amazon_view' ) ) {
 	/**
-     * Echo Product link HTML with asin code.
-     *
-     * This function exists only for the backward compatibility.
-	 * 
+	 * Echo Product link HTML with asin code.
+	 *
+	 * This function exists only for the backward compatibility.
+	 *
 	 * @param string $asin ASIN code
 	 * @deprecated Since 2.0
 	 */
-	function tmkm_amazon_view($asin) {
-        hamazon_asin_link($asin);
+	function tmkm_amazon_view( $asin ) {
+		hamazon_asin_link( $asin );
 	}
 
 
@@ -20,13 +20,13 @@ if(!function_exists('tmkm_amazon_view')) {
  * Echo Product link HTML with asin code.
  *
  * @package hamazon
- * @param string $asin ASIN code
+ * @since 2.3.1
+ * @param string $asin ASIN code.
+ * @param string $content Default empty string.
+ * @return string
  */
-function hamazon_asin_link($asin){
-    $instance = WP_Hamazon_Controller::get_instance();
-    if( $instance->amazon ){
-        echo $instance->amazon->format_amazon($asin);
-    }
+function hamazon_asin_link( $asin, $content = '' ) {
+	return \Hametuha\WpHamazon\Constants\AmazonConstants::format_amazon( $content, [ 'asin' => $asin ] );
 }
 
 /**
@@ -54,7 +54,7 @@ function hamazon_asset_url( $path ) {
  *
  * @return string
  */
-function hamazon_no_image(){
+function hamazon_no_image() {
 	$default = hamazon_asset_url( 'img/hamazon-no-image.svg' );
 	return apply_filters( 'hamazon_default_no_image', $default );
 }

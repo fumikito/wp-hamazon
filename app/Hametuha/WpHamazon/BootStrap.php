@@ -55,6 +55,7 @@ class BootStrap extends Singleton {
 			// Add editor style.
             add_filter( 'mce_css', [ $this, 'mce_css' ], 10, 2 );
 		}
+		$this->backward_compats();
 	}
 
 	/**
@@ -267,6 +268,55 @@ class BootStrap extends Singleton {
     }
 
 	/**
+     * Get localized scripts
+     *
+	 * @param array $excludes
+	 */
+    public function load_hamazon_buttons( $excludes = [] ) {
+		static $did_localized = false;
+        wp_enqueue_style( 'hamazon-editor' );
+		if ( ! $did_localized ) {
+			wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
+				'endpoint' => rest_url( '/hamazon/v3/' ),
+				'nonce' => wp_create_nonce( 'wp_rest' ),
+				'icon' => hamazon_asset_url( 'img/button-icon.png' ),
+				'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
+				'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
+				'search' => __( 'Search', 'hamazon' ),
+				'invalid' => __( 'This service is not available.', 'hamazon' ),
+				'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
+				'insert' => __( 'Insert', 'hamazon' ),
+				'copyCode' => __( 'Copy Code', 'hamazon' ),
+				'copyLink' => __( 'Copy Link', 'hamazon' ),
+				'view' => __( 'View', 'hamazon' ),
+				'category' => __( 'category', 'hamazon' ),
+				'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
+				'previousPage' => __( 'Previous', 'hamazon' ),
+				'nextPage' => __( 'Next', 'hamazon' ),
+				'countries' => __( 'Countries', 'hamazon' ),
+				'services' => array_map( function ( $key, $value ) {
+					$service = [
+						'key' => $key,
+						'label' => $value,
+					];
+					/**
+					 * hamazon_service_variables
+					 *
+					 * Add service instance passed to react.
+					 *
+					 * @param mixed $data
+					 * @param string $key
+					 */
+					$data = apply_filters( 'hamazon_service_variables', null, $key );
+					$service[ 'data' ] = $data;
+					return $service;
+				}, array_keys( $this->active_services ), array_values( $this->active_services ) ),
+			] );
+            $did_localized = true;
+        }
+    }
+
+	/**
 	 * Show media buttons
 	 *
 	 * @param string $editor_id
@@ -281,49 +331,26 @@ class BootStrap extends Singleton {
 		}
 		// O.K. Let's move.
 		$counter++;
-		wp_enqueue_style( 'hamazon-editor' );
+		$this->load_hamazon_buttons();
 		wp_enqueue_script( 'hamazon-editor-helper' );
-		wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
-            'endpoint' => rest_url( '/hamazon/v3/' ),
-			'nonce'    => wp_create_nonce( 'wp_rest' ),
-			'icon'     => hamazon_asset_url( 'img/button-icon.png' ),
-			'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
-			'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
-            'search' => __( 'Search', 'hamazon' ),
-			'invalid' => __( 'This service is not available.', 'hamazon' ),
-			'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
-			'insert' => __( 'Insert', 'hamazon' ),
-            'copyCode' => __( 'Copy Code', 'hamazon' ),
-            'copyLink' => __( 'Copy Link', 'hamazon' ),
-            'view' => __( 'View', 'hamazon' ),
-            'category' => __( 'category', 'hamazon' ),
-			'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
-            'previousPage' => __( 'Previous', 'hamazon' ),
-			'nextPage' => __( 'Next', 'hamazon' ),
-			'countries' => __( 'Countries', 'hamazon' ),
-			'services' => array_map( function( $key, $value ) {
-				$service = [
-					'key'   => $key,
-					'label' => $value,
-				];
-				/**
-				 * hamazon_service_variables
-				 *
-				 * Add service instance passed to react.
-				 *
-				 * @param mixed  $data
-				 * @param string $key
-				 */
-				$data = apply_filters( 'hamazon_service_variables', null, $key );
-				$service['data'] = $data;
-				return $service;
-			}, array_keys( $this->active_services ), array_values( $this->active_services ) ),
-		] );
-
 		?>
 		<div class="hamazon-btn-component" style="display: inline-block" id="hamazon-selector-<?php echo esc_attr( $counter ) ?>" data-editor-id="<?php echo esc_attr( $editor_id ) ?>">
 		</div>
 		<?php
 	}
+
+	/**
+	 * Remove old short codes.
+	 */
+	public function backward_compats() {
+        foreach ( [ 'tmkm-amazon-list', 'hamazon_linkshare', 'rakuten' ] as $code ) {
+            $remove = apply_filters( 'hamazon_duplicated_short_code', true, $code );
+            if ( $remove ) {
+                add_shortcode( $code, function() {
+                    return '';
+                } );
+            }
+        }
+    }
 
 }

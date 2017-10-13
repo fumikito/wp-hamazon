@@ -1,39 +1,51 @@
-#  WP Hamazon
+# Hamazon
 
-Contributors: Takahashi_Fumiki, hametuha
-Tags: amazon, affiliate, linkshare, rakuten, dmm, phg  
-Requires at least: 4.7
-Tested up to: 4.8.2
-Requires PHP: 5.4
+Contributors: Takahashi_Fumiki, hametuha  
+Tags: amazon, affiliate, dmm, phg  
+Requires at least: 4.7  
+Tested up to: 4.8.2  
+Requires PHP: 5.4  
 Stable tag: 3.0.0
 
-You can add affiliate link in post content via Amazon, Rakute and etc.
+You can add affiliate link in post content via Amazon, iTunes, DMM.
 
 ##  Description
 
-WordPressの投稿編集画面にアフィリエイトリンク挿入ショートコードを追加することができます。  
-メディアアップローダーボタンの脇に各アフィリエイトサービスのボタンが表示されるようになるので、そちらをクリックしてください。
-クリックすると検索画面になるので、該当する商品を探し、ショートコードを挿入してください。
+You can add affiliate link in visual editor button.
+Search on editor and add it immediately.
 
-### 対応しているアフィリエイトサービス
+### Available Services
 
-* Amazon
-* 楽天
-* リンクシェア
-* PHG
-* DMM
+* Amazon Advertising API
+* PHG iTunes affiliate
+* DMM affiliate
+
+### Deprecated
+
+These services below are deprecated.
+
+* Rakuten
+* Linkshare
+
 
 ##  Installation
 
-1. `wp-hamazon`フォルダーを`/wp-content/plugins/`ディレクトリにアップロードしてください。
-1. プラグインを有効化してください。
-1. 設定 > アフィリエト設定へ移動し、必要な情報を入力してください。
+1. Upload `wp-hamazon` folder in `/wp-content/plugins/` directory.
+1. Activate plugin.
+1. Go to `Setting > Affiliate Setting` and enter credentials.
 
 ##  Screenshots
 
-1. このようなボタンが追加されます
+1. You can search affiliate like this screen.
 
 ##  Changelog
+
+### 3.0.0
+
+* All codes are rewriten.
+* Drop Rakuten and Linkshare. Shortcodes are now empty.
+* Ready for [Shortcake](https://ja.wordpress.org/plugins/shortcode-ui/). Now you can preview shortcode resutl.
+* If you feel this version breaks your site, stay old verison or contact me via [support forum]().
 
 ### 2.3.1
 

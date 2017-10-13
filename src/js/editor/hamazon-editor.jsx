@@ -39,6 +39,7 @@ class HamazonButton extends React.Component{
             detail: {
               code: code,
               editor: this.props.editorId,
+              target: false,
             }
           });
           document.dispatchEvent(event);
@@ -55,6 +56,3 @@ class HamazonButton extends React.Component{
 Array.from(document.querySelectorAll('.hamazon-btn-component'), (div) => {
   ReactDOM.render(<HamazonButton {...(div.dataset)}/>, div);
 });
-
-
-

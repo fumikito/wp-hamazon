@@ -21,7 +21,7 @@ abstract class Singleton {
 	/**
 	 * Get instance
 	 *
-	 * @return static;
+	 * @return static
 	 */
 	public static function get_instance() {
 		$class_name = get_called_class();

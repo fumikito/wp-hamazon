@@ -6,6 +6,10 @@ namespace Hametuha\WpHamazon\Service;
 use Hametuha\WpHamazon\Pattern\AbstractService;
 use Hametuha\WpHamazon\Constants\AmazonConstants;
 
+/**
+ * Amazon class
+ * @package hamazon
+ */
 class Amazon extends AbstractService {
 
 	public $name = 'amazon';

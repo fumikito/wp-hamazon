@@ -2,7 +2,10 @@
 
 document.addEventListener('hamazon', function (event) {
   'use strict';
-  //editorId.
+  // Check editorId and if exists, insert to tinymce.
+  if ( ! event.detail.editor ) {
+    return;
+  }
   if(tinymce.activeEditor && !tinymce.activeEditor.isHidden()){
     var editor = tinymce.editors[event.detail.editor];
     editor.execCommand('mceInsertContent', false, event.detail.code)

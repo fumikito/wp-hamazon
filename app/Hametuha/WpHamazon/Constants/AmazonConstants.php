@@ -427,7 +427,6 @@ class AmazonConstants {
 	 * @return string|\WP_Error
 	 */
 	public static function format_amazon( $asin, $extra_atts = [] ) {
-
 		try {
 			if ( self::is_asin( $asin ) ) {
 				// Old format like [tmkm-amazon]000000000[/tmkm-amazon]

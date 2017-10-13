@@ -39,9 +39,7 @@ export class FormBase extends React.Component {
     let endpoint = HamazonEditor.endpoint + this.props.service.key;
     let self = this;
     let result;
-    alert('Do search');
     switch (this.methodName()) {
-
       case 'GET':
         axios.get(endpoint, {
           params: params,
