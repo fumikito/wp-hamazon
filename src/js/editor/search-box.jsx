@@ -6,6 +6,8 @@ import {AmazonRenderer} from './renderer/amazon-renderer.jsx';
 import {FormAmazon} from './form/form-amazon.jsx';
 import {DmmRenderer} from "./renderer/dmm-renderer.jsx";
 import {FormDmm} from "./form/form-dmm.jsx";
+import {PhgRenderer} from "./renderer/phg-renderer.jsx";
+import {FormPhg} from "./form/form-phg.jsx";
 
 /* global HamazonEditor:false */
 
@@ -50,6 +52,10 @@ export class SearchBox extends React.Component{
       case 'dmm':
         Renderer = DmmRenderer;
         SearchForm = FormDmm;
+        break;
+      case 'phg':
+        SearchForm = FormPhg;
+        Renderer = PhgRenderer;
         break;
     }
     if ( Renderer ) {

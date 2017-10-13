@@ -300,6 +300,7 @@ class BootStrap extends Singleton {
 			'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
             'previousPage' => __( 'Previous', 'hamazon' ),
 			'nextPage' => __( 'Next', 'hamazon' ),
+			'countries' => __( 'Countries', 'hamazon' ),
 			'services' => array_map( function( $key, $value ) {
 				$service = [
 					'key'   => $key,

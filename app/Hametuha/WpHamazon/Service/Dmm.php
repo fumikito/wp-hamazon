@@ -265,7 +265,7 @@ class Dmm extends AbstractService {
 		], $args);
 		$url = add_query_arg( $params, $this->endpoint . $api );
 		// Make Request
-		$default_time_out = apply_filters( 'hamazon_default_timeout', 10, $params, 'amazon' );
+		$default_time_out = apply_filters( 'hamazon_default_timeout', 10, $params, 'dmm' );
 		$response = wp_remote_get( $url, [
 			'timeout' => $default_time_out,
 		] );
