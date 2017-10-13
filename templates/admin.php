@@ -38,13 +38,13 @@
 
 				<ul class="hamazon-sidebar-list">
 					<li>
-						<?php echo wp_kses_post( __( 'This plugin is hosted on <a href="%s" target="_blank">github</a>. Any pull requests are welcomed!', 'https://github.com/fumikito/wp-hamazon' ) )?>
+						<?php echo wp_kses_post( sprintf( __( 'This plugin is hosted on <a href="%s" target="_blank">github</a>. Any pull requests are welcomed!', 'hamazon' ), 'https://github.com/fumikito/wp-hamazon' ) )?>
 					</li>
 					<li>
-						<?php echo wp_kses_post( __( '<a href="%s" target="_blank">Gisnism.info</a> has lots of tips. Please touch it and join us.', 'https://gianism.info' ) )?>
+						<?php echo wp_kses_post( sprintf( __( '<a href="%s" target="_blank">Gisnism.info</a> has lots of tips. Please touch it and join us.', 'hamazon' ), 'https://gianism.info' ) )?>
 					</li>
 					<li>
-						<?php echo wp_kses_post( __( 'Please review our plugin at <a href="%s" target="_blank">WordPress.org</a>. Feedback will grow us.', 'https://wordpress.org/support/plugin/wp-hamazon/reviews/#new-post' ) )?>
+						<?php echo wp_kses_post( sprintf( __( 'Please review our plugin at <a href="%s" target="_blank">WordPress.org</a>. Feedback will grow us.', 'hamazon' ), 'https://wordpress.org/support/plugin/wp-hamazon/reviews/#new-post' ) )?>
 					</li>
 				</ul>
 

@@ -30,12 +30,12 @@ class Dmm extends AbstractService {
 			[
 				'key' => 'dmm_affiliate_id',
 				'label' => __( 'Affiliate ID', 'hamazon' ),
-				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.' ), __( 'Affiliate ID', 'hamazon' ), 'https://affiliate.dmm.com/account/index/' ),
+				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.', 'hamazon' ), __( 'Affiliate ID', 'hamazon' ), 'https://affiliate.dmm.com/account/index/' ),
 			],
 			[
 				'key'   => 'dmm_api_id',
 				'label' => __( 'API ID', 'hamazon' ),
-				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.' ), __( 'API ID', 'hamazon' ), 'https://affiliate.dmm.com/api/id_confirm/' ),
+				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.', 'hamazon' ), __( 'API ID', 'hamazon' ), 'https://affiliate.dmm.com/api/id_confirm/' ),
 			],
 		];
 	}

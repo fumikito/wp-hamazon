@@ -43,7 +43,7 @@ class Phg extends AbstractService {
 			[
 				'key' => 'phg_id',
 				'label' => __( 'Affiliate ID', 'hamazon' ),
-				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.' ), __( 'Affiliate ID', 'hamazon' ), 'https://www.apple.com/jp/itunes/affiliates/' ),
+				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.', 'hamazon' ), __( 'Affiliate ID', 'hamazon' ), 'https://www.apple.com/jp/itunes/affiliates/' ),
 			],
 		];
 	}
