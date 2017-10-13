@@ -34,7 +34,6 @@ export class BaseRenderer extends React.Component {
   }
 
   render() {
-    console.log(this.props.item);
     return (
       <div className="hamazon-item">
         {(()=>{

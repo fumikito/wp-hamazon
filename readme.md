@@ -42,6 +42,8 @@ These services below are deprecated.
 
 ### 3.0.0
 
+**BREAKING CHANGE!!**
+
 * All codes are rewriten.
 * Drop Rakuten and Linkshare. Shortcodes are now empty.
 * Ready for [Shortcake](https://ja.wordpress.org/plugins/shortcode-ui/). Now you can preview shortcode resutl.

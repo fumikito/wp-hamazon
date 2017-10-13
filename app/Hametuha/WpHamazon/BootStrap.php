@@ -49,6 +49,9 @@ class BootStrap extends Singleton {
 				}
 			}
 		}
+		if ( ! get_option( 'hamazon_option_updated' ) ) {
+		    $this->convert_option();
+        }
 		if ( $this->active_services ) {
 			// O.K, let's initiate media frame!
 			$this->init_media_frame();
@@ -166,8 +169,7 @@ class BootStrap extends Singleton {
 		wp_register_style( 'hamazon-editor', hamazon_asset_url( '/css/hamazon-editor.css' ), [ 'dashicons' ], hamazon_info( 'version' ) );
 		$editor_js = 'js/editor/hamazon-editor' . ( WP_DEBUG ? '' : '.min' ) . '.js';
 		wp_register_script( 'hamazon-editor', hamazon_asset_url( $editor_js ), [], hamazon_info( 'version' ), true );
-        wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/iframe-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
-
+        wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/editor-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
 	}
 
 	/**
@@ -351,6 +353,30 @@ class BootStrap extends Singleton {
                 } );
             }
         }
+    }
+
+	/**
+	 * Update old option.
+	 */
+    public function convert_option() {
+        $old_option = get_option( 'wp_tmkm_admin_options', [] );
+        foreach ( [
+            'associatesid',
+            'accessKey',
+            'secretKey',
+            'show_review',
+            'post_types',
+            'load_css',
+            'phg_id',
+            'dmm_affiliate_id',
+            'dmm_api_id',
+        ] as $old_key ) {
+            $new_key = "hamazon_{$old_key}";
+            if ( isset( $old_option[ $old_key ] ) && $old_option[ $old_key] ) {
+                update_option( $new_key, $old_option[ $old_key ] );
+            }
+        }
+	    update_option( 'hamazon_option_updated', current_time( 'timestamp' ) );
     }
 
 }

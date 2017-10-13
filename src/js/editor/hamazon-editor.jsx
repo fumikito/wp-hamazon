@@ -39,7 +39,7 @@ class HamazonButton extends React.Component{
             detail: {
               code: code,
               editor: this.props.editorId,
-              target: false,
+              target: this.props.target,
             }
           });
           document.dispatchEvent(event);

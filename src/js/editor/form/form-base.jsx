@@ -53,7 +53,6 @@ export class FormBase extends React.Component {
           })
           .catch((response) => {
             self.props.submitHandler([]);
-            console.log('Error:', response);
             self.props.setLoading(false);
           });
         break;
