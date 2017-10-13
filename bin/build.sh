@@ -10,10 +10,13 @@ npm run package
 echo 'Generate readme.'
 curl -L https://raw.githubusercontent.com/fumikito/wp-readme/master/wp-readme.php | php
 # Remove files
-rm -rf node_modules
-rm -rf tests
-rm -rf bin
-rm readme.md
+rm -rf ./node_modules
+rm -rf ./tests
+rm -rf ./bin
+rm -rf ./.git
+rm ./.gitignore
+rm ./readme.md
+rm ./.travis.yml
 
 if [ $TRAVIS_TAG ]; then
     echo $TRAVIS_TAG
