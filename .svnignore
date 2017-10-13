@@ -1,2 +1,3 @@
 phpunit.xml.dist
 composer.lock
+.phpcs.ruleset.xml
