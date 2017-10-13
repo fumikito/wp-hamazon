@@ -70,7 +70,7 @@
 					<!-- Begin MailChimp Signup Form -->
 					<div id="mc_embed_signup">
 						<form
-								action="//gianism.us14.list-manage.com/subscribe/post?u=9b5777bb4451fb83373411d34&amp;id=1e82da4148&amp;SINGUP=WordPress"
+								action="//gianism.us14.list-manage.com/subscribe/post?u=9b5777bb4451fb83373411d34&amp;id=1e82da4148&amp;SINGUP=Hamazon-Admin"
 								method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate"
 								target="_blank" novalidate>
 							<div id="mc_embed_signup_scroll">
