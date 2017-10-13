@@ -17,7 +17,7 @@ env:
   - WP_VERSION=4.7 WP_MULTISITE=0
   global:
   - SVN_REPO: https://plugins.svn.wordpress.org/wp-hamazon
-  - secure: "A00os0RaqPIPY8P9fB1gIi7NlPrtMm4L/sVfzXSiyfsGllam3fZMHZfzDbNtROWARIKsszO/KMgTQX5inX/YcNtuj/iV3Ozzu+90O7Vo3LsWVseZfxfPQ7e1R8fOWtHgizFpk448Rf87RYIiOlfw6Cmx+QRsdA56rHjRhwgGsjk=",
+  - secure: "A00os0RaqPIPY8P9fB1gIi7NlPrtMm4L/sVfzXSiyfsGllam3fZMHZfzDbNtROWARIKsszO/KMgTQX5inX/YcNtuj/iV3Ozzu+90O7Vo3LsWVseZfxfPQ7e1R8fOWtHgizFpk448Rf87RYIiOlfw6Cmx+QRsdA56rHjRhwgGsjk="
 matrix:
   include:
   - php: 5.6
