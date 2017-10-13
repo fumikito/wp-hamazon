@@ -10,6 +10,6 @@
   "globals": {
     "angular": false,
     "wpApiSettings": false,
-    "ga": false,
+    "ga": false
   }
 }
