@@ -361,7 +361,7 @@ class AmazonConstants {
 	 *
 	 * @return array
 	 */
-	public static function get_attributes( \SimpleXMLElement $item ) {
+	public static function get_attributes( $item ) {
 		if ( $item->ItemAttributes ) {
 			return self::parse_object( $item->ItemAttributes );
 		} else {
@@ -400,7 +400,7 @@ class AmazonConstants {
 		$param = [
 			'Operation' => 'ItemLookup',
 			'IdType' => 'ASIN',
-			'ItemId' => (string)$asin,
+			'ItemId' => (string) $asin,
 			'ResponseGroup' => 'Medium,Offers,Images,Reviews'
 		];
 		$id = "asin_{$asin}";
