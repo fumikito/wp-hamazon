@@ -1,14 +1,16 @@
 msgid ""
 msgstr ""
-"Plural-Forms: nplurals=1; plural=0;\n"
 "Project-Id-Version: Hamazon\n"
-"POT-Creation-Date: 2017-10-13 17:58+0900\n"
-"PO-Revision-Date: 2017-10-13 18:16+0900\n"
+"POT-Creation-Date: 2018-11-23 03:46+0900\n"
+"PO-Revision-Date: 2018-11-23 03:50+0900\n"
+"Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
 "Language-Team: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
+"Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-Flags-xgettext: --add-comments=translators:\n"
 "X-Poedit-WPHeader: wp-hamazon.php\n"
@@ -16,38 +18,66 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
 "esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;"
 "_n_noop:1,2;_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
-"Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
-"Language: ja\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:74 templates/admin.php:13
+#: app/Hametuha/WpHamazon/BlockEditor.php:35
+#: app/Hametuha/WpHamazon/BootStrap.php:292
+msgid "Affiliate"
+msgstr "アフィリエイト"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:36
+msgid "Insert affiliater block of WP-Hamazon."
+msgstr "WP-Hamazonのアフィリエイトブロックを挿入。"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:37
+#: app/Hametuha/WpHamazon/BootStrap.php:201
+msgid "Setting"
+msgstr "設定"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:38
+msgid "Cancel"
+msgstr "キャンセル"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:39
+msgid "Enter additional text(e.g. your opinion) here."
+msgstr "あなたの感想など、追加するテキストを入力してください。"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:56
+msgid "No affiliate service available."
+msgstr "利用できるアフィリエイトサービスがありません。"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:70
+msgid "Failed to get proper contents."
+msgstr "コンテンツを取得できませんでした。"
+
+#: app/Hametuha/WpHamazon/BootStrap.php:88 templates/admin.php:13
 msgid "Hamazon Affiliate Setting"
 msgstr "Hamazon アフィリエイト設定"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:75
+#: app/Hametuha/WpHamazon/BootStrap.php:89
 msgid "Affiliate Setting"
 msgstr "アフィリエイト設定"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:100
+#: app/Hametuha/WpHamazon/BootStrap.php:114
 msgid "General Setting"
 msgstr "一般設定"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:109
+#: app/Hametuha/WpHamazon/BootStrap.php:123
 msgid "Available Post Types"
 msgstr "利用可能な投稿タイプ"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:135
-#: app/Hametuha/WpHamazon/BootStrap.php:138
+#: app/Hametuha/WpHamazon/BootStrap.php:151
+#: app/Hametuha/WpHamazon/BootStrap.php:154
 msgid "Load CSS"
 msgstr "CSSを読み込む"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:139
-#: app/Hametuha/WpHamazon/BootStrap.php:151
+#: app/Hametuha/WpHamazon/BootStrap.php:155
+#: app/Hametuha/WpHamazon/BootStrap.php:167
 msgid "No CSS"
 msgstr "CSSなし"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:150
+#: app/Hametuha/WpHamazon/BootStrap.php:166
 msgid ""
 "If you need original CSS, put \"tmkm-amazon.css\" in your theme folder. It "
 "will override default CSS."
@@ -55,73 +85,65 @@ msgstr ""
 "オリジナルのCSSを読み込みたい場合は、 \"tmkm-amazon.css\" をあなたのテーマ"
 "フォルダに配置してください。デフォルトのCSSを上書きします。"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:151
+#: app/Hametuha/WpHamazon/BootStrap.php:167
 #, php-format
 msgid "If you choose \"%s\", anything will be loaded."
 msgstr "\"%s\" を選んだ場合は、なにも読み込まれません。"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:187
-msgid "Setting"
-msgstr "設定"
-
-#: app/Hametuha/WpHamazon/BootStrap.php:283
-msgid "Affiliate"
-msgstr "アフィリエイト"
-
-#: app/Hametuha/WpHamazon/BootStrap.php:284
+#: app/Hametuha/WpHamazon/BootStrap.php:293
 msgid "Enter Affiliate Tag"
 msgstr "アフィリエイトタグを入力"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:285
+#: app/Hametuha/WpHamazon/BootStrap.php:294
 msgid "Search"
 msgstr "検索"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:286
+#: app/Hametuha/WpHamazon/BootStrap.php:295
 msgid "This service is not available."
 msgstr "このサービスは利用できません。"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:287
+#: app/Hametuha/WpHamazon/BootStrap.php:296
 msgid "No results found. Please try different query."
 msgstr "なにも見つかりませんでした。別の条件を試してください。"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:288
+#: app/Hametuha/WpHamazon/BootStrap.php:297
 msgid "Insert"
 msgstr "挿入"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:289
+#: app/Hametuha/WpHamazon/BootStrap.php:298
 msgid "Copy Code"
 msgstr "コードをコピー"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:290
+#: app/Hametuha/WpHamazon/BootStrap.php:299
 msgid "Copy Link"
 msgstr "リンクをコピー"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:291
+#: app/Hametuha/WpHamazon/BootStrap.php:300
 msgid "View"
 msgstr "表示"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:292
+#: app/Hametuha/WpHamazon/BootStrap.php:301
 msgid "category"
 msgstr "カテゴリー"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:293
+#: app/Hametuha/WpHamazon/BootStrap.php:302
 msgid "Search Keyword"
 msgstr "検索キーワード"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:294
+#: app/Hametuha/WpHamazon/BootStrap.php:303
 msgid "Previous"
 msgstr "前へ"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:295
+#: app/Hametuha/WpHamazon/BootStrap.php:304
 msgid "Next"
 msgstr "次へ"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:296
+#: app/Hametuha/WpHamazon/BootStrap.php:305
 msgid "Countries"
 msgstr "国"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:57
-#: app/Hametuha/WpHamazon/Service/Phg.php:438
+#: app/Hametuha/WpHamazon/Service/Phg.php:445
 msgid "eBook"
 msgstr "電子書籍"
 
@@ -138,7 +160,7 @@ msgid "On Demand Video"
 msgstr "オンデマンドビデオ"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:103
-#: app/Hametuha/WpHamazon/Service/Phg.php:429
+#: app/Hametuha/WpHamazon/Service/Phg.php:436
 msgid "All"
 msgstr "すべて"
 
@@ -172,7 +194,7 @@ msgstr "書籍"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:111
 msgid "Classical"
-msgstr ""
+msgstr "クラシック"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:112
 msgid "CreditCards"
@@ -239,7 +261,7 @@ msgid "MP3Downloads"
 msgstr "MP3ダウンロード"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:128
-#: app/Hametuha/WpHamazon/Service/Phg.php:432
+#: app/Hametuha/WpHamazon/Service/Phg.php:439
 msgid "Music"
 msgstr "ミュージック"
 
@@ -264,7 +286,7 @@ msgid "Shoes"
 msgstr "靴"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:134
-#: app/Hametuha/WpHamazon/Service/Phg.php:437
+#: app/Hametuha/WpHamazon/Service/Phg.php:444
 msgid "Software"
 msgstr "ソフトウェア"
 
@@ -308,7 +330,7 @@ msgstr "Amazon へのリクエストが不正です。"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:462
 #: app/Hametuha/WpHamazon/Service/Dmm.php:95
-#: app/Hametuha/WpHamazon/Service/Phg.php:88
+#: app/Hametuha/WpHamazon/Service/Phg.php:93
 msgid "Price"
 msgstr "価格"
 
@@ -323,13 +345,13 @@ msgstr "アーティスト"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:527
 #: app/Hametuha/WpHamazon/Service/Dmm.php:101
-#: app/Hametuha/WpHamazon/Service/Phg.php:98
+#: app/Hametuha/WpHamazon/Service/Phg.php:103
 msgid "Author"
 msgstr "作者"
 
 #: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:528
 #: app/Hametuha/WpHamazon/Service/Dmm.php:91
-#: app/Hametuha/WpHamazon/Service/Phg.php:84
+#: app/Hametuha/WpHamazon/Service/Phg.php:89
 msgid "Category"
 msgstr "カテゴリー"
 
@@ -376,11 +398,11 @@ msgstr "%s アフィリエイトタグ"
 msgid "Content"
 msgstr "コンテンツ"
 
-#: app/Hametuha/WpHamazon/Pattern/AbstractService.php:151
+#: app/Hametuha/WpHamazon/Pattern/AbstractService.php:152
 msgid "Valid"
 msgstr "有効"
 
-#: app/Hametuha/WpHamazon/Pattern/AbstractService.php:153
+#: app/Hametuha/WpHamazon/Pattern/AbstractService.php:154
 msgid "Invalid"
 msgstr "無効"
 
@@ -414,18 +436,18 @@ msgstr "言語"
 
 #: app/Hametuha/WpHamazon/Service/Amazon.php:102
 #: app/Hametuha/WpHamazon/Service/Dmm.php:177
-#: app/Hametuha/WpHamazon/Service/Phg.php:179
+#: app/Hametuha/WpHamazon/Service/Phg.php:184
 msgid "Search keyword."
-msgstr "検索語"
+msgstr "検索語。"
 
 #: app/Hametuha/WpHamazon/Service/Amazon.php:109
 #: app/Hametuha/WpHamazon/Service/Dmm.php:184
 msgid "Specified page."
-msgstr "指定されたページ"
+msgstr "指定されたページ。"
 
 #: app/Hametuha/WpHamazon/Service/Amazon.php:117
 msgid "Search category."
-msgstr "検索するカテゴリー"
+msgstr "検索するカテゴリー。"
 
 #: app/Hametuha/WpHamazon/Service/Dmm.php:32
 #: app/Hametuha/WpHamazon/Service/Dmm.php:33
@@ -474,8 +496,8 @@ msgid "Publisher"
 msgstr "発行"
 
 #: app/Hametuha/WpHamazon/Service/Dmm.php:102
-#: app/Hametuha/WpHamazon/Service/Phg.php:93
-#: app/Hametuha/WpHamazon/Service/Phg.php:187
+#: app/Hametuha/WpHamazon/Service/Phg.php:98
+#: app/Hametuha/WpHamazon/Service/Phg.php:192
 msgid "Genre"
 msgstr "ジャンル"
 
@@ -488,60 +510,64 @@ msgid "DMM API returns bad response."
 msgstr "DMM APIが不正なレスポンスを返しました。"
 
 #: app/Hametuha/WpHamazon/Service/Dmm.php:306
-#: app/Hametuha/WpHamazon/Service/Phg.php:372
+#: app/Hametuha/WpHamazon/Service/Phg.php:379
 msgid "Sorry, but item not found."
 msgstr "申し訳ございません、アイテムが見つかりませんでした。"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:195
+#: app/Hametuha/WpHamazon/Service/Phg.php:60
+msgid "Kind"
+msgstr "種別"
+
+#: app/Hametuha/WpHamazon/Service/Phg.php:200
 msgid "Country code"
 msgstr "国コード"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:294
+#: app/Hametuha/WpHamazon/Service/Phg.php:299
 msgctxt "search_result"
 msgid "Unknown"
 msgstr "不明"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:345
+#: app/Hametuha/WpHamazon/Service/Phg.php:350
 msgid "Failed to get iTunes response."
-msgstr "iTunesからのレスポンスを取得できませんでした。"
+msgstr "結果的にiTunesからのレスポンスを取得できませんでした。"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:413
+#: app/Hametuha/WpHamazon/Service/Phg.php:420
 msgid "Book"
 msgstr "本"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:414
+#: app/Hametuha/WpHamazon/Service/Phg.php:421
 msgid "Album"
 msgstr "アルバム"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:415
+#: app/Hametuha/WpHamazon/Service/Phg.php:422
 msgid "Coached Audio"
 msgstr "教育オーディオ"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:416
+#: app/Hametuha/WpHamazon/Service/Phg.php:423
 msgid "Interactive Booklet"
 msgstr "インタラクティブ・ブックレット"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:430
+#: app/Hametuha/WpHamazon/Service/Phg.php:437
 msgid "Movie"
 msgstr "映画"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:431
+#: app/Hametuha/WpHamazon/Service/Phg.php:438
 msgid "Podcast"
 msgstr "ポッドキャスト"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:433
+#: app/Hametuha/WpHamazon/Service/Phg.php:440
 msgid "Music Video"
 msgstr "ミュージックビデオ"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:434
+#: app/Hametuha/WpHamazon/Service/Phg.php:441
 msgid "Audio Book"
 msgstr "オーディオブック"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:435
+#: app/Hametuha/WpHamazon/Service/Phg.php:442
 msgid "Short Film"
 msgstr "ショートフィルム"
 
-#: app/Hametuha/WpHamazon/Service/Phg.php:436
+#: app/Hametuha/WpHamazon/Service/Phg.php:443
 msgid "TV Show"
 msgstr "TV番組"
 
@@ -556,7 +582,7 @@ msgid ""
 "pull requests are welcomed!"
 msgstr ""
 "このプラグインは <a href=\"%s\" target=\"_blank\">github</a> にホストされて"
-"います。プルリクエストをお待ちしています。"
+"います。プルリクエストをお待ちしています！"
 
 #: templates/admin.php:44
 #, php-format
@@ -618,7 +644,7 @@ msgstr "ソーシャルリンク"
 
 #: templates/admin.php:155
 msgid "Please visit our social media to make us more powerful!"
-msgstr "私たちのメディアを読んで応援してください。"
+msgstr "私たちのメディアを読んで応援してください！"
 
 #: wp-hamazon.php:72
 #, php-format
