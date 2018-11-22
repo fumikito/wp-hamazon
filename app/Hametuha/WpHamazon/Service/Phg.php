@@ -56,6 +56,11 @@ class Phg extends AbstractService {
 					'attr' => 'id',
 					'type' => 'text',
 				],
+				[
+					'label' => __( 'Kind', 'hamazon' ),
+					'attr'  => 'kind',
+					'type'  => 'text',
+				],
 			]
 		];
 	}
@@ -357,15 +362,17 @@ class Phg extends AbstractService {
 	 * @return array|mixed|object|\WP_Error
 	 */
 	public function find_product( $id, $cache = true ) {
+		$lang = 'ja' == get_locale() ? 'ja_jp' : 'en_us';
 		$args = [
-			'id'   => $id,
-            'lang' => 'ja' == get_locale() ? 'ja_jp' : 'en_us',
+			'term'       => $id,
+			'country'    => strtoupper( explode( '_', $lang )[1] ),
+            'lang'       => $lang
 		];
 		$key = "hamazon_phg_{$id}";
 		if ( $cache && ( false !== ( $transient = get_transient( $key ) ) ) ) {
 			return $transient;
 		}
-		$result = $this->make_request( self::LOOKUP_API, $args );
+		$result = $this->make_request( self::SEARCH_API, $args );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		} elseif ( ! $result->resultCount ) {

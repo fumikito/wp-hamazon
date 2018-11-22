@@ -1,13 +1,13 @@
 {
   "name": "wp-hamazon",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "description": "A WordPress plugin for affiliate.",
   "main": "gulpfile.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "gulp build && gulp watch",
     "package": "gulp build",
     "watch": "gulp watch",
@@ -25,19 +25,25 @@
   },
   "homepage": "",
   "devDependencies": {
-    "axios": "^0.16.2",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.24.1",
-    "babelify": "^7.3.0",
-    "browserify": "^14.4.0",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
+    "axios": "^0.18.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-jest": "^23.6.0",
+    "babel-loader": "^8.0.4",
+    "eslint": "^5.6.1",
+    "eslint-config-wordpress": "^2.0.0",
     "event-stream": "^3.3.4",
     "gulp": "^3.9.1",
-    "gulp-autoprefixer": "^3.1.1",
-    "gulp-imagemin": "^3.1.1",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^7.0.0",
+    "gulp-eslint": "^5.0.0",
+    "gulp-imagemin": "^4.1",
     "gulp-include": "^2.3.1",
     "gulp-jshint": "^2.0.4",
     "gulp-load-plugins": "^1.4.0",
-    "gulp-notify": "^3.0.0",
+    "gulp-notify": "^3.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
@@ -46,11 +52,16 @@
     "gulp-uglify": "^2.0.1",
     "gulp-util": "^3.0.8",
     "imagemin-pngquant": "^5.0.0",
+    "jest": "^23.6.0",
     "jshint": "^2.9.4",
     "jshint-stylish": "^2.2.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
-    "run-sequence": "^2.2.0",
-    "vinyl-source-stream": "^1.1.0"
+    "vinyl-named": "^1.1.0",
+    "webpack": "^4.20.2",
+    "webpack-stream": "^5.1.1"
+  },
+  "jest": {
+    "browser": true
   }
 }

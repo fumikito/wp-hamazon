@@ -21,6 +21,11 @@ class BootStrap extends Singleton {
 	protected $active_services = [];
 
 	/**
+	 * @var AbstractService[]
+	 */
+	public $service_instances  =  [];
+
+	/**
 	 * Singleton constructor.
 	 */
 	protected function __construct() {
@@ -45,6 +50,7 @@ class BootStrap extends Singleton {
 					$service = $class_name::get_instance();
 					if ( $service->is_valid() ) {
 						$this->active_services[ $service->name ] = $service->title;
+						$this->service_instances[ $service->name ] = $service;
 					}
 				}
 			}
@@ -61,6 +67,9 @@ class BootStrap extends Singleton {
             add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_script' ] );
 		}
 		$this->backward_compats();
+
+		// Fire Gutenberg.
+		BlockEditor::get_instance();
 	}
 
 	/**
@@ -113,7 +122,9 @@ class BootStrap extends Singleton {
 			'hamazon_post_types',
 			__( 'Available Post Types', 'hamazon' ),
 			function() {
-				$post_types = get_post_types( [ 'public' => true ], OBJECT );
+				$post_types = array_filter( get_post_types( [ 'public' => true ], OBJECT ), function( $post_type ) {
+					return 'attachment' !== $post_type->name;
+				} );
 				/**
 				 * hamazon_valid_post_types
 				 *
@@ -124,7 +135,7 @@ class BootStrap extends Singleton {
 					printf(
 						'<label class="hamazon-inline-block"><input type="checkbox" name="hamazon_post_types[]" value="%s" %s/> %s</label>',
 						esc_attr( $post_type->name ),
-						checked( false !== array_search( $post_type->name, get_option( 'hamazon_post_types', [] ) ), true, false ),
+						checked( false !== array_search( $post_type->name, (array) get_option( 'hamazon_post_types', [] ) ), true, false ),
 						esc_html( $post_type->label )
 					);
 				}
@@ -169,8 +180,7 @@ class BootStrap extends Singleton {
 	public function register_assets() {
 		wp_register_style( 'hamazon-admin', hamazon_asset_url( '/css/hamazon-admin.css' ), [], hamazon_info( 'version' ) );
 		wp_register_style( 'hamazon-editor', hamazon_asset_url( '/css/hamazon-editor.css' ), [ 'dashicons' ], hamazon_info( 'version' ) );
-		$editor_js = 'js/editor/hamazon-editor' . ( WP_DEBUG ? '' : '.min' ) . '.js';
-		wp_register_script( 'hamazon-editor', hamazon_asset_url( $editor_js ), [], hamazon_info( 'version' ), true );
+		wp_register_script( 'hamazon-editor', hamazon_asset_url( 'js/editor/hamazon-editor.js' ), [], hamazon_info( 'version' ), true );
         wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/editor-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
 	}
 
@@ -293,27 +303,37 @@ class BootStrap extends Singleton {
 				'previousPage' => __( 'Previous', 'hamazon' ),
 				'nextPage' => __( 'Next', 'hamazon' ),
 				'countries' => __( 'Countries', 'hamazon' ),
-				'services' => array_map( function ( $key, $value ) {
-					$service = [
-						'key' => $key,
-						'label' => $value,
-					];
-					/**
-					 * hamazon_service_variables
-					 *
-					 * Add service instance passed to react.
-					 *
-					 * @param mixed $data
-					 * @param string $key
-					 */
-					$data = apply_filters( 'hamazon_service_variables', null, $key );
-					$service[ 'data' ] = $data;
-					return $service;
-				}, array_keys( $this->active_services ), array_values( $this->active_services ) ),
+				'services' => $this->service_data_for_script(),
 			] );
             $did_localized = true;
         }
     }
+
+	/**
+	 * Get service array.
+	 *
+	 * @return array
+	 */
+    public function service_data_for_script() {
+	    return array_map( function ( $key, $value ) {
+		    $service = [
+			    'key'   => $key,
+			    'label' => $value,
+		    ];
+		    /**
+		     * hamazon_service_variables
+		     *
+		     * Add service instance passed to react.
+		     *
+		     * @param mixed $data
+		     * @param string $key
+		     */
+		    $data            = apply_filters( 'hamazon_service_variables', null, $key );
+		    $service['data'] = $data;
+
+		    return $service;
+	    }, array_keys( $this->active_services ), array_values( $this->active_services ) );
+	}
 
 	/**
 	 * Show media buttons
@@ -375,5 +395,4 @@ class BootStrap extends Singleton {
         }
 	    update_option( 'hamazon_option_updated', current_time( 'timestamp' ) );
     }
-
 }

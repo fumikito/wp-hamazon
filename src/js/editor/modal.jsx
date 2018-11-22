@@ -5,6 +5,7 @@ import {SearchBox} from "./search-box.jsx";
 
 /* global HamazonEditor:false */
 
+
 export class Modal extends React.Component{
 
   constructor(props){

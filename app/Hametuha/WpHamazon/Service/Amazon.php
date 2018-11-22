@@ -146,7 +146,7 @@ class Amazon extends AbstractService {
 	 *
 	 * @return array
 	 */
-	protected function short_code_setting() {
+	public function short_code_setting() {
 		return [
 			'tmkm-amazon' => [
 				[
@@ -166,7 +166,7 @@ class Amazon extends AbstractService {
 	 * @param string $content
 	 * @return string
 	 */
-	protected function short_code_callback( $short_code, array $attributes = [], $content = '' ){
+	public function short_code_callback( $short_code, array $attributes = [], $content = '' ){
 		switch ( $short_code ) {
 			case 'tmkm-amazon':
 				return AmazonConstants::format_amazon( $content, $attributes );

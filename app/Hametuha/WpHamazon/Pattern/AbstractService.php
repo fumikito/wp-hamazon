@@ -111,6 +111,7 @@ abstract class AbstractService extends Singleton {
 					'attrs' => $setting,
 				] );
 			} );
+			// Add block editor.
         }
     }
 
@@ -122,14 +123,14 @@ abstract class AbstractService extends Singleton {
      * @param string $content
      * @return string|\WP_Error
      */
-    abstract protected function short_code_callback( $short_code_name, array $attributes = [], $content = '' );
+    abstract public function short_code_callback( $short_code_name, array $attributes = [], $content = '' );
 
     /**
      * Return short code settings
      *
-     * @return string
+     * @return array
      */
-    abstract protected function short_code_setting();
+    abstract public function short_code_setting();
 
     /**
      * Filter data passed to react.

@@ -1,11 +1,11 @@
 var gulp        = require('gulp'),
     fs          = require('fs'),
     $           = require('gulp-load-plugins')(),
-    browserify  = require('browserify'),
-    vinylSource = require('vinyl-source-stream'),
     pngquant    = require('imagemin-pngquant'),
     eventStream = require('event-stream'),
-    runSequence = require('run-sequence');
+    webpack       = require( 'webpack-stream' ),
+    webpackBundle = require( 'webpack' ),
+    named         = require( 'vinyl-named' );
 
 // Include Path for Scss
 var includesPaths = [
@@ -15,21 +15,21 @@ var includesPaths = [
 // Source directory
 var srcDir = {
     scss: [
-        './src/scss/**/*.scss'
+        'src/scss/**/*.scss'
     ],
     js: [
-        './src/js/**/*.js',
-        '!./src/js/**/_*.js',
-        '!./src/js/editor/**/*.js'
+        'src/js/**/*.js',
+        '!src/js/**/_*.js',
+        '!src/js/editor/**/*.js'
     ],
     jsHint: [
-        './src/js/**/*.js'
+        'src/js/**/*.js'
     ],
     jshintrc: [
-        './.jshintrc'
+        '.jshintrc'
     ],
     img: [
-        './src/img/**/*'
+        'src/img/**/*'
     ]
 
 };
@@ -56,6 +56,9 @@ gulp.task('sass', function () {
       sourcemap      : true,
       includePaths   : includesPaths
     }))
+    .pipe($.autoprefixer({
+      browsers: ['last 2 version', 'iOS >= 8.1', 'Android >= 4.4']
+    }))
     .pipe($.sourcemaps.write('./map'))
     .pipe(gulp.dest(destDir.scss));
 });
@@ -75,53 +78,59 @@ gulp.task('jsconcat', function () {
 });
 
 
-// JS Hint
-gulp.task('jshint', function () {
-  return gulp.src(srcDir.jsHint)
-    .pipe($.plumber())
-    .pipe($.jshint(srcDir.jshintrc))
-    .pipe($.jshint.reporter('jshint-stylish'));
+// eslint
+gulp.task( 'eslint', function() {
+  return gulp.src([
+    './src/js/**/*.js',
+    './src/js/**/*.jsx'
+  ])
+    .pipe( $.eslint({ useEslintrc: true }) )
+    .pipe( $.eslint.format() );
 });
 
 // JS task
-gulp.task('js', ['jshint', 'jsconcat']);
+gulp.task('js', ['eslint', 'jsconcat']);
 
-gulp.task('reactify', function(callback){
-  return runSequence('browserify', 'reactMinify', callback);
-});
-
-// Babelify
-gulp.task('browserify', function(callback){
-  return browserify('./src/js/editor/hamazon-editor.jsx', {debug: true})
-    .transform('babelify', {
-      presets: ['es2015', 'react']
-    })
-    .bundle(function(err){
-      if (err) {
-        return callback(err);
-      }
-    })
-    .on('error', function(err){
-      console.log( '[JS ERROR]:', err.message, err.stack );
-    })
-    .pipe(vinylSource('hamazon-editor.js'))
-    .pipe($.plumber({
-      errorHandler: $.notify.onError("Error: <%= error.message %>")
-    }))
-    .pipe(gulp.dest('./assets/js/editor'));
-});
-
-gulp.task('reactMinify', function(){
- return  gulp.src([
-    './assets/js/editor/hamazon-editor.js'
+// JSX
+gulp.task('babel-jsx', function(){
+  return gulp.src([
+    './src/js/editor/hamazon-editor.jsx',
+    './src/js/editor/hamazon-block.jsx'
   ])
-    .pipe($.plumber({
-      errorHandler: $.notify.onError("Error: <%= error.message %>")
-    }))
-    .pipe($.uglify())
-    .pipe($.rename({ extname: ".min.js" }))
-    .pipe(gulp.dest('./assets/js/editor'));
+    .pipe( $.plumber({
+      errorHandler: $.notify.onError( '<%= error.message %>' )
+    }) )
+    .pipe( named( function( file ) {
+      return file.relative.replace( /\.[^.]+$/, '' );
+    }) )
+    .pipe( webpack({
+      mode: 'production',
+      devtool: 'source-map',
+      resolve: {
+        extensions:  ['.js', '.jsx']
+      },
+      module: {
+        rules: [
+          {
+            test: /\.jsx?$/,
+            exclude: /(node_modules|bower_components)/,
+            use: {
+              loader: 'babel-loader',
+              options: {
+                presets: [
+                  '@babel/preset-env',
+                  '@babel/preset-react'
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }, webpackBundle ) )
+    .pipe( gulp.dest( './assets/js/editor' ) );
 });
+
+
 
 // Build Libraries.
 gulp.task('copylib', function () {
@@ -149,14 +158,13 @@ gulp.task('watch', function () {
   // Uglify all
   gulp.watch(srcDir.jsHint, ['js']);
   // Babel
-  gulp.watch('./src/js/editor/**/*.jsx', ['browserify']);
-  gulp.watch('./assets/js/editor/hamazon-editor.js', ['reactMinify']);
+  gulp.watch('src/js/**/*.jsx', ['babel-jsx', 'eslint']);
   // Minify Image
   gulp.watch(srcDir.img, ['imagemin']);
 });
 
 // Build
-gulp.task('build', ['copylib', 'js', 'sass', 'imagemin', 'reactify']);
+gulp.task('build', ['copylib', 'js', 'sass', 'imagemin', 'babel-jsx']);
 
 // Default Tasks
 gulp.task('default', ['watch']);
