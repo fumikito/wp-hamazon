@@ -30,6 +30,10 @@ class BlockEditor extends Singleton {
 			return;
 		}
 
+		if ( ! function_exists( 'register_block_type' ) ) {
+			return;
+		}
+
 		wp_register_script( 'hamazon-block', hamazon_asset_url( 'js/editor/hamazon-block.js' ), [ 'wp-element', 'wp-blocks' ], hamazon_info( 'version' ), true );
 		wp_localize_script( 'hamazon-block', 'HamazonBlock', [
 			'title' => __( 'Affiliate', 'hamazon' ),
