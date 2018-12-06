@@ -130,15 +130,6 @@ gulp.task('babel-jsx', function(){
     .pipe( gulp.dest( './assets/js/editor' ) );
 });
 
-
-
-// Build Libraries.
-gulp.task('copylib', function () {
-  // pass gulp tasks to event stream.
-  // return eventStream.merge(
-  // );
-});
-
 // Image min
 gulp.task('imagemin', function () {
   return gulp.src(srcDir.img)
@@ -164,7 +155,7 @@ gulp.task('watch', function () {
 });
 
 // Build
-gulp.task('build', ['copylib', 'js', 'sass', 'imagemin', 'babel-jsx']);
+gulp.task('build', ['js', 'sass', 'imagemin', 'babel-jsx']);
 
 // Default Tasks
 gulp.task('default', ['watch']);

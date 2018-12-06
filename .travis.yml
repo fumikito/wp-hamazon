@@ -24,7 +24,7 @@ matrix:
     env: WP_VERSION=4.7 WP_MULTISITE=0 WP_PULUGIN_DEPLOY=1
 before_script:
 - composer install
-- curl -s -o $HOME/.nvm/nvm.sh https://raw.githubusercontent.com/creationix/nvm/v0.31.0/nvm.sh
+- curl -s -o $HOME/.nvm/nvm.sh https://raw.githubusercontent.com/creationix/nvm/v0.33.11/nvm.sh
 - source $HOME/.nvm/nvm.sh
 - nvm install v10.13.0
 - node --version
