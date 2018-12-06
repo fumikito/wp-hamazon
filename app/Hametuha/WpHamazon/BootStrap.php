@@ -182,6 +182,26 @@ class BootStrap extends Singleton {
 		wp_register_style( 'hamazon-editor', hamazon_asset_url( '/css/hamazon-editor.css' ), [ 'dashicons' ], hamazon_info( 'version' ) );
 		wp_register_script( 'hamazon-editor', hamazon_asset_url( 'js/editor/hamazon-editor.js' ), [], hamazon_info( 'version' ), true );
         wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/editor-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
+		wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
+			'endpoint' => rest_url( '/hamazon/v3/' ),
+			'nonce' => wp_create_nonce( 'wp_rest' ),
+			'icon' => hamazon_asset_url( 'img/button-icon.png' ),
+			'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
+			'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
+			'search' => __( 'Search', 'hamazon' ),
+			'invalid' => __( 'This service is not available.', 'hamazon' ),
+			'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
+			'insert' => __( 'Insert', 'hamazon' ),
+			'copyCode' => __( 'Copy Code', 'hamazon' ),
+			'copyLink' => __( 'Copy Link', 'hamazon' ),
+			'view' => __( 'View', 'hamazon' ),
+			'category' => __( 'category', 'hamazon' ),
+			'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
+			'previousPage' => __( 'Previous', 'hamazon' ),
+			'nextPage' => __( 'Next', 'hamazon' ),
+			'countries' => __( 'Countries', 'hamazon' ),
+			'services' => $this->service_data_for_script(),
+		] );
 	}
 
 	/**
@@ -282,31 +302,7 @@ class BootStrap extends Singleton {
 	 * @param array $excludes
 	 */
     public function load_hamazon_buttons( $excludes = [] ) {
-		static $did_localized = false;
         wp_enqueue_style( 'hamazon-editor' );
-		if ( ! $did_localized ) {
-			wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
-				'endpoint' => rest_url( '/hamazon/v3/' ),
-				'nonce' => wp_create_nonce( 'wp_rest' ),
-				'icon' => hamazon_asset_url( 'img/button-icon.png' ),
-				'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
-				'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
-				'search' => __( 'Search', 'hamazon' ),
-				'invalid' => __( 'This service is not available.', 'hamazon' ),
-				'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
-				'insert' => __( 'Insert', 'hamazon' ),
-				'copyCode' => __( 'Copy Code', 'hamazon' ),
-				'copyLink' => __( 'Copy Link', 'hamazon' ),
-				'view' => __( 'View', 'hamazon' ),
-				'category' => __( 'category', 'hamazon' ),
-				'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
-				'previousPage' => __( 'Previous', 'hamazon' ),
-				'nextPage' => __( 'Next', 'hamazon' ),
-				'countries' => __( 'Countries', 'hamazon' ),
-				'services' => $this->service_data_for_script(),
-			] );
-            $did_localized = true;
-        }
     }
 
 	/**
