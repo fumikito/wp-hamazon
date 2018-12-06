@@ -69,7 +69,6 @@ registerBlockType( 'hamazon/single', {
                   <div className="hamazon-modal-search-box">
                     {services.map((service) => {
                       return <SearchBox key={service.key} service={service} active={activeService === service.key} insertCode={(code) => {
-                        console.log( code );
                         const match = code.match( /\[([^/].*?)]/ );
                         let shortCode = '';
                         const attrs = {};
