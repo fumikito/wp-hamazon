@@ -34,7 +34,7 @@ class BlockEditor extends Singleton {
 			return;
 		}
 
-		wp_register_script( 'hamazon-block', hamazon_asset_url( 'js/editor/hamazon-block.js' ), [ 'wp-element', 'wp-blocks' ], hamazon_info( 'version' ), true );
+		wp_register_script( 'hamazon-block', hamazon_asset_url( 'js/editor/hamazon-block.js' ), [ 'wp-element', 'wp-blocks', 'hamazon-editor' ], hamazon_info( 'version' ), true );
 		wp_localize_script( 'hamazon-block', 'HamazonBlock', [
 			'title' => __( 'Affiliate', 'hamazon' ),
 			'description'     => __( 'Insert affiliater block of WP-Hamazon.', 'hamazon' ),
@@ -45,7 +45,7 @@ class BlockEditor extends Singleton {
 			'attributes'      => $this->get_attributes(),
 			'shortCodes'      => $this->get_types(),
 		] );
-		wp_register_style( 'hamazon-block', hamazon_asset_url( 'css/hamazon-block.css' ), [], hamazon_info( 'version' ) );
+		wp_register_style( 'hamazon-block', hamazon_asset_url( 'css/hamazon-block.css' ), [ 'hamazon-editor' ], hamazon_info( 'version' ) );
 		// Alert Block.
 		register_block_type( 'hamazon/single', [
 			'editor_style'  => 'hamazon-block',
