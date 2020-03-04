@@ -1,0 +1,53 @@
+[
+	{
+		"path": "assets/css/hamazon-admin.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-block.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-editor.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-search.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor-helper.js",
+		"ext": "js",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/hamazon-editor.js",
+		"ext": "js",
+		"deps": [
+			"wp-api-fetch",
+			"wp-element"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/hamazon-editor-helper.js",
+		"ext": "js",
+		"deps": [],
+		"footer": true
+	}
+]

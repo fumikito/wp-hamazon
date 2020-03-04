@@ -12,8 +12,6 @@ if ( !function_exists( 'tmkm_amazon_view' ) ) {
 	function tmkm_amazon_view( $asin ) {
 		hamazon_asin_link( $asin );
 	}
-
-
 }
 
 /**

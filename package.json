@@ -24,14 +24,11 @@
     "url": "https://github.com/fumikito/wp-hamazon/issues"
   },
   "homepage": "",
-  "browserslist": [
-    "last 2 version",
-    "ie 11"
-  ],
   "devDependencies": {
     "@babel/core": "^7.5.4",
     "@babel/plugin-transform-react-jsx": "^7.0.0",
     "@babel/preset-env": "^7.5.4",
+    "@kunoichi/grab-deps": "^1.0.0",
     "@wordpress/browserslist-config": "^2.6.0",
     "@wordpress/eslint-plugin": "^4.0.0",
     "babel-eslint": "^10.0.1",

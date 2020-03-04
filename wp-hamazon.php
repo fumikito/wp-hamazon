@@ -54,7 +54,7 @@ function hamazon_init() {
 	require_once dirname( __FILE__ ) . '/functions.php';
 	// Bootstrap
 	require_once __DIR__ . '/vendor/autoload.php';
-	call_user_func( array( 'Hametuha\\WpHamazon\\BootStrap', 'get_instance' ) );
+	Hametuha\WpHamazon\BootStrap::get_instance();
 
 }
 

@@ -5,11 +5,11 @@ const pngquant = require( 'imagemin-pngquant' );
 const webpack = require( 'webpack-stream' );
 const webpackBundle = require( 'webpack' );
 const named = require( 'vinyl-named' );
+const { dumpSetting } = require( '@kunoichi/grab-deps' );
 
 // Sass
 gulp.task( 'scss', function () {
-
-	return gulp.src( './src/scss' )
+	return gulp.src( './src/scss/**/*.scss' )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -18,11 +18,11 @@ gulp.task( 'scss', function () {
 		.pipe( $.sass( {
 			errLogToConsole: true,
 			outputStyle    : 'compressed',
-			sourceComments : 'normal',
+			sourceComments : false,
 			sourcemap      : true,
 			includePaths   : [ './src/scss' ]
 		} ) )
-		.pipe( $.autoprefixer() )
+		// .pipe( $.autoprefixer() )
 		.pipe( $.sourcemaps.write( './map' ) )
 		.pipe( gulp.dest( 'assets/css' ) );
 } );
@@ -41,7 +41,6 @@ gulp.task( 'stylelint', function( done ) {
 		} ) );
 } );
 
-
 // eslint
 gulp.task( 'eslint', function () {
 	return gulp.src( [
@@ -55,7 +54,7 @@ gulp.task( 'eslint', function () {
 // Bundle JavaScripts.
 gulp.task( 'js:bundle', function () {
 	const tmp = {};
-	return gulp.src( [ './src/js/**/*.jsx', './src/js/**/*.js' ] )
+	return gulp.src( [ './src/js/*/*.jsx', './src/js/**/*.js' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )
@@ -63,24 +62,7 @@ gulp.task( 'js:bundle', function () {
 		.pipe( $.rename( function ( path ) {
 			tmp[ path.basename ] = path.dirname;
 		} ) )
-		.pipe( webpack( {
-			mode  : 'production',
-			module: {
-				rules: [
-					{
-						test   : /\.jsx?$/,
-						exclude: /(node_modules)/,
-						use    : {
-							loader : 'babel-loader',
-							options: {
-								presets: [ '@babel/preset-env' ],
-								plugins: [ '@babel/plugin-transform-react-jsx' ]
-							}
-						}
-					}
-				]
-			}
-		}, webpackBundle ) )
+		.pipe( webpack( require( './webpack.config' ), webpackBundle ) )
 		.pipe( $.rename( function ( path ) {
 			if ( tmp[ path.basename ] ) {
 				path.dirname = tmp[ path.basename ];
@@ -112,6 +94,11 @@ gulp.task( 'imagemin', function () {
 		.pipe( gulp.dest( './assets/img' ) );
 } );
 
+gulp.task( 'dump', function( done ) {
+	dumpSetting( 'assets' );
+	done();
+} );
+
 // watch
 gulp.task( 'watch', function () {
 	// Make SASS
@@ -120,13 +107,15 @@ gulp.task( 'watch', function () {
 	gulp.watch( [ 'src/js/**/*.jsx', 'src/js/**/*.js' ] , gulp.parallel( 'js:bundle', 'eslint' ) );
 	// Minify Image
 	gulp.watch( 'src/img/**/*', gulp.task( 'imagemin' ) );
+	// Dump setting.
+	gulp.watch( [ 'assets/css/**/*.css', 'assets/js/**/*.js' ], gulp.task( 'dump' ) );
 } );
 
 // Default Tasks
 gulp.task( 'default', gulp.task( 'watch' ) );
 
 // Build
-gulp.task( 'build', gulp.parallel( 'js:bundle', 'scss', 'imagemin' ) );
+gulp.task( 'build', gulp.series( gulp.parallel( 'js:bundle', 'scss', 'imagemin' ), 'dump' ) );
 
 // Lint tasks.
 gulp.task( 'lint', gulp.parallel( 'stylelint', 'eslint' ) );

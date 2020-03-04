@@ -178,28 +178,23 @@ class BootStrap extends Singleton {
 	 * Register assets
 	 */
 	public function register_assets() {
-		wp_register_style( 'hamazon-admin', hamazon_asset_url( '/css/hamazon-admin.css' ), [], hamazon_info( 'version' ) );
-		wp_register_style( 'hamazon-editor', hamazon_asset_url( '/css/hamazon-editor.css' ), [ 'dashicons' ], hamazon_info( 'version' ) );
-		wp_register_script( 'hamazon-editor', hamazon_asset_url( 'js/editor/hamazon-editor.js' ), [], hamazon_info( 'version' ), true );
-        wp_register_script( 'hamazon-editor-helper', hamazon_asset_url( '/js/editor-helper.js' ), [ 'jquery', 'hamazon-editor' ], hamazon_info( 'version' ), true );
-		wp_localize_script( 'hamazon-editor', 'HamazonEditor', [
-			'endpoint' => rest_url( '/hamazon/v3/' ),
-			'nonce' => wp_create_nonce( 'wp_rest' ),
-			'icon' => hamazon_asset_url( 'img/button-icon.png' ),
-			'btnLabel' => esc_html__( 'Affiliate', 'hamazon' ),
-			'title' => __( 'Enter Affiliate Tag', 'hamazon' ),
-			'search' => __( 'Search', 'hamazon' ),
-			'invalid' => __( 'This service is not available.', 'hamazon' ),
-			'noResult' => __( 'No results found. Please try different query.', 'hamazon' ),
-			'insert' => __( 'Insert', 'hamazon' ),
-			'copyCode' => __( 'Copy Code', 'hamazon' ),
-			'copyLink' => __( 'Copy Link', 'hamazon' ),
-			'view' => __( 'View', 'hamazon' ),
-			'category' => __( 'category', 'hamazon' ),
-			'searchKeyword' => __( 'Search Keyword', 'hamazon' ),
-			'previousPage' => __( 'Previous', 'hamazon' ),
-			'nextPage' => __( 'Next', 'hamazon' ),
-			'countries' => __( 'Countries', 'hamazon' ),
+
+		foreach ( json_decode( file_get_contents( hamazon_root_dir() . '/wp-dependencies.json' ), true ) as $setting ) {
+			$path    = hamazon_root_dir() . '/' . $setting['path'];
+			$version = file_exists( $path ) ? filemtime( $path ) : hamazon_info( 'version' );
+			$url     = plugins_url( '', $path ) . '/' . basename( $path );
+			$handle  = preg_replace( '/.(js|css)$/u', '', basename( $path ) );
+			switch ( $setting['ext'] ) {
+				case 'js':
+					wp_register_script( $handle, $url, $setting['deps'], $version, true );
+					break;
+				case 'css':
+					wp_register_style( $handle, $url, $setting['deps'], $version );
+					break;
+			}
+		}
+		wp_localize_script( 'hamazon-i18n', 'Hamazon', [
+			'url' => hamazon_asset_url( '' ),
 			'services' => $this->service_data_for_script(),
 		] );
 	}
