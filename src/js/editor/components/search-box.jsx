@@ -1,21 +1,14 @@
 /*!
- * @deps wp-element, hamazon-i18n
+ * @deps wp-element, hamazon-i18n, hamazon-amazon-renderer, hamazon-form-amazon, hamazon-dmm-renderer, hamazon-form-dmm, hamazon-phg-renderer, hamazon-form-phg
  */
 
 const React = wp.element;
-
+const { __ } = wp.i18n;
 
 // Services
-import { AmazonRenderer } from '../renderer/amazon-renderer.jsx';
-import { FormAmazon } from '../form/form-amazon.jsx';
-import { DmmRenderer } from "../renderer/dmm-renderer.jsx";
-import { FormDmm } from "../form/form-dmm.jsx";
-import { PhgRenderer } from "../renderer/phg-renderer.jsx";
-import { FormPhg } from "../form/form-phg.jsx";
+const { AmazonRenderer, FormAmazon, DmmRenderer, FormDmm, PhgRenderer, FormPhg } = wp.hamazon;
 
-/* global HamazonEditor:false */
-
-export class SearchBox extends React.Component {
+class SearchBox extends React.Component {
 
 	constructor( props ) {
 		super();
@@ -107,3 +100,5 @@ export class SearchBox extends React.Component {
 		}
 	}
 }
+
+wp.hamazon.SearchBox = SearchBox;

@@ -1,12 +1,11 @@
 /*!
- * @deps wp-element
+ * @deps wp-element, hamazon-i18n, hamazon-form-base
  */
 const React = wp.element;
-import { FormBase } from "./form-base.jsx";
+const { __ } = wp.i18n;
+const { FormBase } = wp.hamazon;
 
-/* global HamazonEditor: false */
-
-export class FormPhg extends FormBase {
+class FormPhg extends FormBase {
 
 	constructor( params ) {
 		super( params );
@@ -49,7 +48,7 @@ export class FormPhg extends FormBase {
 				<div className="hamazon-modal-form">
 					<div className="hamazon-modal-form-item">
 						<label htmlFor="hamazon-input-amazon-category"
-							   className="hamazon-modal-form-label">{ HamazonEditor.category }</label>
+							   className="hamazon-modal-form-label">{ __( 'Category', 'amazon' ) }</label>
 						<select id="hamazon-input-amazon-category" value={ this.state.selectedMedia }
 								onChange={ ( e ) => {
 									this.onMediaChange( e );
@@ -61,7 +60,7 @@ export class FormPhg extends FormBase {
 					</div>
 					<div className="hamazon-modal-form-item">
 						<label htmlFor="hamazon-input-phg-country"
-							   className="hamazon-modal-form-label">{ HamazonEditor.countries }</label>
+							   className="hamazon-modal-form-label">{ __( 'Countries', 'hamazon' ) }</label>
 						<select id="hamazon-input-phg-country" value={ this.state.selectedCountry }
 								onChange={ ( e ) => {
 									this.onCountryChange( e )
@@ -73,7 +72,7 @@ export class FormPhg extends FormBase {
 					</div>
 					<div className="hamazon-modal-form-item input">
 						<label htmlFor="hamazon-input-amazon-query"
-							   className="hamazon-modal-form-label">{ HamazonEditor.searchKeyword }</label>
+							   className="hamazon-modal-form-label">{ __( 'Search Terms', 'hamazon' ) }</label>
 						<input id="hamazon-input-amazon-query" className="regular-text hamazon-modal-input-text"
 							   value={ this.state.query }
 							   onChange={ ( e ) => this.onInputChange( e ) }/>
@@ -81,7 +80,7 @@ export class FormPhg extends FormBase {
 					<div className="hamazon-modal-form-item">
 						<button onClick={ ( e ) => {
 							this.submitHandler( e )
-						} } className="button-primary">{ HamazonEditor.search }
+						} } className="button-primary">{ __( 'Search', 'hamazon' ) }
 						</button>
 					</div>
 				</div>
@@ -89,5 +88,6 @@ export class FormPhg extends FormBase {
 			</div>
 		)
 	}
-
 }
+
+wp.hamazon.FormPhg = FormPhg;

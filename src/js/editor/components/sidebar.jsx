@@ -1,10 +1,10 @@
 /*!
- * @deps wp-element
+ * @deps wp-element, hamazon-i18n
  */
 
 const React = wp.element;
 
-export function Sidebar( props ) {
+wp.hamazon.Sidebar = ( props ) => {
 	return (
 		<div className="hamazon-modal-sidebar">
 			{ props.services.map( ( item ) => {
@@ -18,4 +18,4 @@ export function Sidebar( props ) {
 			} ) }
 		</div>
 	)
-}
+};

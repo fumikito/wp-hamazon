@@ -54,7 +54,7 @@ gulp.task( 'eslint', function () {
 // Bundle JavaScripts.
 gulp.task( 'js:bundle', function () {
 	const tmp = {};
-	return gulp.src( [ './src/js/*/*.jsx', './src/js/**/*.js' ] )
+	return gulp.src( [ './src/js/**/*.jsx', './src/js/**/*.js' ] )
 		.pipe( $.plumber( {
 			errorHandler: $.notify.onError( '<%= error.message %>' )
 		} ) )

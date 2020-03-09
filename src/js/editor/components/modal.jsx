@@ -1,15 +1,14 @@
 /*!
- * @deps=wp-api-fetch, wp-element
+ * @deps=wp-api-fetch, wp-element, hamazon-i18n, hamazon-sidebar, hamazon-search-box
  */
 
 const React = wp.element;
-import { Sidebar } from "./sidebar.jsx";
-import { SearchBox } from "./search-box.jsx";
+const { Sidebar, SearchBox } = wp.hamazon;
 
-export class Modal extends React.Component {
+class Modal extends React.Component {
 
 	constructor( props ) {
-		super();
+		super( props );
 		this.state = {
 			active: props.services[ 0 ].key,
 		};
@@ -67,3 +66,5 @@ export class Modal extends React.Component {
 		)
 	}
 }
+
+wp.hamazon.Modal = Modal;

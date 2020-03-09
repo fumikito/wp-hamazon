@@ -4,3 +4,5 @@
  */
 
 /* global Hamazon: false */
+
+window.wp.hamazon = {};

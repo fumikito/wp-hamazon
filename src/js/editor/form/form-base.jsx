@@ -1,12 +1,11 @@
 /*!
- * @deps wp-element, hamazon-i18n, wp-api-fetch
+ * @deps jquery, wp-element, hamazon-i18n, wp-api-fetch
  */
 const React = wp.element;
+const $ = jQuery;
+const { __ } = wp.i18n;
 
-import axios from 'axios';
-
-
-export class FormBase extends React.Component {
+class FormBase extends React.Component {
 
 	constructor( params ) {
 		super( params );
@@ -36,44 +35,25 @@ export class FormBase extends React.Component {
 			event.preventDefault();
 		}
 		// Do search
-		let params = this.buildParams();
+		const params = $.param( this.buildParams() );
 		this.props.setLoading( true );
-
-		let endpoint = HamazonEditor.endpoint + this.props.service.key;
-		let self = this;
-		let result;
 		switch ( this.methodName() ) {
 			case 'GET':
 				wp.apiFetch( {
-
+					path: `hamazon/v3/${this.props.service.key}?${params}`,
 				} ).then( ( response ) => {
 					this.setState( {
 						totalPage: response.total_page,
 					} );
+					this.props.submitHandler( response.items );
 				} ).catch( ( response ) => {
-
+					this.props.submitHandler( [] );
 				} ).finally( () => {
 					this.props.setLoading( false );
 				} );
-				axios.get( endpoint, {
-					params: params,
-				} )
-					.then( ( response ) => {
-						self.setState( {
-							totalPage: response.data.total_page
-						} )
-						self.props.submitHandler( response.data.items );
-						self.props.setLoading( false );
-					} )
-					.catch( ( response ) => {
-						self.props.submitHandler( [] );
-						self.props.setLoading( false );
-					} );
 				break;
-
 			default:
-
-
+				// no current desc.
 				break;
 		}
 	}
@@ -178,6 +158,6 @@ export class FormBase extends React.Component {
 			</div>
 		);
 	}
-
-
 }
+
+wp.hamazon.FormBase = FormBase;

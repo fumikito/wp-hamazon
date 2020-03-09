@@ -1,20 +1,20 @@
-/**
+/*!
  * Hamazon block.
  *
- * @deps wp-element, wp-blocks, wp-editor, wp-componets, wp-compose, hamazon-i18n
+ * @deps wp-element, wp-blocks, wp-editor, wp-components, wp-compose, hamazon-i18n, hamazon-sidebar, hamazon-search-box, hamazon-editor
  * @package hamazon
  */
 
 /* global HamazonBlock:false */
 
 const React = wp.element;
+const { __ } = wp.i18n;
 const { registerBlockType } = wp.blocks;
 const { RichText } = wp.editor;
 const { SVG, Path, Text, ServerSideRender, Modal, Button } = wp.components;
 const { withState } = wp.compose;
 
-import { Sidebar } from "./components/sidebar.jsx";
-import { SearchBox } from "./components/search-box.jsx";
+const { Sidebar, SearchBox } = wp.hamazon;
 
 const attributes = HamazonBlock.attributes;
 attributes.content.source = 'children';
@@ -61,7 +61,7 @@ registerBlockType( 'hamazon/single', {
 			return (
 				<div>
 					<button className='hamazon-block-trigger'
-							onClick={ () => setState( { isOpen: true } ) }>{ buttonLabel }</button>
+							onClick={ () => setState( { isOpen: true } ) }>{ __( 'Set Link', 'hamazon' ) }</button>
 					{ isOpen ?
 					  <Modal
 						  className={ 'hamazon-block-modal' }
@@ -71,24 +71,26 @@ registerBlockType( 'hamazon/single', {
 							  <Sidebar services={ services } active={ attributes.type } onSelect={ onSelectHandler }/>
 							  <div className="hamazon-modal-search-box">
 								  { services.map( ( service ) => {
-									  return <SearchBox key={ service.key } service={ service }
-														active={ activeService === service.key }
-														insertCode={ ( code ) => {
-															const match = code.match( /\[([^/].*?)]/ );
-															let shortCode = '';
-															const attrs = {};
-															match[ 1 ].split( ' ' ).forEach( ( val, index ) => {
-																if ( ! index ) {
-																	shortCode = val;
-																} else {
-																	let values = val.split( '=' );
-																	const key = ( 'asin' === values[ 0 ] ) ? 'id' : values[ 0 ];
-																	attrs[ key ] = values[ 1 ].replace( '"', '' ).replace( '"', '' );
-																}
-															} );
-															attrs.type = types[ shortCode ];
-															setAttributes( attrs );
-														} }/>
+									  return (
+										  <SearchBox key={ service.key } service={ service }
+													 active={ activeService === service.key }
+													 insertCode={ ( code ) => {
+														 const match = code.match( /\[([^/].*?)]/ );
+														 let shortCode = '';
+														 const attrs = {};
+														 match[ 1 ].split( ' ' ).forEach( ( val, index ) => {
+															 if ( ! index ) {
+																 shortCode = val;
+															 } else {
+																 let values = val.split( '=' );
+																 const key = ( 'asin' === values[ 0 ] ) ? 'id' : values[ 0 ];
+																 attrs[ key ] = values[ 1 ].replace( '"', '' ).replace( '"', '' );
+															 }
+														 } );
+														 attrs.type = types[ shortCode ];
+														 setAttributes( attrs );
+													 } }/>
+									  )
 								  }, this ) }
 							  </div>
 						  </div>
@@ -104,10 +106,6 @@ registerBlockType( 'hamazon/single', {
 
 		function onChangeContent( newContent ) {
 			setAttributes( { content: newContent } );
-		}
-
-		function onClickButton() {
-			alert( 'hogehoge' );
 		}
 
 		return (

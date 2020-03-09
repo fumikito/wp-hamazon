@@ -1,3 +1,7 @@
+/*!
+ * @deps hamazon-editor
+ */
+
 /* global tinyMCE:false */
 
 document.addEventListener( 'hamazon', function ( event ) {

@@ -1,12 +1,13 @@
 /*!
- * @deps wp-element
+ * @deps wp-element, hamazon-base-renderer, hamazon-i18n
  */
 
-import { BaseRenderer } from "./base-renderer.jsx";
+const React = wp.element;
+const { BaseRenderer } = wp.hamazon;
 
 /* global HamazonEditor:false */
 
-export class AmazonRenderer extends BaseRenderer {
+class AmazonRenderer extends BaseRenderer {
 
 	getCode() {
 		return '[tmkm-amazon asin="' + this.props.item.asin + '"][/tmkm-amazon]';
@@ -43,3 +44,5 @@ export class AmazonRenderer extends BaseRenderer {
 		);
 	}
 }
+
+wp.hamazon.AmazonRenderer = AmazonRenderer;

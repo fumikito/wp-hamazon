@@ -1,12 +1,10 @@
 /*!
- * @deps wp-element
+ * @deps wp-element, hamazon-form-amazon
  */
 const React = wp.element;
-import { FormAmazon } from "./form-amazon.jsx";
+const { FormAmazon } = wp.hamazon;
 
-/* global HamazonEditor: false */
-
-export class FormDmm extends FormAmazon {
+class FormDmm extends FormAmazon {
 
 	constructor( params ) {
 		super( params );
@@ -20,6 +18,7 @@ export class FormDmm extends FormAmazon {
 			site   : this.state.selectedOption,
 			page   : this.state.curPage,
 		}
-
 	}
 }
+
+wp.hamazon.FormDmm = FormDmm;

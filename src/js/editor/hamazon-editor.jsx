@@ -1,10 +1,9 @@
 /*!
- * @deps=wp-element, hamazon-i18n
+ * @deps=wp-element, hamazon-i18n, hamazon-modal
  */
 
-const { React, render } = wp.element;
-
-import { Modal } from './components/modal.jsx';
+const React = wp.element;
+const { Modal } = wp.hamazon;
 
 /* global HamazonEditor:false */
 
@@ -61,5 +60,5 @@ class HamazonButton extends React.Component {
  * Call it all
  */
 Array.from( document.querySelectorAll( '.hamazon-btn-component' ), ( div ) => {
-	render( <HamazonButton { ...( div.dataset ) }/>, div );
+	React.render( <HamazonButton { ...( div.dataset ) }/>, div );
 } );

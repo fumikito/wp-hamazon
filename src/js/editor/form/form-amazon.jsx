@@ -1,12 +1,14 @@
 /*!
- * @deps wp-element
+ * @deps wp-element, hamazon-i18n, hamazon-form-base
  */
+
 const React = wp.element;
-import { FormBase } from "./form-base.jsx";
+const { __ } = wp.i18n;
+const { FormBase } = wp.hamazon;
 
 /* global HamazonEditor: false */
 
-export class FormAmazon extends FormBase {
+class FormAmazon extends FormBase {
 
 	constructor( params ) {
 		super( params );
@@ -74,5 +76,6 @@ export class FormAmazon extends FormBase {
 			</div>
 		)
 	}
-
 }
+
+wp.hamazon.FormAmazon = FormAmazon;

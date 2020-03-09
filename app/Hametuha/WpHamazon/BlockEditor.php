@@ -24,7 +24,6 @@ class BlockEditor extends Singleton {
 	 * Register blocks.
 	 */
 	public function register_blocks() {
-
 		// If no service available, skip.
 		if ( ! $this->hamazon->service_instances ) {
 			return;
@@ -33,19 +32,13 @@ class BlockEditor extends Singleton {
 		if ( ! function_exists( 'register_block_type' ) ) {
 			return;
 		}
-
-		wp_register_script( 'hamazon-block', hamazon_asset_url( 'js/editor/hamazon-block.js' ), [ 'wp-element', 'wp-blocks', 'hamazon-editor' ], hamazon_info( 'version' ), true );
+		// Register variables.
 		wp_localize_script( 'hamazon-block', 'HamazonBlock', [
 			'title' => __( 'Affiliate', 'hamazon' ),
-			'description'     => __( 'Insert affiliater block of WP-Hamazon.', 'hamazon' ),
-			'buttonLabel'     => __( 'Setting', 'hamazon' ),
-			'closeLabel'      => __( 'Cancel' ),
-			'descPlaceholder' => __( 'Enter additional text(e.g. your opinion) here.', 'hamazon' ),
 			'services'        => $this->hamazon->service_data_for_script(),
 			'attributes'      => $this->get_attributes(),
 			'shortCodes'      => $this->get_types(),
 		] );
-		wp_register_style( 'hamazon-block', hamazon_asset_url( 'css/hamazon-block.css' ), [ 'hamazon-editor' ], hamazon_info( 'version' ) );
 		// Alert Block.
 		register_block_type( 'hamazon/single', [
 			'editor_style'  => 'hamazon-block',
@@ -56,7 +49,9 @@ class BlockEditor extends Singleton {
 					'type' => '',
 				] );
 				try {
-					if ( ! in_array( $attributes['type'], $this->get_types() ) ) {
+					if ( empty( $attributes['type'] ) ) {
+						throw new \Exception( __( 'No data is set.', 'hamazon' ) );
+					} elseif ( ! in_array( $attributes['type'], $this->get_types() ) ) {
 						throw new \Exception( __( 'No affiliate service available.', 'hamazon' ) );
 					}
 					if ( 'amazon' === $attributes['type'] ) {

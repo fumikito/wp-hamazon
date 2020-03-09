@@ -184,6 +184,9 @@ class BootStrap extends Singleton {
 			$version = file_exists( $path ) ? filemtime( $path ) : hamazon_info( 'version' );
 			$url     = plugins_url( '', $path ) . '/' . basename( $path );
 			$handle  = preg_replace( '/.(js|css)$/u', '', basename( $path ) );
+			if ( 0 !== strpos( $handle, 'hamazon' ) ) {
+				$handle = 'hamazon-' . $handle;
+			}
 			switch ( $setting['ext'] ) {
 				case 'js':
 					wp_register_script( $handle, $url, $setting['deps'], $version, true );
@@ -194,7 +197,7 @@ class BootStrap extends Singleton {
 			}
 		}
 		wp_localize_script( 'hamazon-i18n', 'Hamazon', [
-			'url' => hamazon_asset_url( '' ),
+			'url'      => hamazon_asset_url( '' ),
 			'services' => $this->service_data_for_script(),
 		] );
 	}
