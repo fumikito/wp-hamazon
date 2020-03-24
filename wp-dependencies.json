@@ -1,0 +1,192 @@
+[
+	{
+		"path": "assets/css/hamazon-admin.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-block.css",
+		"ext": "css",
+		"deps": [
+			"hamazon-editor"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-editor.css",
+		"ext": "css",
+		"deps": [
+			"dashicons"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon-search.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/css/hamazon.css",
+		"ext": "css",
+		"deps": [],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/components/modal.js",
+		"ext": "js",
+		"deps": [
+			"wp-api-fetch",
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-sidebar",
+			"hamazon-search-box"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/components/search-box.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-amazon-renderer",
+			"hamazon-form-amazon",
+			"hamazon-dmm-renderer",
+			"hamazon-form-dmm",
+			"hamazon-phg-renderer",
+			"hamazon-form-phg"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/components/sidebar.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/form/form-amazon.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-form-base"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/form/form-base.js",
+		"ext": "js",
+		"deps": [
+			"jquery",
+			"wp-element",
+			"hamazon-i18n",
+			"wp-api-fetch"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/form/form-dmm.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-form-amazon"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/form/form-phg.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-form-base"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/hamazon-block.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"wp-blocks",
+			"wp-editor",
+			"wp-components",
+			"wp-compose",
+			"hamazon-i18n",
+			"hamazon-sidebar",
+			"hamazon-search-box",
+			"hamazon-editor"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/hamazon-editor.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-modal"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/renderer/amazon-renderer.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-base-renderer",
+			"hamazon-i18n"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/renderer/base-renderer.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/renderer/dmm-renderer.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-i18n",
+			"hamazon-amazon-renderer"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/editor/renderer/phg-renderer.js",
+		"ext": "js",
+		"deps": [
+			"wp-element",
+			"hamazon-amazon-renderer"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/hamazon-editor-helper.js",
+		"ext": "js",
+		"deps": [
+			"hamazon-editor"
+		],
+		"footer": true
+	},
+	{
+		"path": "assets/js/hamazon-i18n.js",
+		"ext": "js",
+		"deps": [
+			"wp-i18n"
+		],
+		"footer": true
+	}
+]

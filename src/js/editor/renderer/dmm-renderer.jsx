@@ -1,36 +1,38 @@
-import React from 'react';
-import {AmazonRenderer} from "./amazon-renderer.jsx";
+/*!
+ * @deps wp-element, hamazon-i18n, hamazon-amazon-renderer
+ */
+const React = wp.element;
+const { AmazonRenderer } = wp.hamazon;
 
-/* global HamazonEditor:false */
+class DmmRenderer extends AmazonRenderer {
 
-export class DmmRenderer extends AmazonRenderer{
+	getCode() {
+		return '[dmm site="' + this.props.item.site + '" id="' + this.props.item.asin + '"][/dmm]';
+	}
 
-  getCode(){
-    return '[dmm site="' + this.props.item.site + '" id="' + this.props.item.asin + '"][/dmm]';
-  }
-
-  getMeta(){
-    let credits = [
-        this.props.item.attributes.genre,
-        this.props.item.attributes.maker,
-        this.props.item.attributes.manufacture,
-        this.props.item.attributes.author,
-    ];
-    return(
-      <div className="hamazon-item-creator">
-        {credits.map((string, index) => {
-          if(string){
-            let className = 'hamazon-item-meta-string-' + index;
-            const vars = string.map((v) => {
-              return v.name;
-            }).join(', ');
-            return <p key={className}>{vars}</p>
-          }else{
-            return null;
-          }
-        })}
-      </div>
-    );
-  }
-
+	getMeta() {
+		let credits = [
+			this.props.item.attributes.genre,
+			this.props.item.attributes.maker,
+			this.props.item.attributes.manufacture,
+			this.props.item.attributes.author,
+		];
+		return (
+			<div className="hamazon-item-creator">
+				{ credits.map( ( string, index ) => {
+					if ( string ) {
+						let className = 'hamazon-item-meta-string-' + index;
+						const vars = string.map( ( v ) => {
+							return v.name;
+						} ).join( ', ' );
+						return <p key={ className }>{ vars }</p>
+					} else {
+						return null;
+					}
+				} ) }
+			</div>
+		);
+	}
 }
+
+wp.hamazon.DmmRenderer = DmmRenderer;

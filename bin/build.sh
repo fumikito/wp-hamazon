@@ -3,7 +3,7 @@
 set -e
 
 # Build files
-composer install --no-dev
+composer install --no-dev --prefer-dist
 npm install
 npm run package
 # Make Readme
@@ -15,8 +15,13 @@ rm -rf ./tests
 rm -rf ./bin
 rm -rf ./.git
 rm ./.gitignore
-rm ./readme.md
+rm ./READE.md
+rm ./.browserslistrc
+rm ./.editorconfig
+rm ./.eslintrc
 rm ./.travis.yml
+rm phpcs.ruleset.xml
+rm phpunit.xml.dist
 
 if [ $TRAVIS_TAG ]; then
     echo $TRAVIS_TAG

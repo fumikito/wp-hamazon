@@ -2,94 +2,23 @@
 
 namespace Hametuha\WpHamazon\Constants;
 
+use Amazon\ProductAdvertisingAPI\v1\ApiException;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\GetItemsRequest;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\Item;
+use Amazon\ProductAdvertisingAPI\v1\Configuration;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\PartnerType;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsRequest;
+use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsResource;
+use Hametuha\WpHamazon\Pattern\StaticPattern;
 use Hametuha\WpHamazon\Service\Amazon;
+use Tarosky\PlasticSearch\Api\Search;
 
 /**
  * Amazon constants holder
  * @package hamazon
  */
-class AmazonConstants {
-
-	/**
-	 * Service Name
-	 * @var string
-	 */
-	const SERVICE = "AWSECommerceService";
-
-	/**
-	 * Version
-	 * @var string
-	 */
-	const VERSION = '2013-08-01';
-
-	/**
-	 * Get locale endpoint.
-	 *
-	 * @param string $locale
-	 *
-	 * @return string
-	 */
-	public static function get_locale_endpoint( $locale ) {
-		$locales = [
-			'US' => 'http://ecs.amazonaws.com/onca/xml',
-			'UK' => 'http://ecs.amazonaws.co.uk/onca/xml',
-			'DE' => 'http://ecs.amazonaws.de/onca/xml',
-			'JP' => 'http://ecs.amazonaws.jp/onca/xml',
-			'FR' => 'http://ecs.amazonaws.fr/onca/xml',
-			'CA' => 'http://ecs.amazonaws.ca/onca/xml',
-		];
-		if ( ! isset( $locales[ $locale ] ) ) {
-			$locale = 'JP';
-		}
-
-		return $locales[ $locale ];
-	}
-
-    /**
-     * Get search index
-     *
-     * @param string $search_index
-     * @return string
-     */
-	public static function index_label( $search_index ) {
-	    switch ( $search_index ) {
-            case 'eBooks':
-                return __( 'eBook', 'hamazon' );
-                break;
-            case 'Pharmacy':
-                return __( 'Pharmacy', 'hamazon' );
-                break;
-            case 'Health and Beauty':
-                return __( 'Health & Beauty', 'hamazon' );
-                break;
-            case 'TV Series Episode Video on Demand':
-                return __( 'On Demand Video', 'hamazon' );
-                break;
-            default:
-	            $convered_index = str_replace( ' ', '', $search_index );
-                $filter = [
-                    'Baby Product' => 'Baby',
-                    'Book' => 'Books',
-                    'CE' => 'Electronics',
-                    'Home Theater' => 'Electronics',
-                    'Home' => 'HomeImprovement',
-                    'Movie' => 'Video',
-                    'OfficeProduct' => 'OfficeProducts',
-                    'DigitalMusicAlbum' => 'Music',
-                    'Hobby' => 'Hobbies',
-                    'Sports' => 'SportingGoods',
-                    'Toy' => 'Toys',
-                    'VHS' => 'Video',
-                    'Watch' => 'Watches',
-                ];
-                if ( isset( $filter[ $convered_index ] ) ) {
-                    $search_index = $filter[ $convered_index ];
-                }
-	            $index = self::get_search_index();
-	            return isset( $index[ $convered_index ] ) ? $index[ $convered_index ] : __( $search_index, 'hamazon' ) ;
-                break;
-        }
-    }
+class AmazonConstants extends StaticPattern {
 
 	/**
 	 * Search Index values for AWS
@@ -97,320 +26,276 @@ class AmazonConstants {
 	 * @return array
 	 */
 	public static function get_search_index() {
-	    static $search_index =  null;
-	    if (is_null($search_index) ){
-	        $search_index = [
-                'All'                => __( 'All', 'hamazon' ),
-                'Apparel'            => __( 'Apparel', 'hamazon' ),
-                'Appliances'         => __( 'Appliances', 'hamazon' ),
-                'Automotive'         => __( 'Automotive', 'hamazon' ),
-                'Baby'               => __( 'Baby', 'hamazon' ),
-                'Beauty'             => __( 'Beauty', 'hamazon' ),
-                'Blended'            => __( 'Blended', 'hamazon' ),
-                'Books'              => __( 'Books', 'hamazon' ),
-                'Classical'          => __( 'Classical', 'hamazon' ),
-                'CreditCards'        => __( 'CreditCards', 'hamazon' ),
-                'DVD'                => __( 'DVD', 'hamazon' ),
-                'Electronics'        => __( 'Electronics', 'hamazon' ),
-                'ForeignBooks'       => __( 'Foreign Books', 'hamazon' ),
-                'GiftCards'          => __( 'Gift Cards', 'hamazon' ),
-                'Grocery'            => __( 'Grocery', 'hamazon' ),
-                'HealthPersonalCare' => __( 'Health Personal Care', 'hamazon' ),
-                'Hobbies'            => __( 'Hobbies', 'hamazon' ),
-                'HomeImprovement'    => __( 'Home Improvement', 'hamazon' ),
-                'Industrial'         => __( 'Industrial', 'hamazon' ),
-                'Jewelry'            => __( 'Jewelry', 'hamazon' ),
-                'KindleStore'        => __( 'Kindle Store', 'hamazon' ),
-                'Kitchen'            => __( 'Kitchen', 'hamazon' ),
-                'Marketplace'        => __( 'Marketplace', 'hamazon' ),
-                'MobileApps'         => __( 'MobileApps', 'hamazon' ),
-                'MP3Downloads'       => __( 'MP3Downloads', 'hamazon' ),
-                'Music'              => __( 'Music', 'hamazon' ),
-                'MusicalInstruments' => __( 'Musical Instruments', 'hamazon' ),
-                'OfficeProducts'     => __( 'Office Products', 'hamazon' ),
-                'PCHardware'         => __( 'PC Hardware', 'hamazon' ),
-                'PetSupplies'        => __( 'Pet Supplies', 'hamazon' ),
-                'Shoes'              => __( 'Shoes', 'hamazon' ),
-                'Software'           => __( 'Software', 'hamazon' ),
-                'SportingGoods'      => __( 'Sporting Goods', 'hamazon' ),
-                'Toys'               => __( 'Toys', 'hamazon' ),
-                'Video'              => __( 'Video', 'hamazon' ),
-                'VideoDownload'      => __( 'Video Download', 'hamazon' ),
-                'VideoGames'         => __( 'Video Games', 'hamazon' ),
-                'Watches'            => __( 'Watches', 'hamazon' ),
-            ];
-        }
-	    return $search_index;
+		static $search_index = null;
+		if ( is_null( $search_index ) ) {
+			$search_index = [
+				'All'                     => __( 'All', 'hamazon' ),
+				'AmazonVideo'             => __( 'Prime Video', 'hamazon' ),
+				'Apparel'                 => __( 'Apparel', 'hamazon' ),
+				'Appliances'              => __( 'Appliances', 'hamazon' ),
+				'Automotive'              => __( 'Car & Bike', 'hamazon' ),
+				'Baby'                    => __( 'Baby', 'hamazon' ),
+				'Beauty'                  => __( 'Beauty', 'hamazon' ),
+				'Books'                   => __( 'Books', 'hamazon' ),
+				'Classical'               => __( 'Classical', 'hamazon' ),
+				'CreditCards'             => __( 'CreditCards', 'hamazon' ),
+				'Computers'               => __( 'Computers', 'hamazon' ),
+				'DigitalMusic'            => __( 'Digital Music', 'hamazon' ),
+				'Electronics'             => __( 'Electronics', 'hamazon' ),
+				'Fashion'                 => __( 'Fashion', 'hamazon' ),
+				'ForeignBooks'            => __( 'Foreign Books', 'hamazon' ),
+				'GiftCards'               => __( 'Gift Cards', 'hamazon' ),
+				'GroceryAndGourmetFood'   => __( 'Food & Beverage', 'hamazon' ),
+				'HealthPersonalCare'      => __( 'Health Personal Care', 'hamazon' ),
+				'Hobbies'                 => __( 'Hobbies', 'hamazon' ),
+				'HomeAndKitchen'          => __( 'Home & Kitchen', 'hamazon' ),
+				'Industrial'              => __( 'Industrial', 'hamazon' ),
+				'Jewelry'                 => __( 'Jewelry', 'hamazon' ),
+				'KindleStore'             => __( 'Kindle Store', 'hamazon' ),
+				'MobileApps'              => __( 'Mobile Apps', 'hamazon' ),
+				'MoviesAndTV'             => __( 'Movies & TV', 'hamazon' ),
+				'Music'                   => __( 'Music', 'hamazon' ),
+				'MusicalInstruments'      => __( 'Musical Instruments', 'hamazon' ),
+				'OfficeProducts'          => __( 'Office Products', 'hamazon' ),
+				'PetSupplies'             => __( 'Pet Supplies', 'hamazon' ),
+				'Shoes'                   => __( 'Shoes & Bags', 'hamazon' ),
+				'Software'                => __( 'Software', 'hamazon' ),
+				'SportsAndOutoors'        => __( 'Sports & Outdoors', 'hamazon' ),
+				'ToolsAndHomeImprovement' => __( 'DIY & Gardening', 'hamazon' ),
+				'Toys'                    => __( 'Toys', 'hamazon' ),
+				'VideoGames'              => __( 'Video Games', 'hamazon' ),
+				'Watches'                 => __( 'Watches', 'hamazon' ),
+			];
+		}
+
+		return $search_index;
 	}
-
-
-	/**
-	 * Send Request and get XML Object
-	 *
-	 * @param array $param
-	 * @param string|bool $cash_id
-	 * @param int $cash_time
-	 *
-	 * @return \WP_Error|\SimpleXMLElement
-	 */
-	public static function send_request( array $param, $cash_id = false, $cash_time = 86400 ) {
-		// Build URL and Check it.
-		$url = self::build_url( $param );
-		if ( is_wp_error( $url ) ) {
-			return $url;
-		}
-		//Cash Request if required.
-		$transient = false;
-		if ( $cash_id ) {
-			$transient = get_transient( $cash_id );
-		}
-		if ( $transient !== false ) {
-			return simplexml_load_string( $transient );
-		} else {
-			// Make Request
-			/**
-			 * hamazon_default_timeout
-			 *
-			 * Filter for timeout
-			 * @param array $param
-			 * @param string $service
-			 */
-			$default_time_out = apply_filters( 'hamazon_default_timeout', 10, $param, 'amazon' );
-			$response = wp_remote_get( $url, [
-				'timeout' => $default_time_out,
-			] );
-			if ( is_wp_error( $response ) ) {
-				return $response;
-			}
-			$data = $response['body'];
-			$xml = simplexml_load_string( $data );
-			foreach ( $xml->Error as $error ) {
-				return new \WP_Error( (string) $error->Code, (string) $error->Message );
-			}
-			if ( $cash_id && $data ) {
-				set_transient( $cash_id, $data, $cash_time );
-			}
-			return $xml;
-		}
-	}
-
-
-	/**
-	 * Return request url to AWS REST Service
-	 *
-	 * @param array $params Request params.
-	 *
-	 * @return string|\WP_Error
-	 */
-	public static function build_url( $params ) {
-		$service = Amazon::get_instance();
-		//Add Default query
-		$params['Service']        = self::SERVICE;
-		$params['AWSAccessKeyId'] = $service->get_option( 'accessKey' );
-		$params['AssociateTag']   = $service->get_option( 'associatesid' );
-		$params['Version']        = self::VERSION;
-		$params['Timestamp']      = self::get_timestamp( false );
-		//Sort Key by byte order
-		ksort( $params );
-		//Make Query String
-		$query_string = '';
-		foreach ( $params as $k => $v ) {
-			$query_string .= '&' . self::urlencode( $k ) . '=' . self::urlencode( $v );
-		}
-		$query_string = substr( $query_string, 1 );
-		// Get endpoint
-		$url = self::get_locale_endpoint( $service->get_option( 'locale' ) );
-		//Create Signature
-		$url_components = parse_url( $url );
-		$string_to_sign = "GET\n{$url_components['host']}\n{$url_components['path']}\n{$query_string}";
-		$signature      = self::get_signature( $string_to_sign, $service->get_option( 'secretKey' ) );
-		if ( is_wp_error( $signature ) ) {
-			return $signature;
-		} else {
-			return $url . "?" . $query_string . "&Signature=" . self::urlencode( base64_encode( $signature ) );
-		}
-	}
-
-
-	/**
-	 * Encode URL according to RFC 3986
-	 *
-	 * @param string $str
-	 *
-	 * @return string
-	 */
-	protected static function urlencode( $str ) {
-		return str_replace( '%7E', '~', rawurlencode( $str ) );
-	}
-
-
-	/**
-	 * Get signature for AWS
-	 *
-	 * @param string $string_to_sign
-	 * @param string $secret_access_key
-	 *
-	 * @return \WP_Error|string
-	 */
-	protected static function get_signature( $string_to_sign, $secret_access_key ) {
-		if ( function_exists( 'hash_hmac' ) ) {
-			return hash_hmac( 'sha256', $string_to_sign, $secret_access_key, true );
-		} elseif ( function_exists( 'mhash' ) ) {
-			return mhash( MHASH_SHA256, $string_to_sign, $secret_access_key );
-		} else {
-			return new \WP_Error( 'error', __( 'hash_hmac or mhash functions are required. Please contact to server admin.', 'hamazon' ) );
-		}
-	}
-
-	/**
-	 * Returns timestamp.
-	 *
-	 * @param boolean $with_suffix if set to true, return with suffix for query string. Default true.
-	 *
-	 * @return string
-	 */
-	protected static function get_timestamp( $with_suffix = true ) {
-		$timestamp = gmdate( 'Y-m-d\TH:i:s\Z' );
-		if ( $with_suffix ) {
-			$timestamp = 'Timestamp=' . $timestamp;
-		}
-
-		return $timestamp;
-	}
-
 
 	/**
 	 * Search item with string.
 	 *
-	 * @param string $query
-	 * @param int $page
+	 * @since 5.0 Change return value.
+	 *
+	 * @param string $keyword
+	 * @param int    $page
 	 * @param string $index
+	 * @param string $order
 	 *
 	 * @return \WP_Error|array
+	 * @throws \Exception
 	 */
-	public static function search_with( $query, $page = 1, $index = 'ALL' ) {
-		$param = array(
-			'Operation'     => 'ItemSearch',
-			'SearchIndex'   => (string) $index,
-			'Keywords'      => (string) $query,
-			'ItemPage'      => $page,
-			'ResponseGroup' => 'Offers,Images,Small'
-		);
-		$result = self::send_request( $param );
-		if ( is_wp_error( $result ) ) {
-			return $result;
+	public static function search_with( $keyword, $page = 1, $index = 'ALL', $order = 'Relevance' ) {
+		$config = self::get_config();
+		if ( is_wp_error( $config ) ) {
+			return $config;
 		}
-		$response = [
-			'total_page' => (int) $result->Items->TotalPages,
-			'total_result' => (int) $result->Items->TotalResults,
-			'items' => [],
-		];
-		foreach ( $result->Items->Item as $item ) {
-			$atts = self::get_attributes( $item );
-			$image = self::get_image_src( $item, 'medium' );
-			$price = 'N/A';
-			if ( isset( $item->OfferSummary->LowestNewPrice ) ) {
-				$price = (string) $item->OfferSummary->LowestNewPrice->FormattedPrice;
-			} elseif ( isset( $item->OfferSummary->LowestUsedPrice ) ) {
-				$price = (string) $item->OfferSummary->LowestUsedPrice->FormattedPrice;
+		$api_instance = new DefaultApi( new \GuzzleHttp\Client(), $config );
+		$item_count = 10;
+		$page       = (int) min( 10, max( 1, $page ) );
+
+		# Forming the request
+		$request = new SearchItemsRequest();
+		$request->setSearchIndex( $index );
+		$request->setKeywords( $keyword );
+		$request->setItemCount( $item_count );
+		$request->setItemPage( $page );
+//		$request->setLanguagesOfPreference( AmazonLocales::get_language_locale() ); // This raises api error.
+		$request->setPartnerTag( self::get_partner_tag() );
+		$request->setPartnerType( PartnerType::ASSOCIATES );
+		$request->setResources( self::get_resources() );
+		$request->setSortBy( $order );
+		$invalid_properties = self::validate_request( $request );
+		if ( is_wp_error( $invalid_properties ) ) {
+			return $invalid_properties;
+		}
+
+		# Sending the request
+		try {
+			$response = $api_instance->searchItems( $request );
+			$errors = $response->getErrors();
+			if ( $errors ) {
+				$error = new \WP_Error();
+				foreach ( $errors as $e ) {
+					$error->add( 'invalid_request', $e->getMessage(), [
+						'response' => $e->getCode(),
+					] );
+				}
+				return $error;
 			}
-			$data = [
-				'title' => (string) $atts['Title'],
-                'category' => self::index_label( isset( $atts['ProductGroup'] ) ? $atts['ProductGroup'] : '' ),
-				'asin' => (string) $item->ASIN,
-				'price' => $price,
-				'attributes' => $atts,
-				'image' => $image,
-				'url' => (string) $item->DetailPageURL,
+
+			$items = $response->getSearchResult();
+			$total = $items ? $items->getTotalResultCount() : 0;
+			$results  = [
+				'total_page'   => ceil( $total / 10 ),
+				'total_result' => $items->getTotalResultCount(),
+				'items' => [],
 			];
-			$response['items'][] = $data;
+			if ( $items ) {
+				foreach ( $items->getItems() as $item ) {
+					$results['items'][] = self::convert_item( $item );
+				}
+			}
+			return $results;
+		} catch ( \Exception $exception ) {
+			return new \WP_Error( 'api_request', sprintf( '[%s] %s', $exception->getCode(), $exception->getMessage() ) );
 		}
-		return $response;
+
 	}
 
 	/**
-	 * Grab image URL.
+	 * Convert item to associative array.
 	 *
-	 * @param \SimpleXMLElement $item
-	 * @param string $size
-	 *
-	 * @return string
+	 * @param Item $item
+	 * @return array
 	 */
-	protected static function get_image_src( $item, $size = 'small' ) {
-		switch ( $size ) {
-			case 'large':
-				$url = (string) $item->LargeImage->URL ?: hamazon_no_image() ;
+	public static function convert_item( $item ) {
+		$info = json_decode( $item, true );
+		$node = $item->getBrowseNodeInfo();
+		$atts  = self::get_attributes( $info );
+		$price = 'N/A';
+		$offers = $item->getOffers();
+		if ( $item->getOffers() ) {
+			foreach ( $item->getOffers()->getListings() as $offer ) {
+				$price = $offer->getPrice()->getDisplayAmount();
 				break;
-			case 'medium':
-				$url = (string) $item->MediumImage->URL ?: hamazon_no_image();
-				break;
-			case 'small':
-				$url = (string) $item->SmallImage->URL ?: hamazon_no_image();
-				break;
-			default:
-				$url = hamazon_no_image();
-				break;
+			}
 		}
-		return $url;
+		$date     = '';
+		$date_gmt = '';
+		foreach ( [
+			'ContentInfo' => 'PublicationDate',
+			'ProductInfo' => 'ReleaseDate',
+		] as $key => $sub_key ) {
+			if ( ! empty( $info['ItemInfo'][ $key ][ $sub_key ]['DisplayValue'] ) ) {
+				$date_gmt = $info['ItemInfo'][ $key ][ $sub_key ]['DisplayValue'];
+				$date = date_i18n( get_option( 'date_format' ), strtotime( $date_gmt ) );
+				break;
+			}
+		}
+		$images = $item->getImages();
+		return apply_filters( 'hamazon_item_array', [
+			'title'      => (string) $item->getItemInfo()->getTitle()->getDisplayValue(),
+			'rank'       => $node ? $item->getBrowseNodeInfo()->getWebsiteSalesRank()->getSalesRank() : '',
+			'category'   => $node ? $item->getBrowseNodeInfo()->getWebsiteSalesRank()->getDisplayName() : '',
+			'asin'       => $item->getASIN(),
+			'price'      => $price,
+			'attributes' => $atts,
+			'date'       => $date,
+			'date_gmt'   => $date_gmt,
+			'image'      => $images ? $images->getPrimary()->getMedium()->getURL() : '',
+			'images'     => [
+				'medium' => $images ? $images->getPrimary()->getMedium()->getURL() : '',
+				'large'  => $images ? $images->getPrimary()->getLarge()->getURL() : '',
+			],
+			'url'        => $item->getDetailPageURL(),
+		], $item );
 	}
 
 	/**
 	 * Get item attributes
 	 *
-	 * @param \SimpleXMLElement $item
+	 * @param array $item
 	 *
 	 * @return array
 	 */
 	public static function get_attributes( $item ) {
-		if ( $item->ItemAttributes ) {
-			return self::parse_object( $item->ItemAttributes );
-		} else {
-			return array();
-		}
-	}
-
-	/**
-	 * Parse object to array
-	 *
-	 * @param \SimpleXMLElement|array $object
-	 *
-	 * @return array
-	 */
-	protected static function parse_object( $object ) {
-		$vars = array();
-		foreach ( get_object_vars( $object ) as $key => $val ) {
-			if ( is_object( $val ) ) {
-				$vars[ $key ] = self::parse_object( $val );
-			} elseif ( is_array( $val ) ) {
-				$vars[ $key ] = implode( ', ', $val );
-			} else {
-				$vars[ $key ] = $val;
+		$attributes = [];
+		// Set contributors
+		if ( ! empty( $item['ItemInfo']['ByLineInfo']['Contributors'] ) ) {
+			foreach ( $item['ItemInfo']['ByLineInfo']['Contributors'] as $contributor ) {
+				if ( ! isset( $attributes['contributors'] ) ) {
+					$attributes['contributors'] = [];
+				}
+				$name = $contributor['Name'];
+				$role = $contributor['Role'];
+				if ( ! isset( $attributes['contributors'][ $role ] ) ) {
+					$attributes['contributors'][ $role ] = [];
+				}
+				$attributes['contributors'][ $role ][] = $name;
 			}
 		}
-		return $vars;
+		// Set brand & manufacturer
+		foreach ( [ 'Brand', 'Manufacturer' ] as $key ) {
+			$attributes[ strtolower( $key ) ] = ! empty( $item['ItemInfo']['ByLineInfo'][ $key ] )
+				? $item['ItemInfo']['ByLineInfo'][ $key ]['DisplayValue'] : '';
+		}
+		// Product Info
+		if ( ! empty( $item['ItemInfo']['ProductInfo']['IsAdultProduct']['DisplayValue'] ) ) {
+			$attributes['is_adult'] = $item['ItemInfo']['ProductInfo']['IsAdultProduct']['DisplayValue'];
+		} else {
+			$attributes['is_adult'] = '';
+		}
+		return $attributes;
 	}
 
 	/**
 	 * Get item from ASIN code.
 	 *
+	 * @since 5.0 Change return value.
 	 * @param string $asin
-	 * @return \SimpleXMLElement|\WP_Error
+	 *
+	 * @return array|\WP_Error
 	 */
 	public static function get_item_by_asin( $asin ) {
-		$param = [
-			'Operation' => 'ItemLookup',
-			'IdType' => 'ASIN',
-			'ItemId' => (string) $asin,
-			'ResponseGroup' => 'Medium,Offers,Images,Reviews'
-		];
-		$id = "asin_{$asin}";
-		return self::send_request($param, $id);
+		$config = self::get_config();
+		if ( is_wp_error( $config ) ) {
+			return $config;
+		}
+		$apiInstance = new DefaultApi(
+		/*
+		 * If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+		 * This is optional, `GuzzleHttp\Client` will be used as default.
+		 */
+			new \GuzzleHttp\Client(),
+			$config
+		);
+
+		$item_ids = [ $asin ];
+
+		# Forming the request
+		$request = new GetItemsRequest();
+		$request->setItemIds( $item_ids );
+		$request->setPartnerTag( self::get_partner_tag() );
+		$request->setPartnerType( PartnerType::ASSOCIATES );
+		$request->setResources( self::get_resources() );
+
+		# Validating request
+		$invalid_properties = self::validate_request( $request );
+		if ( is_wp_error( $invalid_properties ) ) {
+			return $invalid_properties;
+		}
+
+		# Sending the request
+		try {
+			$response = $apiInstance->getItems($request);
+			$errors = $response->getErrors();
+			if ( $errors ) {
+				$error = new \WP_Error();
+				foreach ( $errors as $e ) {
+					$error->add( 'invalid_request', $e->getMessage(), [
+						'response' => $e->getCode(),
+					] );
+				}
+				return $error;
+			}
+
+			# Parsing the response
+			if ( $response->getItemsResult() ) {
+				foreach ( $response->getItemsResult()->getItems() as $item ) {
+					return self::convert_item( $item );
+				}
+			}
+			throw new \Exception( __( 'Sorry, but item not found.', 'hamazon' ) );
+		} catch ( \Exception $exception) {
+			return new \WP_Error( 'api_request', sprintf( '[%s] %s', $exception->getCode(), $exception->getMessage() ) );
+		}
 	}
 
 	/**
 	 * Detect if string is ASIN
 	 *
 	 * @param $asin
+	 *
 	 * @return bool
 	 */
 	private static function is_asin( $asin ) {
@@ -421,123 +306,143 @@ class AmazonConstants {
 	/**
 	 * Create HTML Source With Asin
 	 *
-	 * @since 3.0.0 May return WP_Error
 	 * @param string $asin
 	 * @param array $extra_atts
+	 *
 	 * @return string|\WP_Error
+	 * @since 3.0.0 May return WP_Error
 	 */
 	public static function format_amazon( $asin, $extra_atts = [] ) {
 		try {
 			if ( self::is_asin( $asin ) ) {
 				// Old format like [tmkm-amazon]000000000[/tmkm-amazon]
-				$content = $extra_atts[ 'description' ];
-			} elseif ( self::is_asin( $extra_atts[ 'asin' ] ) ) {
+				$content = $extra_atts['description'];
+			} elseif ( self::is_asin( $extra_atts['asin'] ) ) {
 				// New format
 				$content = $asin;
-				$asin = $extra_atts[ 'asin' ];
+				$asin    = $extra_atts['asin'];
 			} else {
 				throw new \Exception( __( 'ASIN format is wrong.', 'hamazon' ), 400 );
 			}
 
-			$result = self::get_item_by_asin( $asin );
-
-			if ( is_wp_error( $result ) ) {
-				return $result;
+			$cache_key = 'amazon_api5_' . $asin;
+			$cache     = get_transient( $cache_key );
+			if ( false !== $cache ) {
+				$item = $cache;
 			} else {
-				// Amazon function returned XML data
-				$status = $result->Items->Request->IsValid;
-				if ( $status == 'False' ) {
-					throw new \Exception( __( 'Request for Amazon is invalid.', 'hamazon' ), 400 );
+				$item = self::get_item_by_asin( $asin );
+			}
+
+
+			if ( is_wp_error( $item ) ) {
+				return $item;
+			} else {
+				set_transient( $cache_key, $item, 60 * 60 * 24 );
+				$content = trim( $content );
+				if ( ! empty( $content ) ) {
+					$desc = sprintf( '<p class="additional-description">%s</p>', wp_kses_post( $content ) );
 				} else {
-					// results were found, so display the products
-					$item = $result->Items->Item[ 0 ];
-					$attributes = self::get_attributes( $item );
-					$goods_image = self::get_image_src( $item, 'large' );
-
-					$url = esc_url( $item->DetailPageURL );
-
-					$title = $attributes[ 'Title' ];
-					$product_group = sprintf( '<small>%s</small>', self::index_label( $attributes[ 'ProductGroup' ] ) );
-					$price = isset( $attributes[ 'ListPrice' ] ) ? $attributes[ 'ListPrice' ][ 'FormattedPrice' ] : false;
-					$desc = $price ? sprintf( "<p class=\"price\"><span class=\"label\">%s</span><em>{$price}</em></p>", __( 'Price', 'hamazon' ) ) : '';
-					$filter = [
-						'author' => [ 'Author', 'Director', 'Actor', 'Artist', 'Creator' ],
-						'publisher' => [ 'Publisher', 'Manufacturer', 'Label', 'Brand', 'Studio' ],
-						'Date' => [ 'PublicationDate' ],
-						'allowable' => [ 'Binding', 'NumberOfPages', 'ISBN', 'Feature' ]
-					];
-					foreach($filter as $f => $values){
-						foreach($values as $val){
-							if(isset($attributes[$val]) && ( $label = self::atts_to_string( $val ) )  ){
-								$key = self::atts_to_string($val);
-								$value = esc_html(preg_match('/^[0-9]{4}-[0-9]{2}-[0-9]{2}( [0-9]{2}:[0-9]{2}:[0-9]{2})?$/', $attributes[$val]) ? mysql2date(get_option('date_format'), $attributes[$val]) : $attributes[$val]);
-								$desc .= "<p><span class=\"label\">{$key}</span><em>{$value}</em></p>";
-								if( false === array_search( $f, [ 'allowable', 'author' ] ) ) {
-									break;
-								}
-							}
-						}
-					}
-					if ( get_option( 'hamazon_show_review', false ) && 'true' === (string) $item->CustomerReviews->HasReviews ) {
-						$review = sprintf( '<p class="review"><iframe src="%s"></iframe></p>', $item->CustomerReviews->IFrameURL );
-					} else {
-						$review = '';
-					}
-					if ( !empty( $content ) ) {
-						$desc .= sprintf( '<p class="additional-description">%s</p>', $content );
-					}
-					$tag = <<<EOS
-<div class="tmkm-amazon-view wp-hamazon-amazon">
-<p class="tmkm-amazon-img"><a href="{$url}" target="_blank"><img src="{$goods_image}" border="0" alt="{$title}" /></a></p>
-<p class="tmkm-amazon-title"><a href="{$url}" target="_blank">{$title}{$product_group}</a></p>
-{$desc}{$review}
-<p class="vendor"><a href="https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html">Supported by amazon Product Advertising API</a></p>
-</div>
-EOS;
-					/**
-					 * wp_hamazon_amazon
-					 *
-					 * Filter output of amazon
-					 *
-					 * @param string $html
-					 * @param \SimpleXMLElement $item
-					 * @param array $extra_atts
-					 * @param string $content
-					 * @return string
-					 */
-					return apply_filters( 'wp_hamazon_amazon', $tag, $item, $extra_atts, $content );
+					$desc = '';
 				}
+				$html = hamazon_template( 'amazon', 'single', [
+					'item'       => $item,
+					'extra_atts' => $extra_atts,
+					'asin'       => $asin,
+					'desc'       => $desc,
+				] );
+
+				/**
+				 * wp_hamazon_amazon
+				 *
+				 * Filter output of amazon
+				 *
+				 * @since 5.0 Change $item attributes to array.
+				 * @param string $html
+				 * @param array $item
+				 * @param array $extra_atts
+				 * @param string $content
+				 *
+				 * @return string
+				 */
+				return apply_filters( 'wp_hamazon_amazon', $html, $item, $extra_atts, $content );
 			}
 		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
 	}
 
+	/**
+	 * Get resources about product information.
+	 */
+	public static function get_resources() {
+		return apply_filters( 'hamazon_apa_resources', [
+			SearchItemsResource::BROWSE_NODE_INFOWEBSITE_SALES_RANK,
+			SearchItemsResource::IMAGESPRIMARYLARGE,
+			SearchItemsResource::IMAGESPRIMARYMEDIUM,
+			SearchItemsResource::ITEM_INFOTITLE,
+			SearchItemsResource::ITEM_INFOBY_LINE_INFO,
+			SearchItemsResource::ITEM_INFOPRODUCT_INFO,
+			SearchItemsResource::ITEM_INFOCONTENT_INFO,
+			SearchItemsResource::ITEM_INFOEXTERNAL_IDS,
+			SearchItemsResource::ITEM_INFOTRADE_IN_INFO,
+			SearchItemsResource::ITEM_INFOMANUFACTURE_INFO,
+			SearchItemsResource::OFFERSLISTINGSPRICE,
+			SearchItemsResource::PARENT_ASIN,
+			SearchItemsResource::OFFERSLISTINGSPROGRAM_ELIGIBILITYIS_PRIME_EXCLUSIVE,
+			SearchItemsResource::OFFERSLISTINGSPROGRAM_ELIGIBILITYIS_PRIME_PANTRY,
+		] );
+	}
 
 	/**
-	 * Translate Attribute
+	 * Get configuration.
 	 *
-	 * @param string $key
+	 * @return Configuration|\WP_Error
+	 */
+	public static function get_config() {
+		$service    = Amazon::get_instance();
+		$access_key = $service->get_option( 'accessKey' );
+		$secret_key = $service->get_option( 'secretKey' );
+		$tag        = self::get_partner_tag();
+		$locale     = $service->get_option( 'locale' );
+		if ( ! ( $access_key && $tag && $locale && $secret_key ) ) {
+			return new \WP_Error( 'hamazon_invalid_arguments', __( 'Amazon Associate setting is invalid. Please fill all information.', 'hamazon' ) );
+		}
+		$config = new Configuration();
+		$config->setAccessKey( $access_key );
+		$config->setSecretKey( $secret_key );
+		$host   = AmazonLocales::get_host( $locale );
+		$region = AmazonLocales::get_region( $locale );
+		$config->setHost( $host );
+		$config->setRegion( $region );
+
+		return $config;
+	}
+
+	/**
+	 * Get partner tag.
+	 *
 	 * @return string
 	 */
-	public static function atts_to_string($key){
-		$attributes = [
-			'Actor' => __( 'Actor', 'hamazon' ),
-			'Artist' => __( 'Artist', 'hamazon' ),
-			'Author' => __( 'Author', 'hamazon' ),
-			'Binding' => __( 'Category', 'hamazon' ),
-			'Brand' => __( 'Brand', 'hamazon' ),
-			'Creator' => __( 'Creator', 'hamazon' ),
-			'Director' => __( 'Director', 'hamazon' ),
-			'ISBN' => 'ISBN',
-			'Label' => __( 'Label', 'hamazon' ),
-			'Manufacturer' => __( 'Actor', 'hamazon' ),
-			'NumberOfPages' => _x( 'No. of Pages', 'item_attributes', 'hamazon' ),
-			'PublicationDate' => __( 'Published', 'hamazon' ),
-			'Publisher' => _x( 'Publisher', 'item_attributes', 'hamazon' ),
-			'Studio' => __( 'Studio', 'hamazon' ),
-		];
-		return isset( $attributes[ $key ] ) ? $attributes[ $key ] : '';
+	public static function get_partner_tag() {
+		$service    = Amazon::get_instance();
+		return $service->get_option( 'associatesid' );
+	}
+
+	/**
+	 * Validate request.
+	 *
+	 * @param SearchItemsRequest|GetItemsRequest $request
+	 *
+	 * @return true|\WP_Error
+	 */
+	protected static function validate_request( $request ) {
+		$invalid_properties = $request->listInvalidProperties();
+		$length              = count( $invalid_properties );
+		if ( $length > 0 ) {
+			return new \WP_Error( 'invalid_property', __( 'Invalid properties for request.', 'hamazon' ) );
+		} else {
+			true;
+		}
 	}
 
 }

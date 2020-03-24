@@ -2,10 +2,10 @@
 
 Contributors: Takahashi_Fumiki, hametuha  
 Tags: amazon, affiliate, dmm, phg  
-Requires at least: 4.7  
-Tested up to: 4.9.8  
-Requires PHP: 5.4  
-Stable tag: 4.0.4  
+Requires at least: 5.0  
+Tested up to: 5.3.2  
+Requires PHP: 5.6  
+Stable tag: 5.0.0  
 
 You can add affiliate link in post content via Amazon, iTunes, DMM.
 
@@ -39,6 +39,13 @@ These services below are deprecated.
 1. You can search affiliate like this screen.
 
 ##  Changelog
+
+### 5.0.0
+
+**Breaking Changes!**
+
+* Follow Amazon Advertising API 5.0. If you use old credentials, go to Amazon Associate Central and get new credentials.
+* Markups and API data structures are changed, so if you customize with hooks, please check they work as you wanted.
 
 ### 4.0.4
 

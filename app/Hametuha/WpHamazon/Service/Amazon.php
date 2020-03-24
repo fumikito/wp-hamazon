@@ -3,6 +3,7 @@
 namespace Hametuha\WpHamazon\Service;
 
 
+use Hametuha\WpHamazon\Constants\AmazonLocales;
 use Hametuha\WpHamazon\Pattern\AbstractService;
 use Hametuha\WpHamazon\Constants\AmazonConstants;
 
@@ -36,28 +37,11 @@ class Amazon extends AbstractService {
 				'label' => __( 'Secret Key', 'hamazon' ),
 			],
 			[
-				'key'   => 'show_review',
-				'label' => __( 'Display Reviews', 'hamazon' ),
-				'default' => '',
-				'type' => 'radio',
-				'options' => [
-					__( 'No', 'hamazon' )  => '',
-					__( 'Yes', 'hamazon' ) => '1',
-				],
-			],
-			[
 				'key' => 'locale',
 				'label' => __( 'Locale', 'hamazon' ),
 				'default' => 'JP',
 				'type' => 'radio',
-				'options' => [
-					'USA' => 'US',
-					'UK'  => 'UK',
-					'Deutschland' => 'DE',
-					'日本' => 'JP',
-					'France' => 'FR',
-					'Canada' => 'CA',
-				],
+				'options' => AmazonLocales::get_locale_labels(),
 			],
 		];
 	}
@@ -80,6 +64,7 @@ class Amazon extends AbstractService {
      */
     protected function filter_data( $data ) {
         $constants = AmazonConstants::get_search_index();
+        $orders    = AmazonLocales::get_sort_orders();
         return [
             'options' => array_map( function( $key, $value ) {
                 return [
@@ -87,6 +72,12 @@ class Amazon extends AbstractService {
                     'label' => $value,
                 ];
             }, array_keys( $constants ), array_values( $constants ) ),
+            'orders' => array_map( function( $key, $value ) {
+            	return [
+            		'value' => $key,
+		            'label' => $value,
+	            ];
+            }, array_keys( $orders ), array_values( $orders ) ),
         ];
     }
 
@@ -120,6 +111,15 @@ class Amazon extends AbstractService {
 					return isset( $indexed[ $var ] );
 				}
 			],
+			'order' => [
+				'default'  => 'Relevance',
+				'required' => true,
+				'description' => 'Order of search results',
+				'validation_callback' => function( $var ) {
+					$orders = AmazonLocales::get_sort_orders();
+					return isset( $orders[ $var ] );
+				},
+			]
 		];
 	}
 
@@ -128,17 +128,15 @@ class Amazon extends AbstractService {
 	 *
 	 * @param \WP_REST_Request $request
 	 *
-	 * @return \SimpleXMLElement|\WP_Error|\WP_REST_Response
+	 * @return \WP_Error|\WP_REST_Response
 	 */
 	public function handle_rest_request( \WP_REST_Request $request ) {
-		$response = AmazonConstants::search_with( $request['query'], $request['page'], $request['index'] );
+		$response = AmazonConstants::search_with( $request['query'], $request['page'], $request['index'], $request['order'] );
 		if ( is_wp_error( $response ) ) {
-			$response->add_data( [
-				'response' => 500,
-			] );
 			return $response;
+		} else {
+			return new \WP_REST_Response( $response );
 		}
-		return new \WP_REST_Response( $response );
 	}
 
 	/**
@@ -157,6 +155,11 @@ class Amazon extends AbstractService {
 			],
 		];
 	}
+
+	protected function get_service_description() {
+		return sprintf( __( 'Display link via Amazon Advertising API. You can get credentials from <a href="%s" target="_blank" rel="noopener noreferrer">Associate Central</a>.', 'hamazon' ), 'https://affiliate.amazon.co.jp/assoc_credentials/home' );
+	}
+
 
 	/**
 	 * Get short code
