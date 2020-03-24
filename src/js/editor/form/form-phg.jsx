@@ -48,7 +48,7 @@ class FormPhg extends FormBase {
 				<div className="hamazon-modal-form">
 					<div className="hamazon-modal-form-item">
 						<label htmlFor="hamazon-input-amazon-category"
-							   className="hamazon-modal-form-label">{ __( 'Category', 'amazon' ) }</label>
+							   className="hamazon-modal-form-label">{ __( 'Category', 'hamazon' ) }</label>
 						<select id="hamazon-input-amazon-category" value={ this.state.selectedMedia }
 								onChange={ ( e ) => {
 									this.onMediaChange( e );

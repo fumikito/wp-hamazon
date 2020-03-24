@@ -6,12 +6,12 @@ use Amazon\ProductAdvertisingAPI\v1\ApiException;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\api\DefaultApi;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\GetItemsRequest;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\Item;
-use Hametuha\WpHamazon\Pattern\StaticPattern;
-use Hametuha\WpHamazon\Service\Amazon;
 use Amazon\ProductAdvertisingAPI\v1\Configuration;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\PartnerType;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsRequest;
 use Amazon\ProductAdvertisingAPI\v1\com\amazon\paapi5\v1\SearchItemsResource;
+use Hametuha\WpHamazon\Pattern\StaticPattern;
+use Hametuha\WpHamazon\Service\Amazon;
 use Tarosky\PlasticSearch\Api\Search;
 
 /**
@@ -143,33 +143,6 @@ class AmazonConstants extends StaticPattern {
 	}
 
 	/**
-	 * Grab image URL.
-	 *
-	 * @param \SimpleXMLElement $item
-	 * @param string $size
-	 *
-	 * @return string
-	 */
-	protected static function get_image_src( $item, $size = 'small' ) {
-		switch ( $size ) {
-			case 'large':
-				$url = (string) $item->LargeImage->URL ?: hamazon_no_image();
-				break;
-			case 'medium':
-				$url = (string) $item->MediumImage->URL ?: hamazon_no_image();
-				break;
-			case 'small':
-				$url = (string) $item->SmallImage->URL ?: hamazon_no_image();
-				break;
-			default:
-				$url = hamazon_no_image();
-				break;
-		}
-
-		return $url;
-	}
-
-	/**
 	 * Convert item to associative array.
 	 *
 	 * @param Item $item
@@ -253,28 +226,6 @@ class AmazonConstants extends StaticPattern {
 			$attributes['is_adult'] = '';
 		}
 		return $attributes;
-	}
-
-	/**
-	 * Parse object to array
-	 *
-	 * @param \SimpleXMLElement|array $object
-	 *
-	 * @return array
-	 */
-	protected static function parse_object( $object ) {
-		$vars = array();
-		foreach ( get_object_vars( $object ) as $key => $val ) {
-			if ( is_object( $val ) ) {
-				$vars[ $key ] = self::parse_object( $val );
-			} elseif ( is_array( $val ) ) {
-				$vars[ $key ] = implode( ', ', $val );
-			} else {
-				$vars[ $key ] = $val;
-			}
-		}
-
-		return $vars;
 	}
 
 	/**
@@ -410,35 +361,6 @@ class AmazonConstants extends StaticPattern {
 		} catch ( \Exception $e ) {
 			return new \WP_Error( $e->getCode(), $e->getMessage() );
 		}
-	}
-
-
-	/**
-	 * Translate Attribute
-	 *
-	 * @param string $key
-	 *
-	 * @return string
-	 */
-	public static function atts_to_string( $key ) {
-		$attributes = [
-			'Actor'           => __( 'Actor', 'hamazon' ),
-			'Artist'          => __( 'Artist', 'hamazon' ),
-			'Author'          => __( 'Author', 'hamazon' ),
-			'Binding'         => __( 'Category', 'hamazon' ),
-			'Brand'           => __( 'Brand', 'hamazon' ),
-			'Creator'         => __( 'Creator', 'hamazon' ),
-			'Director'        => __( 'Director', 'hamazon' ),
-			'ISBN'            => 'ISBN',
-			'Label'           => __( 'Label', 'hamazon' ),
-			'Manufacturer'    => __( 'Actor', 'hamazon' ),
-			'NumberOfPages'   => _x( 'No. of Pages', 'item_attributes', 'hamazon' ),
-			'PublicationDate' => __( 'Published', 'hamazon' ),
-			'Publisher'       => _x( 'Publisher', 'item_attributes', 'hamazon' ),
-			'Studio'          => __( 'Studio', 'hamazon' ),
-		];
-
-		return isset( $attributes[ $key ] ) ? $attributes[ $key ] : '';
 	}
 
 	/**

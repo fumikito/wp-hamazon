@@ -26,7 +26,6 @@ class AmazonRenderer extends BaseRenderer {
 	getMeta() {
 		const { item } = this.props;
 		const meta = [];
-		console.log( item );
 		if ( item.attributes.contributors ) {
 			for ( const role in item.attributes.contributors ) {
 				if ( ! item.attributes.contributors.hasOwnProperty( role ) ) {

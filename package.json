@@ -11,7 +11,9 @@
     "start": "gulp build && gulp watch",
     "package": "gulp build",
     "watch": "gulp watch",
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "jed": "po2json languages/hamazon-$LOCALE.po languages/hamazon-$LOCALE-hamazon-i18n.json -f jed",
+    "jed-ja": "po2json languages/hamazon-ja.po languages/hamazon-ja-hamazon-i18n.json -f jed"
   },
   "repository": {
     "type": "git",

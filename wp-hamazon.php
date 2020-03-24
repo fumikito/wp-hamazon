@@ -8,7 +8,7 @@
  * Version: 5.0.0
  * PHP Version: 5.6
  * Text Domain: hamazon
- * Domain Path: /language/
+ * Domain Path: /languages/
  * License: GPL3 or Later
 */
 
@@ -44,7 +44,7 @@ function hamazon_info( $key ) {
  */
 function hamazon_init() {
 	// Load translations.
-	load_plugin_textdomain( 'hamazon', false, basename( dirname( __FILE__ ) ) . '/language' );
+	load_plugin_textdomain( 'hamazon', false, basename( dirname( __FILE__ ) ) . '/languages' );
 	// Check PHP version
 	if ( version_compare( phpversion(), hamazon_info( 'php' ), '<' ) ) {
 		add_action( 'admin_notices', 'hamazon_warnings' );

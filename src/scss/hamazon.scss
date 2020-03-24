@@ -62,7 +62,7 @@
 		float: right;
 		margin: 0 0 1em 1em;
 		padding: 0.5em;
-		border: solid 1px #C2C2C2;
+		border: solid 1px #ddd;
 		background-color: #fff;
 		max-width: 200px;
 		height: auto;
@@ -97,6 +97,7 @@
 	}
 
 	&-actions {
+		margin-top: 2em;
 	}
 
 	&-btn {
@@ -144,7 +145,6 @@
 		&-actions {
 			text-align: center;
 			clear: both;
-			margin-top: 2em;
 		}
 
 		&-btn {
