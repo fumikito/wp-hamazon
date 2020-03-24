@@ -74,52 +74,11 @@ class Dmm extends AbstractService {
 				if ( is_wp_error( $item ) ) {
 					return $item;
 				}
-				ob_start();
-				?>
-                <div class="tmkm-amazon-view wp-hamazon-dmm">
-                    <p class="tmkm-amazon-img">
-                        <a href="<?php echo esc_url( $item->affiliateURL ) ?>" target="_blank">
-                            <img src="<?php echo isset( $item->imageURL->large ) ? $item->imageURL->large : hamazon_no_image() ?>" border="0" alt="<?php echo esc_attr( $item->title ) ?>"/>
-                        </a>
-                    </p>
-                    <p class="tmkm-amazon-title">
-                        <a href="<?php echo esc_url( $item->affiliateURL ) ?>" target="_blank">
-							<?php echo esc_html( $item->title ) ?>
-                        </a>
-                    </p>
-                    <p class="category">
-                        <span class="label"><?php esc_html_e( 'Category', 'hamazon' ) ?></span>
-                        <em><?php echo esc_html( $item->category_name ) ?></em>
-                    </p>
-                    <p class="price">
-                        <span class="label"><?php esc_html_e( 'Price', 'hamazon' ) ?></span>
-                        <em><?php echo $this->format_price( $item->prices->price ) ?></em>
-                    </p>
-                    <?php foreach ( [
-                        'manufacture' => __( 'Publisher', 'hamazon' ),
-                        'maker'  => __( 'Publisher', 'hamazon' ),
-                        'author' => __( 'Author', 'hamazon' ),
-                        'genre'  => __( 'Genre', 'hamazon' ),
-                    ] as $key => $label ) :
-                        if ( ! isset( $item->iteminfo->{$key} ) || ! $item->iteminfo->{$key} ) {
-                            continue;
-                        }
-                        ?>
-                    <p class="<?php echo esc_attr( $key ) ?>">
-                        <span class="label"><?php echo esc_html( $label ) ?></span>
-                        <em><?php echo esc_html( $this->attribute_to_csv( $item->iteminfo->{$key} ) ) ?></em>
-                    </p>
-                    <?php endforeach; ?>
-                    <?php if ( $content ) : ?>
-                        <p class="additional-description">
-                            <?php echo wp_kses_post( $content ) ?>
-                        </p>
-                    <?php endif; ?>
-                    <p class="vendor"><a href="https://affiliate.dmm.com/" target="_blank">Supported by DMM Affiliate</a></p>
-                </div>
-				<?php
-				$out = ob_get_contents();
-				ob_end_clean();
+				$out = hamazon_template( 'dmm', 'single', [
+					'item'    => $item,
+					'content' => $content,
+					'price'   => $this->format_price( $item->prices->price ),
+				] );
 				/**
 				 * wp_hamazon_dmm
 				 *

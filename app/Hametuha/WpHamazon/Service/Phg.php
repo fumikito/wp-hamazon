@@ -72,53 +72,14 @@ class Phg extends AbstractService {
 				if ( is_wp_error( $item ) ) {
 					return $item;
 				}
-				ob_start();
-				?>
-                <div class="tmkm-amazon-view wp-hamazon-dmm">
-                    <p class="tmkm-amazon-img">
-                        <a href="<?php echo esc_url( $this->affiliate_url( $item ) ) ?>" target="_blank">
-                            <img src="<?php echo esc_url( $this->artwork_url( $item ) ) ?>" border="0" alt="<?php echo esc_attr( $item->trackName ) ?>"/>
-                        </a>
-                    </p>
-                    <p class="tmkm-amazon-title">
-                        <a href="<?php echo esc_url(  $this->affiliate_url( $item )  ) ?>" target="_blank">
-							<?php echo esc_html( $item->trackName ) ?>
-                        </a>
-                    </p>
-                    <p class="category">
-                        <span class="label"><?php esc_html_e( 'Category', 'hamazon' ) ?></span>
-                        <em><?php echo esc_html( $this->format_kind( $item ) ) ?></em>
-                    </p>
-                    <p class="price">
-                        <span class="label"><?php esc_html_e( 'Price', 'hamazon' ) ?></span>
-                        <em><?php echo $this->format_price( $item ) ?></em>
-                    </p>
-                    <?php if ( isset( $item->genres ) && $item->genres ) : ?>
-                    <p class="genre">
-                        <span class="label"><?php esc_html_e( 'Genre', 'hamazon' ) ?></span>
-                        <em><?php echo esc_html( implode( ', ', $item->genres ) ) ?></em>
-                    </p>
-                    <?php endif; ?>
-                    <?php foreach ( [
-                        'author' => [ __( 'Author', 'hamazon' ), $this->format_artist_name( $item ) ],
-                    ] as $key => $labels ) :
-                        list( $label, $name ) = $labels;
-                        ?>
-                    <p class="<?php echo esc_attr( $key ) ?>">
-                        <span class="label"><?php echo esc_html( $label ) ?></span>
-                        <em><?php echo esc_html( $name ) ?></em>
-                    </p>
-                    <?php endforeach; ?>
-                    <?php if ( $content ) : ?>
-                        <p class="additional-description">
-                            <?php echo wp_kses_post( $content ) ?>
-                        </p>
-                    <?php endif; ?>
-                    <p class="vendor"><a href="https://www.apple.com/itunes/affiliates/" target="_blank">Supported by PHG iTunes Affiliate</a></p>
-                </div>
-				<?php
-				$out = ob_get_contents();
-				ob_end_clean();
+				$out = hamazon_template( 'phg', 'single', [
+					'item'   => $item,
+					'price'  => $this->format_price( $item ),
+					'kind'   => $this->format_kind( $item ),
+					'link'   => $this->affiliate_url( $item ),
+					'image'  => $this->artwork_url( $item ),
+					'artist' => $this->format_artist_name( $item ),
+				] );
 				/**
 				 * wp_hamazon_phg
 				 *
@@ -340,7 +301,7 @@ class Phg extends AbstractService {
 		// Make Request
 		$default_time_out = apply_filters( 'hamazon_default_timeout', 30, $args, 'phg' );
 		$result = wp_remote_get( $url, [
-		    'timeout' => $default_time_out,    
+		    'timeout' => $default_time_out,
         ] );
 		if ( is_wp_error( $result ) ) {
 		    return $result;
@@ -348,7 +309,7 @@ class Phg extends AbstractService {
         $json = json_decode( $result['body'] );
 		if ( ! $json ) {
             return new \WP_Error( 'hamazon_phg_failed', __( 'Failed to get iTunes response.', 'hamazon' ), [
-                'status' => 500,    
+                'status' => 500,
             ] );
         }
         return $json;

@@ -19,10 +19,10 @@ if ( isset( $item['images']['large'] ) ) {
 	$image_url = $item['image'];
 }
 ?>
-<div class="tmkm-amazon-view wp-hamazon-amazon" data-asin="<?php echo esc_attr( $asin ) ?>">
+<div class="tmkm-amazon-view wp-hamazon-amazon" data-store="amazon" data-asin="<?php echo esc_attr( $asin ) ?>">
 	<p class="tmkm-amazon-img">
 		<a href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
-			<img class="tmkm-amazon-image" src="<?php echo esc_attr( $image_url ) ?>" alt="<?php echo esc_attr( $item['title'] ) ?>" />
+			<img class="tmkm-amazon-image" src="<?php echo esc_attr( $image_url ) ?>" alt="" />
 		</a>
 	</p>
 	<p class="tmkm-amazon-title">
@@ -62,7 +62,7 @@ if ( isset( $item['images']['large'] ) ) {
 		}
 	} ?>
 
-	<?php foreach( [ 'brand' => __( 'Brand', 'hamazon' ), 'manufacturer' => __( 'Manufacturer', 'hamazon' ) ] as $key => $label ) {
+	<?php foreach( [ 'brand' => __( 'Publisher', 'hamazon' ), 'manufacturer' => __( 'Publisher', 'hamazon' ) ] as $key => $label ) {
 			if ( empty( $item['attributes'][ $key ] ) ) {
 				continue;
 			}
@@ -84,8 +84,8 @@ if ( isset( $item['images']['large'] ) ) {
 	<?php echo $desc ?>
 
 	<p class="tmkm-amazon-actions">
-		<a class="btn tmkm-amazon-btn tmkm-link-amazon" href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
-			<?php esc_html_e( 'Go to Amazon', 'hamazon' ) ?>
+		<a class="btn tmkm-amazon-btn tmkm-amazon-btn-amazon" href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
+			<?php esc_html_e( 'Open Amazon', 'hamazon' ) ?>
 		</a>
 	</p>
 	<p class="vendor tmkm-amazon-vendor">

@@ -37,6 +37,7 @@
 	&-label {
 		display: inline-block;
 		width: 8em;
+		font-weight: bold;
 	}
 
 	&-title {
@@ -48,9 +49,11 @@
 	&-category {
 		display: inline-block;
 		margin-left: 1em;
-		background-color: #ddd;
+		background-color: #000;
 		border-radius: 3px;
-		color: inherit
+		color: #fff;
+		text-decoration: none;
+		padding: 2px 5px;
 	}
 
 	&-img{}
@@ -93,4 +96,49 @@
 		}
 	}
 
+	&-actions {
+	}
+
+	&-btn {
+		display: inline-block;
+		padding: 0.5em 1em;
+		border-style: solid;
+		border-width: 1px;
+		border-radius: 3px;
+		text-decoration: none !important;
+		font-size: 1.2em;
+		font-weight: bold;
+		transition: color .3s ease-in-out, background-color .3s ease-in-out, border-color .3s ease-in-out;
+
+		& + & {
+			margin-left: 0.5em;
+		}
+
+		@each $brand, $color in (
+						( amazon, #FF9900 ),
+						( dmm, #EF2737 ),
+						( phg, #000 ),
+		) {
+			&-#{$brand} {
+				color: $color;
+				border-color: $color;
+				background-color: transparent;
+
+				&:hover,
+				&:active {
+					color: #fff;
+					background-color: $color;
+				}
+			}
+		}
+
+	}
+
+
+
+	@media only screen and ( max-width: 767px ) {
+		&-actions {
+			text-align: center;
+		}
+	}
 }
