@@ -14,6 +14,7 @@ class Modal extends React.Component {
 		};
 	}
 
+
 	closeHandler( event ) {
 		event.preventDefault();
 		event.stopPropagation();

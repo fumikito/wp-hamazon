@@ -34,12 +34,6 @@
 		"footer": true
 	},
 	{
-		"path": "assets/js/editor-helper.js",
-		"ext": "js",
-		"deps": [],
-		"footer": true
-	},
-	{
 		"path": "assets/js/editor/components/modal.js",
 		"ext": "js",
 		"deps": [

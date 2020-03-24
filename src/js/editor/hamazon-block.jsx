@@ -6,6 +6,7 @@
  */
 
 /* global HamazonBlock:false */
+/* global Hamazon:false */
 
 const React = wp.element;
 const { __ } = wp.i18n;
@@ -51,7 +52,7 @@ registerBlockType( 'hamazon/single', {
 
 		const HamazonModal = withState( {
 			isOpen       : false,
-			activeService: attributes.type,
+			activeService: attributes.type || ( Hamazon.services.length ? Hamazon.services[0].key : '' ),
 		} )( ( { isOpen, activeService, setState } ) => {
 
 			const onSelectHandler = ( service ) => {
@@ -68,7 +69,7 @@ registerBlockType( 'hamazon/single', {
 						  title={ title }
 						  onRequestClose={ () => setState( { isOpen: false } ) }>
 						  <div className="hamazon-modal-content">
-							  <Sidebar services={ services } active={ attributes.type } onSelect={ onSelectHandler }/>
+							  <Sidebar services={ services } active={ activeService } onSelect={ onSelectHandler }/>
 							  <div className="hamazon-modal-search-box">
 								  { services.map( ( service ) => {
 									  return (

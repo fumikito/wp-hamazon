@@ -256,12 +256,4 @@ abstract class AbstractService extends Singleton {
 	 * @return \WP_Error|\WP_REST_Response
 	 */
 	abstract public function handle_rest_request( \WP_REST_Request $request );
-
-
-	/**
-	 * Returns is this service is valid
-	 *
-	 * @return bool
-	 */
-	abstract public function is_valid();
 }

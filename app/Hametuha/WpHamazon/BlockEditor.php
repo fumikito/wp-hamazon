@@ -39,7 +39,7 @@ class BlockEditor extends Singleton {
 			'attributes'      => $this->get_attributes(),
 			'shortCodes'      => $this->get_types(),
 		] );
-		// Alert Block.
+		// Block
 		register_block_type( 'hamazon/single', [
 			'editor_style'  => 'hamazon-block',
 			'editor_script' => 'hamazon-block',

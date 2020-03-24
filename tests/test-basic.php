@@ -26,4 +26,15 @@ class Hamazon_Basic_Test extends WP_UnitTestCase {
 		$this->assertEquals( 1, preg_match( '#^https?://#', $src ) );
 	}
 
+	/**
+	 * Load template
+	 */
+	function test_template() {
+		add_filter( 'hamazon_template_path', function( $path ) {
+			return dirname( __DIR__ ) . '/tests/template.php';
+		} );
+		$template_result = hamazon_template( 'test' );
+		$this->assertEquals( '<p>Test</p>', trim( $template_result ) );
+	}
+
 }

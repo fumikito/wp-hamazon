@@ -4,6 +4,7 @@
 
 const React = wp.element;
 const { BaseRenderer } = wp.hamazon;
+const { __ } = wp.i18n;
 
 /* global HamazonEditor:false */
 
@@ -23,22 +24,45 @@ class AmazonRenderer extends BaseRenderer {
 	}
 
 	getMeta() {
-		let credits = [
-			this.props.item.attributes.Author,
-			this.props.item.attributes.Creator,
-			this.props.item.attributes.Actor,
-			this.props.item.attributes.Director,
-			this.props.item.attributes.Manufacturer,
-		];
+		const { item } = this.props;
+		const meta = [];
+		console.log( item );
+		if ( item.attributes.contributors ) {
+			for ( const role in item.attributes.contributors ) {
+				if ( ! item.attributes.contributors.hasOwnProperty( role ) ) {
+					continue;
+				}
+				meta.push( {
+					label: role,
+					value: item.attributes.contributors[ role ].join( ', ' ),
+				} );
+			}
+		}
+		for ( const key of [ 'brand', 'manufacturer' ] ) {
+			if ( ! item.attributes[ key ] ) {
+				continue;
+			}
+			meta.push( {
+				label: __( 'Brand', 'hamazon' ),
+				value: item.attributes[ key ],
+			} );
+			break;
+		}
+		if ( item.date ) {
+			meta.push( {
+				label: __( 'Release Date', 'hamazon' ),
+				value: item.date,
+			} );
+		}
 		return (
 			<div className="hamazon-item-creator">
-				{ credits.map( ( string, index ) => {
-					if ( string ) {
-						let className = 'hamazon-item-meta-string-' + index;
-						return <p key={ className }>{ string }</p>
-					} else {
-						return null;
-					}
+				{ meta.map( ( info, index ) => {
+					return (
+						<p key={ 'hamazon-item-meta-string-' + index }>
+							<small>{ info.label }</small>
+							{ info.value }
+						</p>
+					);
 				} ) }
 			</div>
 		);

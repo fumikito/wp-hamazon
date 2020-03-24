@@ -13,7 +13,7 @@
 */
 
 // Do not load directly
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || die();
 
 // Register initialization hook
 add_action( 'plugins_loaded', 'hamazon_init' );
@@ -55,7 +55,10 @@ function hamazon_init() {
 	// Bootstrap
 	require_once __DIR__ . '/vendor/autoload.php';
 	Hametuha\WpHamazon\BootStrap::get_instance();
-
+	// Register command on CLI environment.
+	if ( defined( 'WP_CLI' ) && WP_CLI ) {
+		WP_CLI::add_command( 'hamazon', Hametuha\WpHamazon\Commands::class );
+	}
 }
 
 /**

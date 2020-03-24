@@ -3,7 +3,7 @@
 set -e
 
 # Build files
-composer install --no-dev
+composer install --no-dev --prefer-dist
 npm install
 npm run package
 # Make Readme

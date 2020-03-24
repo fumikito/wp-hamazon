@@ -73,7 +73,7 @@ class FormPhg extends FormBase {
 					<div className="hamazon-modal-form-item input">
 						<label htmlFor="hamazon-input-amazon-query"
 							   className="hamazon-modal-form-label">{ __( 'Search Terms', 'hamazon' ) }</label>
-						<input id="hamazon-input-amazon-query" className="regular-text hamazon-modal-input-text"
+						<input id="hamazon-input-amazon-query" className="regular-text hamazon-modal-input-text input-control"
 							   value={ this.state.query }
 							   onChange={ ( e ) => this.onInputChange( e ) }/>
 					</div>
