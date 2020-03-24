@@ -40,6 +40,13 @@ These services below are deprecated.
 
 ##  Changelog
 
+### 5.0.0
+
+**Breaking Changes!**
+
+* Follow Amazon Advertising API 5.0. If you use old credentials, go to Amazon Associate Central and get new credentials.
+* Markups and API data structures are changed, so if you customize with hooks, please check they work as you wanted.
+
 ### 4.0.4
 
 * Fix js dependency errors.
