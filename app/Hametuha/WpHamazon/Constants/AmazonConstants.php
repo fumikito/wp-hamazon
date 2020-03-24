@@ -325,11 +325,19 @@ class AmazonConstants extends StaticPattern {
 				throw new \Exception( __( 'ASIN format is wrong.', 'hamazon' ), 400 );
 			}
 
-			$item = self::get_item_by_asin( $asin );
+			$cache_key = 'amazon_api5_' . $asin;
+			$cache     = get_transient( $cache_key );
+			if ( false !== $cache ) {
+				$item = $cache;
+			} else {
+				$item = self::get_item_by_asin( $asin );
+			}
+
 
 			if ( is_wp_error( $item ) ) {
 				return $item;
 			} else {
+				set_transient( $cache_key, $item, 60 * 60 * 24 );
 				$content = trim( $content );
 				if ( ! empty( $content ) ) {
 					$desc = sprintf( '<p class="additional-description">%s</p>', wp_kses_post( $content ) );
