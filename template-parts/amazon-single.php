@@ -34,14 +34,14 @@ if ( isset( $item['images']['large'] ) ) {
 		</a>
 	</p>
 
-	<p class="tmkm-amazon-price price">
+	<p class="tmkm-amazon-price price tmkm-amazon-row">
 		<span class="label tmkm-amazon-label"><?php esc_html_e( 'Price', 'hamazon' ) ?></span>
 		<em class="tmkm-amazon-value tmkm-amazon-price-number"><?php echo $item['price'] ? esc_html( $item['price'] ) : 'N/A' ?></em>
 	</p>
 
 	<?php if ( $item['rank'] ) : ?>
-		<p class="tmkm-amazon-rank">
-			<span class="label tmkm-amaozn-label"><?php esc_html_e( 'Rank', 'hamazon' ) ?></span>
+		<p class="tmkm-amazon-rank tmkm-amazon-row">
+			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Rank', 'hamazon' ) ?></span>
 			<em class="tmkm-amazon-value tmkm-amazon-rank">
 				<?php echo esc_html( sprintf( _x( '%s', 'Amazon Ranking', 'hamazon' ), number_format( $item['rank'] ) ) ); ?>
 			</em>
@@ -55,7 +55,7 @@ if ( isset( $item['images']['large'] ) ) {
 				$users[] = _x( 'and more', 'Amazon Contributors', 'hamazon' );
 			}
 			printf(
-				'<p class="tmkm-amazon-contributor"><span class="tmkm-amazon-label">%s</span><em class="tmkm-amazon-value tmkm-amazon-contributors-name">%s</em></p>',
+				'<p class="tmkm-amazon-contributor tmkm-amazon-row"><span class="tmkm-amazon-label">%s</span><em class="tmkm-amazon-value tmkm-amazon-contributors-name">%s</em></p>',
 				esc_html( $role ),
 				esc_html( implode( ', ', $users ) )
 			);
@@ -67,7 +67,7 @@ if ( isset( $item['images']['large'] ) ) {
 				continue;
 			}
 			printf(
-				'<p class="tmkm-amazon-brand"><span class="tmkm-amazon-label">%s</span><em class="tmkm-amazon-value tmkm-amazon-brand-name">%s</em></p>',
+				'<p class="tmkm-amazon-brand tmkm-amazon-row"><span class="tmkm-amazon-label">%s</span><em class="tmkm-amazon-value tmkm-amazon-brand-name">%s</em></p>',
 				esc_html( $label ),
 				esc_html( $item['attributes'][ $key ] )
 			);
@@ -75,8 +75,8 @@ if ( isset( $item['images']['large'] ) ) {
 	} ?>
 
 	<?php if ( ! empty( $item['date'] ) ) : ?>
-		<p class="tmkm-amazon-date">
-			<span class="label tmkm-amaozn-label"><?php esc_html_e( 'Released', 'hamazon' ) ?></span>
+		<p class="tmkm-amazon-date tmkm-amazon-row">
+			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Released', 'hamazon' ) ?></span>
 			<em class="tmkm-amazon-value tmkm-amazon-rank"><?php echo esc_html( $item['date'] ) ?></em>
 		</p>
 	<?php endif; ?>
@@ -88,7 +88,7 @@ if ( isset( $item['images']['large'] ) ) {
 			<?php esc_html_e( 'Go to Amazon', 'hamazon' ) ?>
 		</a>
 	</p>
-	<p class="vendor">
+	<p class="vendor tmkm-amazon-vendor">
 		<a href="https://affiliate.amazon.co.jp/gp/advertising/api/detail/main.html" target="_blank" rel="nofollow">Supported by amazon Product Advertising API</a>
 	</p>
 </div>
