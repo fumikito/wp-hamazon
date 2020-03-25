@@ -46,6 +46,7 @@ These services below are deprecated.
 
 * Sorry to be late. Followed Amazon Advertising API 5.0. If you use old credentials, go to Amazon Associate Central and get new credentials.
 * Markups and API data structures are completely changed, so if you customize with hooks, please check they work as you wanted.
+* Add WP CLI command: `wp hamazon search 'science fiction'`
 
 ### 4.0.4
 
