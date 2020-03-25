@@ -14,14 +14,14 @@ rm -rf ./node_modules
 rm -rf ./tests
 rm -rf ./bin
 rm -rf ./.git
-rm ./.gitignore
-rm ./READE.md
-rm ./.browserslistrc
-rm ./.editorconfig
-rm ./.eslintrc
-rm ./.travis.yml
-rm phpcs.ruleset.xml
-rm phpunit.xml.dist
+rm -rf ./.gitignore
+rm -rf ./.browserslistrc
+rm -rf ./.editorconfig
+rm -rf ./.eslintrc
+rm -rf ./.travis.yml
+rm -rf phpcs.ruleset.xml
+rm -rf phpunit.xml.dist
+rm -rf README.md
 
 if [ $TRAVIS_TAG ]; then
     echo $TRAVIS_TAG
