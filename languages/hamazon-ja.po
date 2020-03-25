@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Hamazon\n"
-"POT-Creation-Date: 2020-03-24 21:37+0900\n"
-"PO-Revision-Date: 2020-03-24 21:38+0900\n"
+"POT-Creation-Date: 2020-03-25 15:07+0900\n"
+"PO-Revision-Date: 2020-03-25 15:08+0900\n"
 "Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
 "Language-Team: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
 "Language: ja\n"
@@ -36,6 +36,12 @@ msgstr "利用できるアフィリエイトサービスがありません。"
 #: app/Hametuha/WpHamazon/BlockEditor.php:69
 msgid "Failed to get proper contents."
 msgstr "コンテンツを取得できませんでした。"
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:80
+msgid "Sorry, but this link is temporary unavailable. Please try again later."
+msgstr ""
+"申し訳ございません、このリンクは現在利用できないようです。のちほどお試しくだ"
+"さい。"
 
 #: app/Hametuha/WpHamazon/BootStrap.php:88 templates/admin.php:13
 msgid "Hamazon Affiliate Setting"
@@ -76,7 +82,7 @@ msgstr ""
 msgid "If you choose \"%s\", anything will be loaded."
 msgstr "\"%s\" を選んだ場合は、なにも読み込まれません。"
 
-#: app/Hametuha/WpHamazon/BootStrap.php:219
+#: app/Hametuha/WpHamazon/BootStrap.php:220
 msgid "Setting"
 msgstr "設定"
 
@@ -237,11 +243,11 @@ msgstr "申し訳ございません、アイテムが見つかりませんでし
 msgid "ASIN format is wrong."
 msgstr "ASINフォーマットが不正です。"
 
-#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:400
+#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:408
 msgid "Amazon Associate setting is invalid. Please fill all information."
 msgstr "Amazonアソシエイトの設定が無効です。情報を入力してください。"
 
-#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:434
+#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:442
 msgid "Invalid properties for request."
 msgstr "無効な項目がリクエストされています。"
 
@@ -635,11 +641,11 @@ msgstr "閉じる"
 msgid "Enter additional text(e.g. your opinion) here."
 msgstr "あなたの感想など、追加するテキストを入力してください。"
 
-#: src/js/editor/renderer/amazon-renderer.jsx:46
+#: src/js/editor/renderer/amazon-renderer.jsx:45
 msgid "Brand"
 msgstr "ブランド"
 
-#: src/js/editor/renderer/amazon-renderer.jsx:53
+#: src/js/editor/renderer/amazon-renderer.jsx:52
 msgid "Release Date"
 msgstr "リリース日"
 

@@ -16,7 +16,7 @@ Search on editor and add it immediately.
 
 ### Available Services
 
-* Amazon Advertising API
+* Amazon Advertising API(v5)
 * PHG iTunes affiliate
 * DMM affiliate
 
@@ -44,8 +44,8 @@ These services below are deprecated.
 
 **Breaking Changes!**
 
-* Follow Amazon Advertising API 5.0. If you use old credentials, go to Amazon Associate Central and get new credentials.
-* Markups and API data structures are changed, so if you customize with hooks, please check they work as you wanted.
+* Sorry to be late. Followed Amazon Advertising API 5.0. If you use old credentials, go to Amazon Associate Central and get new credentials.
+* Markups and API data structures are completely changed, so if you customize with hooks, please check they work as you wanted.
 
 ### 4.0.4
 

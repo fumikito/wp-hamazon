@@ -2,6 +2,8 @@
  This should not be removed.
  */
 
+@import "components/no_content";
+
 /*
 ----------------------------------------------
 	1. div.tmkm-amazon-view
@@ -158,4 +160,8 @@
 			text-align: center;
 		}
 	}
+}
+
+.hamazon-block-no-content {
+
 }

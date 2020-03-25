@@ -1,6 +1,9 @@
 /*!
  * @deps hamazon-editor
  */
+
+@import "components/no_content";
+
 .hamazon-block{
 
   &-content{
@@ -51,13 +54,4 @@
     padding-top: 10px;
   }
 
-  &-no-content{
-    text-align: center;
-    height: 200px;
-    padding: 20px;
-    box-sizing: border-box;
-    margin: 0;
-    background: #ccc;
-    color: #fff;
-  }
 }

@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 "Project-Id-Version: Hamazon\n"
-"POT-Creation-Date: 2020-03-24 21:37+0900\n"
+"POT-Creation-Date: 2020-03-25 15:07+0900\n"
 "PO-Revision-Date: 2017-10-13 17:58+0900\n"
 "Last-Translator: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
 "Language-Team: Takahashi Fumiki <takahashi.fumiki@hametuha.co.jp>\n"
@@ -38,6 +38,10 @@ msgstr ""
 
 #: app/Hametuha/WpHamazon/BlockEditor.php:69
 msgid "Failed to get proper contents."
+msgstr ""
+
+#: app/Hametuha/WpHamazon/BlockEditor.php:80
+msgid "Sorry, but this link is temporary unavailable. Please try again later."
 msgstr ""
 
 #: app/Hametuha/WpHamazon/BootStrap.php:88 templates/admin.php:13
@@ -77,7 +81,7 @@ msgstr ""
 msgid "If you choose \"%s\", anything will be loaded."
 msgstr ""
 
-#: app/Hametuha/WpHamazon/BootStrap.php:219
+#: app/Hametuha/WpHamazon/BootStrap.php:220
 msgid "Setting"
 msgstr ""
 
@@ -238,11 +242,11 @@ msgstr ""
 msgid "ASIN format is wrong."
 msgstr ""
 
-#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:400
+#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:408
 msgid "Amazon Associate setting is invalid. Please fill all information."
 msgstr ""
 
-#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:434
+#: app/Hametuha/WpHamazon/Constants/AmazonConstants.php:442
 msgid "Invalid properties for request."
 msgstr ""
 
@@ -627,11 +631,11 @@ msgstr ""
 msgid "Enter additional text(e.g. your opinion) here."
 msgstr ""
 
-#: src/js/editor/renderer/amazon-renderer.jsx:46
+#: src/js/editor/renderer/amazon-renderer.jsx:45
 msgid "Brand"
 msgstr ""
 
-#: src/js/editor/renderer/amazon-renderer.jsx:53
+#: src/js/editor/renderer/amazon-renderer.jsx:52
 msgid "Release Date"
 msgstr ""
 

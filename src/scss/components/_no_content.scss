@@ -1,0 +1,21 @@
+.hamazon-block-no-content{
+	text-align: center !important;
+	box-sizing: border-box;
+	margin: 3em 0;
+	height: auto;
+	padding: 1em;
+	color: #ccc;
+	border: 1px solid #eee;
+	border-radius: 3px;
+
+	// in admin.
+	.block-editor-page & {
+		height: 200px;
+		padding: 20px;
+		margin: 0;
+		background: #ccc;
+		color: #fff;
+		border: none;
+		border-radius: 0;
+	}
+}

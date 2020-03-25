@@ -74,7 +74,11 @@ class BlockEditor extends Singleton {
 					}
 					return $result;
 				} catch ( \Exception $e ) {
-					return sprintf( '<p class="hamazon-block-no-content">%s</p>', esc_html( $e->getMessage() ) );
+					return sprintf(
+						'<p class="hamazon-block-no-content"><!-- %s -->%s</p>',
+						esc_html( $e->getMessage() ),
+						esc_html__( 'Sorry, but this link is temporary unavailable. Please try again later.', 'hamazon' )
+					);
 				}
 			},
 		] );
