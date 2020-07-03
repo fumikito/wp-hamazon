@@ -232,7 +232,7 @@ abstract class AbstractService extends Singleton {
 	 */
 	public function rest_api_init() {
 		if ( $this->is_valid() ) {
-			register_rest_route( 'hamazon/v3/', $this->name, [
+			register_rest_route( 'hamazon/v3', untrailingslashit( $this->name ), [
 				'method' => 'GET',
 				'callback' => [ $this, 'handle_rest_request' ],
 				'args' => $this->get_rest_arguments(),
