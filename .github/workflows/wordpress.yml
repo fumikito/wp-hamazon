@@ -1,4 +1,4 @@
-name: Kyom Theme Workflow
+name: WordPress Plugin Workflow
 
 on:
   push:
@@ -56,8 +56,7 @@ jobs:
 
   lint:
     name: PHP Syntax Check
-    runs-on: ${{ matrix.operating-system }}
-
+    runs-on: ubuntu-latest
     steps:
       - name: Setup PHP with composer v2
         uses: shivammathur/setup-php@v2
@@ -110,7 +109,7 @@ jobs:
         run: echo "OK"
 
   release:
-    name: Build Theme
+    name: Deploy WordPress Plugin
     needs: status
     if: contains(github.ref, 'tags/') && github.event_name == 'push'
     runs-on: ubuntu-latest
