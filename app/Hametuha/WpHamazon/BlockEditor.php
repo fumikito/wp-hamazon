@@ -17,7 +17,7 @@ class BlockEditor extends Singleton {
 	 * Constructor
 	 */
 	public function __construct() {
-		add_action( 'init', [ $this, 'register_blocks' ] );
+		add_action( 'init', array( $this, 'register_blocks' ) );
 	}
 
 	/**
@@ -33,31 +33,31 @@ class BlockEditor extends Singleton {
 			return;
 		}
 		// Register variables.
-		wp_localize_script( 'hamazon-block', 'HamazonBlock', [
-			'title' => __( 'Affiliate', 'hamazon' ),
-			'services'        => $this->hamazon->service_data_for_script(),
-			'attributes'      => $this->get_attributes(),
-			'shortCodes'      => $this->get_types(),
-		] );
+		wp_localize_script( 'hamazon-block', 'HamazonBlock', array(
+			'title'      => __( 'Affiliate', 'hamazon' ),
+			'services'   => $this->hamazon->service_data_for_script(),
+			'attributes' => $this->get_attributes(),
+			'shortCodes' => $this->get_types(),
+		) );
 		// Block
-		register_block_type( 'hamazon/single', [
-			'editor_style'  => 'hamazon-block',
-			'editor_script' => 'hamazon-block',
+		register_block_type( 'hamazon/single', array(
+			'editor_style'    => 'hamazon-block',
+			'editor_script'   => 'hamazon-block',
 			'attributes'      => $this->get_attributes(),
-			'render_callback' => function( $attributes, $content = '' ) {
-				$attributes = wp_parse_args( $attributes, [
+			'render_callback' => function ( $attributes, $content = '' ) {
+				$attributes = wp_parse_args( $attributes, array(
 					'type' => '',
-				] );
+				) );
 				try {
 					if ( empty( $attributes['type'] ) ) {
 						throw new \Exception( __( 'No data is set.', 'hamazon' ) );
-					} elseif ( ! in_array( $attributes['type'], $this->get_types() ) ) {
+					} elseif ( ! in_array( $attributes['type'], $this->get_types(), true ) ) {
 						throw new \Exception( __( 'No affiliate service available.', 'hamazon' ) );
 					}
 					if ( 'amazon' === $attributes['type'] ) {
 						$attributes['asin'] = $attributes['id'];
 					}
-					$contents = $content ? strip_tags( $content ) : implode( ' ', $attributes['content'] );
+					$contents = $content ? strip_tags( $content ) : implode( ' ', (array) $attributes['content'] );
 					$instance = $this->hamazon->service_instances[ $attributes['type'] ];
 					$key      = '';
 					foreach ( $this->get_types() as $short_code => $type ) {
@@ -68,7 +68,7 @@ class BlockEditor extends Singleton {
 					if ( ! $key ) {
 						throw new \Exception( __( 'Failed to get proper contents.', 'hamazon' ) );
 					}
-					$result =  $instance->short_code_callback( $key, $attributes, $contents );
+					$result = $instance->short_code_callback( $key, $attributes, $contents );
 					if ( is_wp_error( $result ) ) {
 						throw new \Exception( $result->get_error_message() );
 					}
@@ -81,7 +81,7 @@ class BlockEditor extends Singleton {
 					);
 				}
 			},
-		] );
+		) );
 	}
 
 	/**
@@ -91,7 +91,7 @@ class BlockEditor extends Singleton {
 	 * @param string $content
 	 * @return string
 	 */
-	public function render_callback( $attributes = [], $content = '' ) {
+	public function render_callback( $attributes = array(), $content = '' ) {
 		return 'string';
 	}
 
@@ -101,7 +101,7 @@ class BlockEditor extends Singleton {
 	 * @return array
 	 */
 	protected function get_types() {
-		$types = [];
+		$types = array();
 		foreach ( $this->hamazon->service_instances as $service ) {
 			foreach ( $service->short_code_setting() as $short_code => $setting ) {
 				$types[ $short_code ] = $service->name;
@@ -116,15 +116,15 @@ class BlockEditor extends Singleton {
 	 * @return array
 	 */
 	protected function get_attributes() {
-		$attributes = [
-			'type' => [
+		$attributes = array(
+			'type'    => array(
 				'type'    => 'string',
 				'default' => '',
-			],
-			'content' => [
-				'type'   => 'array',
-			],
-		];
+			),
+			'content' => array(
+				'type' => 'array',
+			),
+		);
 		foreach ( $this->hamazon->service_instances as $name => $service ) {
 			foreach ( $service->short_code_setting() as $short_code => $settings ) {
 				foreach ( $settings as $setting ) {
@@ -133,10 +133,10 @@ class BlockEditor extends Singleton {
 						$key = 'id';
 					}
 					if ( ! isset( $attributes[ $key ] ) ) {
-						$attributes[ $key ] = [
+						$attributes[ $key ] = array(
 							'type'    => 'string',
 							'default' => '',
-						];
+						);
 					}
 				}
 			}
@@ -159,6 +159,5 @@ class BlockEditor extends Singleton {
 				return null;
 				break;
 		}
-
 	}
 }

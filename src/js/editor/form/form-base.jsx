@@ -1,4 +1,5 @@
 /*!
+ * @handle hamazon-form-base
  * @deps jquery, wp-element, hamazon-i18n, wp-api-fetch
  */
 const React = wp.element;
@@ -6,11 +7,10 @@ const $ = jQuery;
 const { __ } = wp.i18n;
 
 class FormBase extends React.Component {
-
 	constructor( params ) {
 		super( params );
 		this.state = {
-			curPage  : 1,
+			curPage: 1,
 			totalPage: 0,
 		};
 	}
@@ -21,7 +21,7 @@ class FormBase extends React.Component {
 
 	clearSearch() {
 		this.setState( {
-			totalPage: 0
+			totalPage: 0,
 		} );
 		this.props.submitHandler( [] );
 	}
@@ -40,13 +40,13 @@ class FormBase extends React.Component {
 		switch ( this.methodName() ) {
 			case 'GET':
 				wp.apiFetch( {
-					path: `hamazon/v3/${this.props.service.key}?${params}`,
+					path: `hamazon/v3/${ this.props.service.key }?${ params }`,
 				} ).then( ( response ) => {
 					this.setState( {
 						totalPage: response.total_page,
 					} );
 					this.props.submitHandler( response.items );
-				} ).catch( ( response ) => {
+				} ).catch( () => {
 					this.props.submitHandler( [] );
 				} ).finally( () => {
 					this.props.setLoading( false );
@@ -65,7 +65,7 @@ class FormBase extends React.Component {
 		}
 		const showPrevious = ( 1 < this.state.curPage );
 		const showNext = ( totalPage !== this.state.curPage );
-		let pages = [ 1 ];
+		const pages = [ 1 ];
 		for ( let i = -3; i < 4; i++ ) {
 			const page = this.state.curPage + i;
 			switch ( i ) {
@@ -89,10 +89,8 @@ class FormBase extends React.Component {
 						if ( page > 1 && i < totalPage ) {
 							pages.push( page );
 						}
-					} else {
-						if ( page < totalPage ) {
-							pages.push( page );
-						}
+					} else if ( page < totalPage ) {
+						pages.push( page );
 					}
 					break;
 			}
@@ -105,13 +103,13 @@ class FormBase extends React.Component {
 				{ ( () => {
 					return showPrevious ? (
 						<button key="hamazon-pagination-item-first" className="hamazon-pagination-item"
-								onClick={ ( event ) => {
-									this.setState( {
-										curPage: this.state.curPage - 1,
-									}, () => {
-										this.submitHandler( event );
-									} );
-								} }>
+							onClick={ ( event ) => {
+								this.setState( {
+									curPage: this.state.curPage - 1,
+								}, () => {
+									this.submitHandler( event );
+								} );
+							} }>
 							{ __( 'Previous', 'hamazon' ) }
 						</button>
 					) : null;
@@ -129,28 +127,27 @@ class FormBase extends React.Component {
 						return (
 							<span key={ keyName } className={ className }>{ p }</span>
 						);
-					} else {
-						return (
-							<button key={ keyName } className={ className } onClick={ ( event ) => {
+					}
+					return (
+						<button key={ keyName } className={ className } onClick={ ( event ) => {
+							this.setState( {
+								curPage: this.state.curPage + 1,
+							}, () => {
+								this.submitHandler( event );
+							} );
+						} }>{ p }</button>
+					);
+				}, this ) }
+				{ ( () => {
+					return showNext ? (
+						<button key="hamazon-pagination-item-last" className="hamazon-pagination-item"
+							onClick={ ( event ) => {
 								this.setState( {
 									curPage: this.state.curPage + 1,
 								}, () => {
 									this.submitHandler( event );
 								} );
-							} }>{ p }</button>
-						);
-					}
-				}, this ) }
-				{ ( () => {
-					return showNext ? (
-						<button key="hamazon-pagination-item-last" className="hamazon-pagination-item"
-								onClick={ ( event ) => {
-									this.setState( {
-										curPage: this.state.curPage + 1,
-									}, () => {
-										this.submitHandler( event );
-									} );
-								} }>
+							} }>
 							{ __( 'Next', 'hamazon' ) }
 						</button>
 					) : null;

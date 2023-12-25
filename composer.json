@@ -4,27 +4,37 @@
   "type": "wordpress-plugin",
   "license": "GPL-3.0-or-later",
   "authors": [
-	{
-	  "name": "Takahashi Fumiki",
-	  "email": "info@takahashifumiki.com"
-	}
+    {
+      "name": "Takahashi Fumiki",
+      "email": "info@takahashifumiki.com"
+    }
   ],
   "scripts": {
-	"test": "phpunit"
+    "test": "phpunit",
+    "lint": "phpcs --standard=phpcs.ruleset.xml $(find ./ -name '*.php')",
+    "fix": "phpcbf --standard=phpcs.ruleset.xml $(find ./ -name '*.php')"
   },
   "minimum-stability": "stable",
   "require": {
-	"php": "^5.6|^7.0",
-	"thewirecutter/paapi5-php-sdk": "^1.0"
+    "php": ">=7.2",
+    "thewirecutter/paapi5-php-sdk": "^1.0"
   },
   "require-dev": {
-	"phpunit/phpunit": "^4.8|^5.7",
-	"squizlabs/php_codesniffer": "^3.0",
-	"wp-coding-standards/wpcs": "^2.0"
+    "phpunit/phpunit": ">=6.0",
+    "yoast/phpunit-polyfills": "^1.0",
+    "squizlabs/php_codesniffer": "^3.0",
+    "wp-coding-standards/wpcs": "^3.0",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0"
   },
   "autoload": {
-	"psr-0": {
-	  "Hametuha\\WpHamazon": "app"
-	}
+    "psr-0": {
+      "Hametuha\\WpHamazon": "app"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
   }
 }

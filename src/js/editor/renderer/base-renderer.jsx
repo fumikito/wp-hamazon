@@ -1,4 +1,5 @@
 /*!
+ * @handle hamazon-base-renderer
  * @deps wp-element, hamazon-i18n
  */
 
@@ -6,9 +7,9 @@ const React = wp.element;
 const { __ } = wp.i18n;
 
 class BaseRenderer extends React.Component {
-
 	copy( event, copy ) {
 		event.preventDefault();
+		// eslint-disable-next-line no-alert
 		window.prompt( __( 'Copy this string.', 'hamazon' ), copy );
 	}
 
@@ -39,26 +40,20 @@ class BaseRenderer extends React.Component {
 	render() {
 		return (
 			<div className="hamazon-item">
-				{ ( () => {
-					if ( this.props.item.image ) {
-						return (
-							<div className="hamazon-item-image">
-								<img src={ this.props.item.image }/>
-							</div>
-						)
-					} else {
-						return null;
-					}
-				} )() }
+				{ ( this.props.item.image ) && (
+					<div className="hamazon-item-image">
+						<img src={ this.props.item.image } alt="" />
+					</div>
+				) }
 				<div className="hamazon-item-content">
 					{ ( () => {
-						return this.getTitle()
+						return this.getTitle();
 					} )() }
 					{ ( () => {
-						return this.getPrice()
+						return this.getPrice();
 					} )() }
 					{ ( () => {
-						return this.getMeta()
+						return this.getMeta();
 					} )() }
 					<div className="hamazon-item-meta">
 						<button className="button-primary" onClick={ ( event ) => {
@@ -68,14 +63,14 @@ class BaseRenderer extends React.Component {
 						<button className="button" onClick={ ( e ) => {
 							this.copy( e, this.getCode() );
 						} }>{ __( 'Copy Code', 'hamazon' ) }</button>
-						<a className="button" href={ this.props.item.url } target="_blank" rel='noopener noreferer'>
+						<a className="button" href={ this.props.item.url } target="_blank" rel="noopener noreferer noreferrer">
 							{ __( 'View', 'hamazon' ) }
 						</a>
 						<button className="button" onClick={ ( e ) => {
 							this.copy( e, this.props.item.url );
 						} }>{ __( 'Copy Link', 'hamazon' ) }</button>
 						{ ( () => {
-							this.extraButtons()
+							return this.extraButtons();
 						} )() }
 					</div>
 				</div>

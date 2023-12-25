@@ -33,7 +33,7 @@ function hamazon_info( $key ) {
 			'php'     => 'PHP Version',
 		) );
 	}
-	return isset( $version[$key] ) ? $version[ $key ] : null;
+	return isset( $version[ $key ] ) ? $version[ $key ] : null;
 }
 
 /**
@@ -44,14 +44,14 @@ function hamazon_info( $key ) {
  */
 function hamazon_init() {
 	// Load translations.
-	load_plugin_textdomain( 'hamazon', false, basename( dirname( __FILE__ ) ) . '/languages' );
+	load_plugin_textdomain( 'hamazon', false, basename( __DIR__ ) . '/languages' );
 	// Check PHP version
 	if ( version_compare( phpversion(), hamazon_info( 'php' ), '<' ) ) {
 		add_action( 'admin_notices', 'hamazon_warnings' );
 		return;
 	}
 	// Load global functions
-	require_once dirname( __FILE__ ) . '/functions.php';
+	require_once __DIR__ . '/functions.php';
 	// Bootstrap
 	require_once __DIR__ . '/vendor/autoload.php';
 	Hametuha\WpHamazon\BootStrap::get_instance();
@@ -72,6 +72,7 @@ function hamazon_warnings() {
 	printf(
 		'<div class="error"><p>%s</p></div>',
 		sprintf(
+			// translators: %1$s is PHP version, %2$s is current PHP version.
 			esc_html__( 'Hamazon requires PHP %1$s and over, but your version is %2$s.', 'hamazon' ),
 			hamazon_info( 'php' ),
 			phpversion()

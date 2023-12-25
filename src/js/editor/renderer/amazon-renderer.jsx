@@ -1,4 +1,5 @@
 /*!
+ * @hahdle hamazon-amazon-renderer
  * @deps wp-element, hamazon-base-renderer, hamazon-i18n
  */
 
@@ -6,10 +7,7 @@ const React = wp.element;
 const { BaseRenderer } = wp.hamazon;
 const { __ } = wp.i18n;
 
-/* global HamazonEditor:false */
-
 class AmazonRenderer extends BaseRenderer {
-
 	getCode() {
 		return '[tmkm-amazon asin="' + this.props.item.asin + '"][/tmkm-amazon]';
 	}

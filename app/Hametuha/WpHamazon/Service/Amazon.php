@@ -23,27 +23,27 @@ class Amazon extends AbstractService {
 	 * @return array
 	 */
 	protected function get_option_names() {
-		return [
-			[
-				'key' => 'associatesid',
+		return array(
+			array(
+				'key'   => 'associatesid',
 				'label' => __( 'Associate ID', 'hamazon' ),
-			],
-			[
+			),
+			array(
 				'key'   => 'accessKey',
 				'label' => __( 'Access Key', 'hamazon' ),
-			],
-			[
+			),
+			array(
 				'key'   => 'secretKey',
 				'label' => __( 'Secret Key', 'hamazon' ),
-			],
-			[
-				'key' => 'locale',
-				'label' => __( 'Locale', 'hamazon' ),
+			),
+			array(
+				'key'     => 'locale',
+				'label'   => __( 'Locale', 'hamazon' ),
 				'default' => 'JP',
-				'type' => 'radio',
+				'type'    => 'radio',
 				'options' => AmazonLocales::get_locale_labels(),
-			],
-		];
+			),
+		);
 	}
 
 	/**
@@ -56,30 +56,30 @@ class Amazon extends AbstractService {
 	}
 
 
-    /**
-     * Filter data passed to react.
-     *
-     * @param $data
-     * @return array|\stdClass
-     */
-    protected function filter_data( $data ) {
-        $constants = AmazonConstants::get_search_index();
-        $orders    = AmazonLocales::get_sort_orders();
-        return [
-            'options' => array_map( function( $key, $value ) {
-                return [
-                    'key' => $key,
-                    'label' => $value,
-                ];
-            }, array_keys( $constants ), array_values( $constants ) ),
-            'orders' => array_map( function( $key, $value ) {
-            	return [
-            		'value' => $key,
-		            'label' => $value,
-	            ];
-            }, array_keys( $orders ), array_values( $orders ) ),
-        ];
-    }
+	/**
+	 * Filter data passed to react.
+	 *
+	 * @param $data
+	 * @return array|\stdClass
+	 */
+	protected function filter_data( $data ) {
+		$constants = AmazonConstants::get_search_index();
+		$orders    = AmazonLocales::get_sort_orders();
+		return array(
+			'options' => array_map( function ( $key, $value ) {
+				return array(
+					'key'   => $key,
+					'label' => $value,
+				);
+			}, array_keys( $constants ), array_values( $constants ) ),
+			'orders'  => array_map( function ( $key, $value ) {
+				return array(
+					'value' => $key,
+					'label' => $value,
+				);
+			}, array_keys( $orders ), array_values( $orders ) ),
+		);
+	}
 
 	/**
 	 * Get rest arguments.
@@ -87,40 +87,40 @@ class Amazon extends AbstractService {
 	 * @return array
 	 */
 	public function get_rest_arguments() {
-		return [
-			'query' => [
-				'required' => true,
-				'description' => __( 'Search keyword.', 'hamazon' ),
-				'validate_callback' => function( $var ) {
-					return ! empty( $var );
+		return array(
+			'query' => array(
+				'required'          => true,
+				'description'       => __( 'Search keyword.', 'hamazon' ),
+				'validate_callback' => function ( $query ) {
+					return ! empty( $query );
 				},
-			],
-			'page' => [
-				'default' => 1,
-				'description' => __( 'Specified page.', 'hamazon' ),
-				'validate_callback' => function( $var ) {
-					return is_numeric( $var ) && ( 0 < $var );
+			),
+			'page'  => array(
+				'default'           => 1,
+				'description'       => __( 'Specified page.', 'hamazon' ),
+				'validate_callback' => function ( $page ) {
+					return is_numeric( $page ) && ( 0 < $page );
 				},
-			],
-			'index' => [
-				'default' => 'All',
-				'required' => true,
-				'description' => __( 'Search category.', 'hamazon' ),
-				'validation_callback' => function( $var ) {
+			),
+			'index' => array(
+				'default'             => 'All',
+				'required'            => true,
+				'description'         => __( 'Search category.', 'hamazon' ),
+				'validation_callback' => function ( $index ) {
 					$indexed = AmazonConstants::get_search_index();
-					return isset( $indexed[ $var ] );
-				}
-			],
-			'order' => [
-				'default'  => 'Relevance',
-				'required' => true,
-				'description' => 'Order of search results',
-				'validation_callback' => function( $var ) {
-					$orders = AmazonLocales::get_sort_orders();
-					return isset( $orders[ $var ] );
+					return isset( $indexed[ $index ] );
 				},
-			]
-		];
+			),
+			'order' => array(
+				'default'             => 'Relevance',
+				'required'            => true,
+				'description'         => 'Order of search results',
+				'validation_callback' => function ( $order ) {
+					$orders = AmazonLocales::get_sort_orders();
+					return isset( $orders[ $order ] );
+				},
+			),
+		);
 	}
 
 	/**
@@ -145,18 +145,19 @@ class Amazon extends AbstractService {
 	 * @return array
 	 */
 	public function short_code_setting() {
-		return [
-			'tmkm-amazon' => [
-				[
+		return array(
+			'tmkm-amazon' => array(
+				array(
 					'label' => 'ASIN',
 					'type'  => 'text',
 					'attr'  => 'asin',
-				],
-			],
-		];
+				),
+			),
+		);
 	}
 
 	protected function get_service_description() {
+		// translators: %s is a URL.
 		return sprintf( __( 'Display link via Amazon Advertising API. You can get credentials from <a href="%s" target="_blank" rel="noopener noreferrer">Associate Central</a>.', 'hamazon' ), 'https://affiliate.amazon.co.jp/assoc_credentials/home' );
 	}
 
@@ -169,7 +170,7 @@ class Amazon extends AbstractService {
 	 * @param string $content
 	 * @return string
 	 */
-	public function short_code_callback( $short_code, array $attributes = [], $content = '' ){
+	public function short_code_callback( $short_code, array $attributes = array(), $content = '' ) {
 		switch ( $short_code ) {
 			case 'tmkm-amazon':
 				return AmazonConstants::format_amazon( $content, $attributes );
@@ -179,5 +180,4 @@ class Amazon extends AbstractService {
 				break;
 		}
 	}
-
 }

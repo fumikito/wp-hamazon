@@ -39,47 +39,48 @@ class Phg extends AbstractService {
 	 * @return array
 	 */
 	protected function get_option_names() {
-		return [
-			[
-				'key' => 'phg_id',
-				'label' => __( 'Affiliate ID', 'hamazon' ),
+		return array(
+			array(
+				'key'         => 'phg_id',
+				'label'       => __( 'Affiliate ID', 'hamazon' ),
+				// translators: %1$s is label, %2$s is affiliate ID link.
 				'description' => sprintf( __( 'You can get %1$s <a href="%2$s" target="_blank">here</a>.', 'hamazon' ), __( 'Affiliate ID', 'hamazon' ), 'https://www.apple.com/jp/itunes/affiliates/' ),
-			],
-		];
+			),
+		);
 	}
 
 	public function short_code_setting() {
-		return [
-			'phg' => [
-				[
+		return array(
+			'phg' => array(
+				array(
 					'label' => 'ID',
-					'attr' => 'id',
-					'type' => 'text',
-				],
-				[
+					'attr'  => 'id',
+					'type'  => 'text',
+				),
+				array(
 					'label' => __( 'Kind', 'hamazon' ),
 					'attr'  => 'kind',
 					'type'  => 'text',
-				],
-			]
-		];
+				),
+			),
+		);
 	}
 
-	public function short_code_callback( $short_code_name, array $attributes = [], $content = '' ) {
+	public function short_code_callback( $short_code_name, array $attributes = array(), $content = '' ) {
 		switch ( $short_code_name ) {
 			case 'phg':
 				$item = $this->find_product( $attributes['id'] );
 				if ( is_wp_error( $item ) ) {
 					return $item;
 				}
-				$out = hamazon_template( 'phg', 'single', [
+				$out = hamazon_template( 'phg', 'single', array(
 					'item'   => $item,
 					'price'  => $this->format_price( $item ),
 					'kind'   => $this->format_kind( $item ),
 					'link'   => $this->affiliate_url( $item ),
 					'image'  => $this->artwork_url( $item ),
 					'artist' => $this->format_artist_name( $item ),
-				] );
+				) );
 				/**
 				 * wp_hamazon_phg
 				 *
@@ -87,10 +88,10 @@ class Phg extends AbstractService {
 				 *
 				 * @param string $html
 				 * @param \stdClass $item
-                 * @param string $content
+				 * @param string $content
 				 * @return string
 				 */
-                $out = apply_filters( 'wp_hamazon_phg', $out, $item, $content );
+				$out = apply_filters( 'wp_hamazon_phg', $out, $item, $content );
 				return $out;
 				break;
 			default:
@@ -115,22 +116,22 @@ class Phg extends AbstractService {
 	 * @return array|\stdClass
 	 */
 	protected function filter_data( $data ) {
-	    $countries = $this->get_countries();
-	    $media = $this->get_genre();
-		return [
-			'countries' => array_map( function( $key, $value ) {
-				return [
-					'key' => $key,
+		$countries = $this->get_countries();
+		$media     = $this->get_genre();
+		return array(
+			'countries' => array_map( function ( $key, $value ) {
+				return array(
+					'key'   => $key,
 					'label' => $value,
-				];
+				);
 			}, array_keys( $countries ), array_values( $countries ) ),
-            'media' => array_map( function( $key, $value ) {
-				return [
-					'key' => $key,
+			'media'     => array_map( function ( $key, $value ) {
+				return array(
+					'key'   => $key,
 					'label' => $value,
-				];
-            }, array_keys( $media ), array_values( $media ) ),
-		];
+				);
+			}, array_keys( $media ), array_values( $media ) ),
+		);
 	}
 
 	/**
@@ -139,58 +140,58 @@ class Phg extends AbstractService {
 	 * @return array
 	 */
 	public function get_rest_arguments() {
-		return [
-			'keyword' => [
-				'required' => true,
-				'description' => __( 'Search keyword.', 'hamazon' ),
-				'validate_callback' => function( $var ) {
-					return ! empty( $var );
+		return array(
+			'keyword' => array(
+				'required'          => true,
+				'description'       => __( 'Search keyword.', 'hamazon' ),
+				'validate_callback' => function ( $keyword ) {
+					return ! empty( $keyword );
 				},
-			],
-			'media' => [
-				'required' => true,
-                'default' => 'all',
-				'description' => __( 'Genre', 'hamazon' ),
-				'validation_callback' => function ( $var ) {
-		            return array_key_exists( $var, $this->get_genre() );
-				}
-			],
-			'country' => [
-				'default' => 'US',
-				'required' => true,
-				'description' => __( 'Country code', 'hamazon' ),
-				'validation_callback' => function( $var ) {
-					return false !== array_search( $var, [ 'DMM.com', 'DMM.R18' ] );
-				}
-			],
-		];
+			),
+			'media'   => array(
+				'required'            => true,
+				'default'             => 'all',
+				'description'         => __( 'Genre', 'hamazon' ),
+				'validation_callback' => function ( $media ) {
+					return array_key_exists( $media, $this->get_genre() );
+				},
+			),
+			'country' => array(
+				'default'             => 'US',
+				'required'            => true,
+				'description'         => __( 'Country code', 'hamazon' ),
+				'validation_callback' => function ( $country ) {
+					return in_array( $country, array_keys( $this->get_countries() ), true );
+				},
+			),
+		);
 	}
 
 	/**
-     * Get countries name
-     *
+	 * Get countries name
+	 *
 	 * @return array
 	 */
 	protected function get_countries() {
 		/**
 		 * hamazon_phg_countries
-         *
-         * Country codes for iTunes affiliate.
-         *
-         * @see {https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2}
-         * @param array $countries An array like [ 'US' => 'USA' ]
-         * @return array
+		 *
+		 * Country codes for iTunes affiliate.
+		 *
+		 * @see {https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2}
+		 * @param array $countries An array like [ 'US' => 'USA' ]
+		 * @return array
 		 */
-	    return apply_filters( 'hamazon_phg_countries', [
-            'US' => 'USA',
-            'JP' => '日本',
-            'GB' => 'United Kingdom',
-            'DD' => 'Deutschland',
-            'FR' => 'France',
-            'ES' => 'España',
-            'IT' => 'Italia',
-        ] );
-    }
+		return apply_filters( 'hamazon_phg_countries', array(
+			'US' => 'USA',
+			'JP' => '日本',
+			'GB' => 'United Kingdom',
+			'DD' => 'Deutschland',
+			'FR' => 'France',
+			'ES' => 'España',
+			'IT' => 'Italia',
+		) );
+	}
 
 	/**
 	 * Handle Amazon search request
@@ -200,93 +201,93 @@ class Phg extends AbstractService {
 	 * @return \SimpleXMLElement|\WP_Error|\WP_REST_Response
 	 */
 	public function handle_rest_request( \WP_REST_Request $request ) {
-		$args = array(
-			'media' => $request['media'],
-			'term' => $request['keyword'],
-			'lang' => 'ja' === get_locale() ? 'ja_jp' : 'en_us',
+		$args          = array(
+			'media'   => $request['media'],
+			'term'    => $request['keyword'],
+			'lang'    => 'ja' === get_locale() ? 'ja_jp' : 'en_us',
 			'country' => $request['country'],
-            'limit' => $this->per_page,
+			'limit'   => $this->per_page,
 		);
 		$search_result = $this->make_request( self::SEARCH_API, $args );
 		if ( is_wp_error( $search_result ) ) {
-			$search_result->add_data( [
+			$search_result->add_data( array(
 				'response' => 500,
-			] );
+			) );
 			return $search_result;
 		}
-		return new \WP_REST_Response( [
-			'total_page' => ceil( $search_result->resultCount / $this->per_page ),
+		return new \WP_REST_Response( array(
+			'total_page'   => ceil( $search_result->resultCount / $this->per_page ),
 			'total_result' => (int) $search_result->resultCount,
-			'items' => array_map( function( $item ) use ( $args ) {
-				return [
-					'title' => isset( $item->trackName ) ? $item->trackName : '',
-					'category' => $this->format_kind( $item ),
-					'id' => isset( $item->trackId ) ? $item->trackId : $item->collectionId,
-					'price' => $this->format_price( $item ),
-                    'author' => $this->format_artist_name( $item ),
+			'items'        => array_map( function ( $item ) use ( $args ) {
+				return array(
+					'title'      => isset( $item->trackName ) ? $item->trackName : '',
+					'category'   => $this->format_kind( $item ),
+					'id'         => isset( $item->trackId ) ? $item->trackId : $item->collectionId,
+					'price'      => $this->format_price( $item ),
+					'author'     => $this->format_artist_name( $item ),
 					'attributes' => $item,
-					'image' => $this->artwork_url( $item ),
-					'url' => $this->affiliate_url( $item ),
-				];
+					'image'      => $this->artwork_url( $item ),
+					'url'        => $this->affiliate_url( $item ),
+				);
 			}, $search_result->results ),
-		] );
+		) );
 	}
 
 	/**
-     *
-     *
+	 * Get available keywords.
+	 *
 	 * @param \stdClass $item
 	 * @param array     $keys
-	 * @param string    $default
+	 * @param string    $default_value
 	 * @return string
 	 */
-	private function get_available_attributes( $item, $keys, $default ) {
-	    foreach ( $keys as $key ) {
-	        if ( isset( $item->{$key} ) ) {
-	            $default = $item->{$key};
-	            break;
-            }
-        }
-	    return $default;
-    }
+	private function get_available_attributes( $item, $keys, $default_value ) {
+		foreach ( $keys as $key ) {
+			if ( isset( $item->{$key} ) ) {
+				$default_value = $item->{$key};
+				break;
+			}
+		}
+		return $default_value;
+	}
 
 	/**
-     * Get artist name
-     *
+	 * Get artist name
+	 *
 	 * @param \stdClass $item
 	 * @return string
 	 */
 	public function format_artist_name( $item ) {
-	    return $this->get_available_attributes( $item, [ 'artistName', 'sellerName' ], _x( 'Unknown', 'search_result', 'hamazon' ) );
-    }
+		return $this->get_available_attributes( $item, array( 'artistName', 'sellerName' ), _x( 'Unknown', 'search_result', 'hamazon' ) );
+	}
 
 	/**
-     * Format price
-     *
+	 * Format price
+	 *
 	 * @param \stdClass $item
 	 * @return string
 	 */
 	protected function format_price( $item ) {
-	    if ( isset( $item->formattedPrice ) ) {
-	        return $item->formattedPrice;
-        } elseif ( isset( $item->trackPrice ) ) {
-	        return number_format( $item->trackPrice ) . ' ' . $item->currency;
-        } else {
-	        return '---';
-        }
-    }
+		if ( isset( $item->formattedPrice ) ) {
+			return $item->formattedPrice;
+		} elseif ( isset( $item->trackPrice ) ) {
+			return number_format( $item->trackPrice ) . ' ' . $item->currency;
+		} else {
+			return '---';
+		}
+	}
 
 	/**
-     * Get artwork image.
-     *
+	 * Get artwork image.
+	 *
 	 * @param \stdClass $item
 	 * @return string
 	 */
-    protected function artwork_url( $item ) {
-        return $this->get_available_attributes( $item, array_map( function( $size ) {
-            return "artworkUrl{$size}";
-        }, [ 1024, 600, 512, 100, 60 ] ), hamazon_no_image() );
-    }
+	protected function artwork_url( $item ) {
+		return $this->get_available_attributes( $item, array_map( function ( $size ) {
+			return "artworkUrl{$size}";
+		}, array( 1024, 600, 512, 100, 60 ) ), hamazon_no_image() );
+	}
 
 	/**
 	 * Get request from DMM
@@ -295,49 +296,52 @@ class Phg extends AbstractService {
 	 * @param array $args
 	 * @return array|mixed|object|\WP_Error
 	 */
-	public function make_request( $api, $args = [] ) {
-		$queries = [];
-		$url = add_query_arg( $args, $api );
+	public function make_request( $api, $args = array() ) {
+		$queries = array();
+		$url     = add_query_arg( $args, $api );
 		// Make Request
 		$default_time_out = apply_filters( 'hamazon_default_timeout', 30, $args, 'phg' );
-		$result = wp_remote_get( $url, [
-		    'timeout' => $default_time_out,
-        ] );
+		$result           = wp_remote_get( $url, array(
+			'timeout' => $default_time_out,
+		) );
 		if ( is_wp_error( $result ) ) {
-		    return $result;
-        }
-        $json = json_decode( $result['body'] );
+			return $result;
+		}
+		$json = json_decode( $result['body'] );
 		if ( ! $json ) {
-            return new \WP_Error( 'hamazon_phg_failed', __( 'Failed to get iTunes response.', 'hamazon' ), [
-                'status' => 500,
-            ] );
-        }
-        return $json;
+			return new \WP_Error( 'hamazon_phg_failed', __( 'Failed to get iTunes response.', 'hamazon' ), array(
+				'status' => 500,
+			) );
+		}
+		return $json;
 	}
 
 	/**
 	 * Get item information
 	 *
 	 * @param string $id
-	 * @param bool $cache
+	 * @param bool   $cache
 	 * @return array|mixed|object|\WP_Error
 	 */
 	public function find_product( $id, $cache = true ) {
-		$lang = 'ja' == get_locale() ? 'ja_jp' : 'en_us';
-		$args = [
-			'term'       => $id,
-			'country'    => strtoupper( explode( '_', $lang )[1] ),
-            'lang'       => $lang
-		];
-		$key = "hamazon_phg_{$id}";
-		if ( $cache && ( false !== ( $transient = get_transient( $key ) ) ) ) {
-			return $transient;
+		$lang = ( 'ja' === get_locale() ) ? 'ja_jp' : 'en_us';
+		$args = array(
+			'term'    => $id,
+			'country' => strtoupper( explode( '_', $lang )[1] ),
+			'lang'    => $lang,
+		);
+		$key  = "hamazon_phg_{$id}";
+		if ( $cache ) {
+			$transient = get_transient( $key );
+			if ( false !== $transient ) {
+				return $transient;
+			}
 		}
 		$result = $this->make_request( self::SEARCH_API, $args );
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		} elseif ( ! $result->resultCount ) {
-		    return new \WP_Error( '404', __( 'Sorry, but item not found.' ) );
+			return new \WP_Error( '404', __( 'Sorry, but item not found.' ) );
 		} else {
 			$item = $result->results[0];
 			set_transient( $key, $item, 60 * 60 * 24 );
@@ -346,64 +350,64 @@ class Phg extends AbstractService {
 	}
 
 	/**
-     * Get kind label
-     *
+	 * Get kind label
+	 *
 	 * @param \stdClass $item
 	 * @return string
 	 */
 	public function format_kind( $item ) {
 		$kind = isset( $item->kind ) ? $item->kind : $item->wrapperType;
-	    switch ( $kind ) {
-            case 'tv-episode':
-                $kind = 'tvShow';
-                break;
-            case 'podcast-episode':
-                $kind = 'podcast';
-                break;
-            case 'software-package':
-                $kind = 'software';
-                break;
-            case 'music-video':
-                $kind = 'musicVideo';
-                break;
-            case 'feature-movie':
-                $kind = 'movie';
-                break;
-            case 'song':
-                $kind = 'music';
-                break;
-        }
-        $genre = $this->get_genre();
-	    if ( isset( $genre[ $kind ] ) ) {
-	        return $genre[ $kind ];
-        }
-        $others = [
-			'book' => __( 'Book', 'hamazon' ),
-			'album' => __( 'Album', 'hamazon' ),
-			'coached-audio' => __( 'Coached Audio', 'hamazon' ),
+		switch ( $kind ) {
+			case 'tv-episode':
+				$kind = 'tvShow';
+				break;
+			case 'podcast-episode':
+				$kind = 'podcast';
+				break;
+			case 'software-package':
+				$kind = 'software';
+				break;
+			case 'music-video':
+				$kind = 'musicVideo';
+				break;
+			case 'feature-movie':
+				$kind = 'movie';
+				break;
+			case 'song':
+				$kind = 'music';
+				break;
+		}
+		$genre = $this->get_genre();
+		if ( isset( $genre[ $kind ] ) ) {
+			return $genre[ $kind ];
+		}
+		$others = array(
+			'book'                => __( 'Book', 'hamazon' ),
+			'album'               => __( 'Album', 'hamazon' ),
+			'coached-audio'       => __( 'Coached Audio', 'hamazon' ),
 			'interactive-booklet' => __( 'Interactive Booklet', 'hamazon' ),
-			'pdf' => 'PDF',
-        ];
-	    return isset( $others[ $kind ] ) ? $others[ $kind ] : $kind;
-    }
+			'pdf'                 => 'PDF',
+		);
+		return isset( $others[ $kind ] ) ? $others[ $kind ] : $kind;
+	}
 
 	/**
 	 * Retrun genres
-     *
+	 *
 	 * @return array
 	 */
-	public function get_genre(){
+	public function get_genre() {
 		return array(
-            'all' => __( 'All', 'hamazon' ),
-			'movie' => __( 'Movie', 'hamazon' ),
-			'podcast' => __( 'Podcast', 'hamazon' ),
-			'music' => __( 'Music', 'hamazon' ),
+			'all'        => __( 'All', 'hamazon' ),
+			'movie'      => __( 'Movie', 'hamazon' ),
+			'podcast'    => __( 'Podcast', 'hamazon' ),
+			'music'      => __( 'Music', 'hamazon' ),
 			'musicVideo' => __( 'Music Video', 'hamazon' ),
-			'audiobook' => __( 'Audio Book', 'hamazon' ),
-			'shortFilm' => __( 'Short Film', 'hamazon' ),
-			'tvShow' => __( 'TV Show', 'hamazon' ),
-			'software' => __( 'Software', 'hamazon' ),
-			'ebook' => __( 'eBook', 'hamazon' ),
+			'audiobook'  => __( 'Audio Book', 'hamazon' ),
+			'shortFilm'  => __( 'Short Film', 'hamazon' ),
+			'tvShow'     => __( 'TV Show', 'hamazon' ),
+			'software'   => __( 'Software', 'hamazon' ),
+			'ebook'      => __( 'eBook', 'hamazon' ),
 		);
 	}
 
@@ -415,16 +419,16 @@ class Phg extends AbstractService {
 	 * @return string
 	 */
 	public function affiliate_url( $item ) {
-	    if ( isset( $item->trackViewUrl ) ) {
-	        $url = $item->trackViewUrl;
-        } elseif( isset( $item->collectionViewUrl ) ) {
-	        $url = $item->collectionViewUrl;
-        } else {
-	        return false;
-        }
-		return add_query_arg( [
-            'at' => $this->get_option( 'phg_id' ),
-            'ct' => is_admin() ? 'wphamazon-admin' : 'wphamazon',
-        ], $url );
+		if ( isset( $item->trackViewUrl ) ) {
+			$url = $item->trackViewUrl;
+		} elseif ( isset( $item->collectionViewUrl ) ) {
+			$url = $item->collectionViewUrl;
+		} else {
+			return false;
+		}
+		return add_query_arg( array(
+			'at' => $this->get_option( 'phg_id' ),
+			'ct' => is_admin() ? 'wphamazon-admin' : 'wphamazon',
+		), $url );
 	}
 }

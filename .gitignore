@@ -6,3 +6,4 @@ assets/
 composer.lock
 package-lock.json
 readme.txt
+wp-dependencies.json

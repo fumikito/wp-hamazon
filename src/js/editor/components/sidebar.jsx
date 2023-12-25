@@ -1,4 +1,5 @@
 /*!
+ * @handle hamazon-sidebar
  * @deps wp-element, hamazon-i18n
  */
 
@@ -13,9 +14,9 @@ wp.hamazon.Sidebar = ( props ) => {
 					itemClassName += ' active';
 				}
 				return <div key={ item.key } className={ itemClassName } onClick={ () => {
-					props.onSelect( item.key )
-				} }>{ item.label }</div>
+					props.onSelect( item.key );
+				} }>{ item.label }</div>;
 			} ) }
 		</div>
-	)
+	);
 };
