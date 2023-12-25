@@ -137,6 +137,7 @@ jobs:
         with:
           generate-zip: true
         env:
+          SLUG: wp-hamazon
           SVN_USERNAME: ${{ secrets.WPORG_FUMIKI_USERNAME }}
           SVN_PASSWORD: ${{ secrets.WPORG_FUMIKI_PASSWORD }}
 
