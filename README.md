@@ -2,14 +2,12 @@
 
 Contributors: Takahashi_Fumiki, hametuha  
 Tags: amazon, affiliate, dmm, phg  
-Requires at least: 5.0  
-Tested up to: 5.4  
-Requires PHP: 5.6  
-Stable tag: 5.0.2  
+Requires at least: 5.6  
+Tested up to: 6.4  
+Requires PHP: 7.2  
+Stable tag: 5.1.0  
 
 You can add affiliate link in post content via Amazon, iTunes, DMM.
-
-[![Travis CI master Build Status](https://travis-ci.org/fumikito/WP-Hamazon.svg?branch=master)](https://travis-ci.org/github/fumikito/WP-Hamazon)
 
 ##  Description
 
@@ -29,7 +27,6 @@ These services below are deprecated.
 * Rakuten
 * Linkshare
 
-
 ##  Installation
 
 1. Upload `wp-hamazon` folder in `/wp-content/plugins/` directory.
@@ -41,6 +38,10 @@ These services below are deprecated.
 1. You can search affiliate like this screen.
 
 ##  Changelog
+
+### 5.1.0
+
+* Fix bug with serverside render.
 
 ### 5.0.2
 

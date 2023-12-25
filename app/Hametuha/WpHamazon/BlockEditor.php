@@ -57,7 +57,7 @@ class BlockEditor extends Singleton {
 					if ( 'amazon' === $attributes['type'] ) {
 						$attributes['asin'] = $attributes['id'];
 					}
-					$contents = $content ? strip_tags( $content ) : implode( ' ', $attributes['content'] );
+					$contents = $content ? strip_tags( $content ) : implode( ' ', (array) $attributes['content'] );
 					$instance = $this->hamazon->service_instances[ $attributes['type'] ];
 					$key      = '';
 					foreach ( $this->get_types() as $short_code => $type ) {

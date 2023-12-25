@@ -1,4 +1,5 @@
 /*!
+ * @handle hamzon-form-amazon
  * @deps wp-element, hamazon-i18n, hamazon-form-base
  */
 
@@ -6,10 +7,7 @@ const React = wp.element;
 const { __ } = wp.i18n;
 const { FormBase } = wp.hamazon;
 
-/* global HamazonEditor: false */
-
 class FormAmazon extends FormBase {
-
 	constructor( params ) {
 		super( params );
 		this.state = {
@@ -20,15 +18,13 @@ class FormAmazon extends FormBase {
 		};
 	}
 
-
 	buildParams() {
 		return {
 			query: this.state.query,
 			index: this.state.selectedOption,
-			page : this.state.curPage,
+			page: this.state.curPage,
 			order: this.state.selectedOrder,
-		}
-
+		};
 	}
 
 	render() {
@@ -38,53 +34,53 @@ class FormAmazon extends FormBase {
 				<div className="hamazon-modal-form">
 					<div className="hamazon-modal-form-item input">
 						<label htmlFor="hamazon-input-amazon-query"
-							   className="hamazon-modal-form-label">
+							className="hamazon-modal-form-label">
 							{ __( 'Search Keyword', 'hamazon' ) }
 						</label>
 						<input id="hamazon-input-amazon-query" className="regular-text hamazon-modal-input-text input-control"
-							   placeholder={ __( 'Enter search keywords...', 'hamazon' ) }
-							   value={ this.state.query }
-							   onChange={ ( e ) => {
-								   this.setState( {
-									   query: e.target.value,
-									   curPage: 1,
-								   } );
-							   } }/>
+							placeholder={ __( 'Enter search keywords…', 'hamazon' ) }
+							value={ this.state.query }
+							onChange={ ( e ) => {
+								this.setState( {
+									query: e.target.value,
+									curPage: 1,
+								} );
+							} } />
 					</div>
 					<div className="hamazon-modal-form-item">
 						<label htmlFor="hamazon-input-amazon-category"
-							   className="hamazon-modal-form-label">{ __( 'Category', 'hamazon' ) }</label>
+							className="hamazon-modal-form-label">{ __( 'Category', 'hamazon' ) }</label>
 						<select id="hamazon-input-amazon-category" value={ this.state.selectedOption }
-								onChange={ ( e ) => {
-									this.setState( {
-										selectedOption: e.target.value,
-										curPage: 1,
-									} );
-								} }>
+							onChange={ ( e ) => {
+								this.setState( {
+									selectedOption: e.target.value,
+									curPage: 1,
+								} );
+							} }>
 							{ service.data.options.map( ( option ) => {
-								return <option key={ option.key } value={ option.key }>{ option.label }</option>
+								return <option key={ option.key } value={ option.key }>{ option.label }</option>;
 							} ) }
 						</select>
 					</div>
 					{ service.data.orders && (
 						<div className="hamazon-modal-form-item">
 							<label htmlFor="hamazon-input-amazon-order"
-								   className="hamazon-modal-form-label">{ __( 'Order', 'hamazon' ) }</label>
+								className="hamazon-modal-form-label">{ __( 'Order', 'hamazon' ) }</label>
 							<select id="hamazon-input-amazon-order" value={ this.state.selectedOrder }
-									onChange={ ( e ) => {
-										this.setState( {
-											selectedOrder: e.target.value,
-										} );
-									} }>
+								onChange={ ( e ) => {
+									this.setState( {
+										selectedOrder: e.target.value,
+									} );
+								} }>
 								{ service.data.orders.map( ( option ) => {
-									return <option key={ option.value } value={ option.value }>{ option.label }</option>
+									return <option key={ option.value } value={ option.value }>{ option.label }</option>;
 								} ) }
 							</select>
 						</div>
 					) }
 					<div className="hamazon-modal-form-item">
 						<button onClick={ ( e ) => {
-							this.submitHandler( e )
+							this.submitHandler( e );
 						} } className="button-primary">
 							{ __( 'Search', 'hamazon' ) }
 						</button>
@@ -92,7 +88,7 @@ class FormAmazon extends FormBase {
 				</div>
 				{ this.paginate() }
 			</div>
-		)
+		);
 	}
 }
 

@@ -1,4 +1,6 @@
 /*!
+ *
+ * @handle hamazon-search-box
  * @deps wp-element, hamazon-i18n, hamazon-amazon-renderer, hamazon-form-amazon, hamazon-dmm-renderer, hamazon-form-dmm, hamazon-phg-renderer, hamazon-form-phg
  */
 
@@ -9,24 +11,23 @@ const { __ } = wp.i18n;
 const { AmazonRenderer, FormAmazon, DmmRenderer, FormDmm, PhgRenderer, FormPhg } = wp.hamazon;
 
 class SearchBox extends React.Component {
-
-	constructor( props ) {
+	constructor() {
 		super();
 		this.state = {
 			loading: false,
-			items  : [],
+			items: [],
 		};
 	}
 
 	setLoading( isLoading ) {
 		this.setState( {
-			loading: isLoading
+			loading: isLoading,
 		} );
 	}
 
 	submitHandler( items ) {
 		this.setState( {
-			items: items,
+			items,
 		} );
 	}
 
@@ -60,44 +61,39 @@ class SearchBox extends React.Component {
 				return (
 					<div className={ classes }>
 						<SearchForm submitHandler={ ( items ) => {
-							this.submitHandler( items )
-						} } setLoading={ ( isLoading ) => this.setLoading( isLoading ) }
-									service={ this.props.service }/>
+							this.submitHandler( items );
+						} } setLoading={ ( isLoading ) => this.setLoading( isLoading ) } service={ this.props.service } />
 						<div className="hamazon-search-result">
 							{ this.state.items.map( ( item ) => {
-								let itemKey = this.props.service.key + '-' + index;
+								const itemKey = this.props.service.key + '-' + index;
 								index++;
 								switch ( this.props.service.key ) {
 									default:
 										return <Renderer key={ itemKey } item={ item } selectHandler={ ( code ) => {
-											this.props.insertCode( code )
-										} }/>;
-										break;
+											this.props.insertCode( code );
+										} } />;
 								}
 							}, this ) }
 						</div>
 					</div>
-				)
-			} else {
-				return (
-					<div className={ classes }>
-						<SearchForm submitHandler={ ( items ) => {
-							this.submitHandler( items )
-						} } setLoading={ ( isLoading ) => this.setLoading( isLoading ) }
-									service={ this.props.service }/>
-						<div className="hamazon-search-result-empty">
-							<div className="hamazon-modal-search-result-empty">
-								{ __( 'No results found. Please try different query.', 'hamazon' ) }
-							</div>
+				);
+			}
+			return (
+				<div className={ classes }>
+					<SearchForm submitHandler={ ( items ) => {
+						this.submitHandler( items );
+					} } setLoading={ ( isLoading ) => this.setLoading( isLoading ) } service={ this.props.service } />
+					<div className="hamazon-search-result-empty">
+						<div className="hamazon-modal-search-result-empty">
+							{ __( 'No results found. Please try different query.', 'hamazon' ) }
 						</div>
 					</div>
-				)
-			}
-		} else {
-			return <div className={ classes }>
-				<div className="hamazon-modal-search-result-error">{ __( 'This service is not available.', 'hamazon' ) }</div>
-			</div>;
+				</div>
+			);
 		}
+		return <div className={ classes }>
+			<div className="hamazon-modal-search-result-error">{ __( 'This service is not available.', 'hamazon' ) }</div>
+		</div>;
 	}
 }
 

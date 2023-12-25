@@ -1,68 +1,66 @@
 {
-  "name": "wp-hamazon",
-  "version": "5.0.0",
-  "description": "A WordPress plugin for affiliate.",
-  "main": "gulpfile.js",
-  "directories": {
-    "test": "tests"
-  },
-  "scripts": {
-    "test": "jest",
-    "start": "gulp build && gulp watch",
-    "package": "gulp build",
-    "watch": "gulp watch",
-    "gulp": "gulp",
-    "jed": "po2json languages/hamazon-$LOCALE.po languages/hamazon-$LOCALE-hamazon-i18n.json -f jed",
-    "jed-ja": "po2json languages/hamazon-ja.po languages/hamazon-ja-hamazon-i18n.json -f jed"
-  },
-  "repository": {
-    "type": "git",
-    "url": ""
-  },
-  "keywords": [],
-  "author": "fumikito <guy@hametuha.com>",
-  "license": "GPL-3.0",
-  "bugs": {
-    "url": "https://github.com/fumikito/wp-hamazon/issues"
-  },
-  "homepage": "",
-  "devDependencies": {
-    "@babel/core": "^7.5.4",
-    "@babel/plugin-transform-react-jsx": "^7.0.0",
-    "@babel/preset-env": "^7.5.4",
-    "@kunoichi/grab-deps": "^1.0.0",
-    "@wordpress/browserslist-config": "^2.6.0",
-    "@wordpress/eslint-plugin": "^4.0.0",
-    "babel-eslint": "^10.0.1",
-    "babel-loader": "^8.0.5",
-    "classnames": "^2.2.6",
-    "eslint": "^6.0.1",
-    "eslint-config-wordpress": "^2.0.0",
-    "gulp": "^4.0.0",
-    "gulp-autoprefixer": "^6.0.0",
-    "gulp-eslint": "^6.0.0",
-    "gulp-imagemin": "^5.0.3",
-    "gulp-load-plugins": "^2.0.0",
-    "gulp-notify": "^3.2.0",
-    "gulp-plumber": "^1.2.0",
-    "gulp-rename": "^1.4.0",
-    "gulp-sass": "^4.0.2",
-    "gulp-sass-glob": "^1.0.9",
-    "gulp-sourcemaps": "^2.6.4",
-    "gulp-stylelint": "^13.0.0",
-    "imagemin": "^6.0.0",
-    "imagemin-mozjpeg": "^8.0.0",
-    "imagemin-pngquant": "^6.0.1",
-    "jest": "^23.6.0",
-    "merge-stream": "^2.0.0",
-    "po2json": "^1.0.0-alpha",
-    "stylelint": "^13.2.0",
-    "stylelint-config-wordpress": "^16.0.0",
-    "vinyl-named": "^1.1.0",
-    "webpack": "^4.36.1",
-    "webpack-stream": "^5.1.1"
-  },
-  "jest": {
-    "browser": true
-  }
+	"name": "wp-hamazon",
+	"version": "5.0.0",
+	"description": "A WordPress plugin for affiliate.",
+	"main": "gulpfile.js",
+	"directories": {
+		"test": "tests"
+	},
+	"scripts": {
+		"test": "jest",
+		"start": "gulp build && gulp watch",
+		"package": "gulp build",
+		"watch": "gulp watch",
+		"gulp": "gulp",
+		"fix:js": "eslint --fix --ext .js,.jsx -c .eslintrc src/js",
+		"fix:css": "stylelint --fix src/scss",
+		"jed": "po2json languages/hamazon-$LOCALE.po languages/hamazon-$LOCALE-hamazon-i18n.json -f jed",
+		"jed-ja": "po2json languages/hamazon-ja.po languages/hamazon-ja-hamazon-i18n.json -f jed"
+	},
+	"repository": {
+		"type": "git",
+		"url": ""
+	},
+	"keywords": [],
+	"author": "fumikito <guy@hametuha.com>",
+	"license": "GPL-3.0",
+	"bugs": {
+		"url": "https://github.com/fumikito/wp-hamazon/issues"
+	},
+	"homepage": "",
+	"devDependencies": {
+		"@babel/core": "^7.5.4",
+		"@babel/eslint-parser": "^7.23.3",
+		"@babel/plugin-transform-react-jsx": "^7.0.0",
+		"@babel/preset-env": "^7.5.4",
+		"@kunoichi/grab-deps": "^1.0.0",
+		"@wordpress/browserslist-config": "5.31",
+		"@wordpress/eslint-plugin": "^17.5.0",
+		"babel-eslint": "^10.0.1",
+		"babel-loader": "^8.0.5",
+		"classnames": "^2.2.6",
+		"gulp": "^4.0.0",
+		"gulp-autoprefixer": "^8.0.0",
+		"gulp-eslint": "^6.0.0",
+		"gulp-imagemin": "^8.0.0",
+		"gulp-load-plugins": "^2.0.0",
+		"gulp-notify": "^4.0.0",
+		"gulp-plumber": "^1.2.0",
+		"gulp-rename": "^2.0.0",
+		"gulp-sass": "^5.1.0",
+		"gulp-sass-glob": "^1.0.9",
+		"gulp-sourcemaps": "^3.0.0",
+		"gulp-stylelint": "^13.0.0",
+		"imagemin-mozjpeg": "9.0",
+		"imagemin-pngquant": "9.0",
+		"jest": "^29.7.0",
+		"po2json": "^1.0.0-alpha",
+		"sass": "^1.69.5",
+		"vinyl-named": "^1.1.0",
+		"webpack": "^5.89.0",
+		"webpack-stream": "^7.0.0"
+	},
+	"jest": {
+		"browser": true
+	}
 }
