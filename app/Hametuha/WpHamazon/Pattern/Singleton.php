@@ -10,7 +10,7 @@ namespace Hametuha\WpHamazon\Pattern;
  */
 abstract class Singleton {
 
-	private static $instances = [];
+	private static $instances = array();
 
 	/**
 	 * Singleton constructor.
@@ -30,5 +30,4 @@ abstract class Singleton {
 		}
 		return self::$instances[ $class_name ];
 	}
-
 }

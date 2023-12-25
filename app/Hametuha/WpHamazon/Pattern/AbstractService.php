@@ -42,49 +42,49 @@ abstract class AbstractService extends Singleton {
 	/**
 	 * Constructor
 	 */
-	protected function __construct(){
+	protected function __construct() {
 		// Register Option screen
-		add_action( 'admin_init', [ $this, 'register_options' ], 11 );
+		add_action( 'admin_init', array( $this, 'register_options' ), 11 );
 		// Register REST API
-		add_action( 'rest_api_init', [ $this, 'rest_api_init' ] );
+		add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
 		// Add data filter
-        add_filter( 'hamazon_service_variables', function( $data, $key ) {
-            if ( $this->name == $key ) {
-                $data = $this->filter_data( $data );
-            }
-            return $data;
-        }, 1, 2 );
-        add_action( 'init', [ $this, 'short_code_set_up' ]);
+		add_filter( 'hamazon_service_variables', function ( $data, $key ) {
+			if ( $this->name === $key ) {
+				$data = $this->filter_data( $data );
+			}
+			return $data;
+		}, 1, 2 );
+		add_action( 'init', array( $this, 'short_code_set_up' ) );
 	}
 
-    /**
-     * Register short codes
-     */
-    public function short_code_set_up(){
-	    if ( ! $this->is_valid() ) {
-	        return;
-        }
-        /**
-         * hamazon_shortcode_settings
-         *
-         * Filters shortcode setting
-         *
-         * @param array  $settings
-         * @param string $service
-         * @return array
-         */
-        $short_codes = apply_filters( 'hamazon_shortcode_settings', $this->short_code_setting(), $this->name );
-	    foreach ( $short_codes as $short_code => $setting ) {
-	    	// Register short code
-	    	add_shortcode( $short_code, function( $atts, $content = '' ) use ( $short_code, $setting ) {
-	    		$default = [];
-	    		foreach ( $setting as $attribute ) {
-	    			$default[$attribute['attr']] = isset( $attribute['default'] ) ? $attribute['default'] : '';
+	/**
+	 * Register short codes
+	 */
+	public function short_code_set_up() {
+		if ( ! $this->is_valid() ) {
+			return;
+		}
+		/**
+		 * hamazon_shortcode_settings
+		 *
+		 * Filters shortcode setting
+		 *
+		 * @param array  $settings
+		 * @param string $service
+		 * @return array
+		 */
+		$short_codes = apply_filters( 'hamazon_shortcode_settings', $this->short_code_setting(), $this->name );
+		foreach ( $short_codes as $short_code => $setting ) {
+			// Register short code
+			add_shortcode( $short_code, function ( $atts, $content = '' ) use ( $short_code, $setting ) {
+				$default = array();
+				foreach ( $setting as $attribute ) {
+					$default[ $attribute['attr'] ] = isset( $attribute['default'] ) ? $attribute['default'] : '';
 				}
-				$atts = shortcode_atts( $default, $atts, $short_code );
-	    		$result = $this->short_code_callback( $short_code, $atts, $content );
-	    		if ( is_wp_error( $result ) ) {
-	    			$html = wp_kses_post( sprintf( '<p class="hamazon">%s</p>', $result->get_error_message() ) );
+				$atts   = shortcode_atts( $default, $atts, $short_code );
+				$result = $this->short_code_callback( $short_code, $atts, $content );
+				if ( is_wp_error( $result ) ) {
+					$html = wp_kses_post( sprintf( '<p class="hamazon">%s</p>', $result->get_error_message() ) );
 					/**
 					 * hamazon_error_message_html
 					 *
@@ -97,58 +97,59 @@ abstract class AbstractService extends Singleton {
 					 */
 					return apply_filters( 'hamazon_error_message_html', $html, $result, $this->name );
 				} else {
-	    			return $result;
+					return $result;
 				}
-	    	} );
-	    	// Add for shortcake
-			add_action( 'register_shortcode_ui', function() use ( $short_code, $setting ) {
-				shortcode_ui_register_for_shortcode( $short_code, [
-					'label' => sprintf( __( '%s Affiliate Tag', 'hamazon' ), $this->title ),
+			} );
+			// Add for shortcake
+			add_action( 'register_shortcode_ui', function () use ( $short_code, $setting ) {
+				shortcode_ui_register_for_shortcode( $short_code, array(
+					// translators: %s is Service name.
+					'label'         => sprintf( __( '%s Affiliate Tag', 'hamazon' ), $this->title ),
 					'listItemImage' => 'dashicons-money',
-					'inner_content' => [
-						'label'       => __( 'Content', 'hamazon' ),
-					],
-					'attrs' => $setting,
-				] );
+					'inner_content' => array(
+						'label' => __( 'Content', 'hamazon' ),
+					),
+					'attrs'         => $setting,
+				) );
 			} );
 			// Add block editor.
-        }
-    }
+		}
+	}
 
-    /**
-     * Handle short code format
-     *
-     * @param $short_code_name
-     * @param array $attributes
-     * @param string $content
-     * @return string|\WP_Error
-     */
-    abstract public function short_code_callback( $short_code_name, array $attributes = [], $content = '' );
+	/**
+	 * Handle short code format
+	 *
+	 * @param $short_code_name
+	 * @param array $attributes
+	 * @param string $content
+	 * @return string|\WP_Error
+	 */
+	abstract public function short_code_callback( $short_code_name, array $attributes = array(), $content = '' );
 
-    /**
-     * Return short code settings
-     *
-     * @return array
-     */
-    abstract public function short_code_setting();
+	/**
+	 * Return short code settings
+	 *
+	 * @return array
+	 */
+	abstract public function short_code_setting();
 
-    /**
-     * Filter data passed to react.
-     *
-     * @param $data
-     * @return array|\stdClass
-     */
+	/**
+	 * Filter data passed to react.
+	 *
+	 * @param $data
+	 * @return array|\stdClass
+	 */
 	protected function filter_data( $data ) {
-	    return $data;
-    }
+		return $data;
+	}
 
 	/**
 	 * Register options
 	 */
 	public function register_options() {
 		$section = "hamazon_setting_{$this->name}";
-		$title = $this->title . sprintf( '<span class="dashicons dashicons-%s"></span>', $this->is_valid() ? 'yes' : 'no' );
-		if ( $this->is_valid()  ) {
+		$title   = $this->title . sprintf( '<span class="dashicons dashicons-%s"></span>', $this->is_valid() ? 'yes' : 'no' );
+		if ( $this->is_valid() ) {
 			$icon = sprintf( '<small class="valid"><span class="dashicons dashicons-yes"></span> %s</small>', esc_html__( 'Valid', 'hamazon' ) );
 		} else {
 			$icon = sprintf( '<small class="invalid"><span class="dashicons dashicons-no"></span> %s</small>', esc_html__( 'Invalid', 'hamazon' ) );
@@ -156,28 +157,29 @@ abstract class AbstractService extends Singleton {
 		add_settings_section(
 			$section,
 			$this->title . $icon,
-			function() {
-				if ( $desc = $this->get_service_description() ) {
+			function () {
+				$desc = $this->get_service_description();
+				if ( ! empty( $desc ) ) {
 					printf( '<p class="descirptoin">%s</p>', wp_kses_post( $desc ) );
 				}
 			},
 			'wp-hamazon'
 		);
 		foreach ( $this->get_option_names() as $option ) {
-			$option = wp_parse_args( $option, [
-				'type'    => 'text',
-				'label'   => '',
-				'default' => '',
+			$option      = wp_parse_args( $option, array(
+				'type'        => 'text',
+				'label'       => '',
+				'default'     => '',
 				'description' => '',
-				'options' => [],
-			] );
+				'options'     => array(),
+			) );
 			$option_name = "hamazon_{$option['key']}";
 			add_settings_field(
 				$option_name,
 				isset( $option['label'] ) ? $option['label'] : ucfirst( $option['label'] ),
-				function() use ( $option, $option_name ) {
+				function () use ( $option, $option_name ) {
 					$current_value = get_option( $option_name, $option['default'] );
-					switch ( $option['type']) {
+					switch ( $option['type'] ) {
 						case 'radio':
 							foreach ( $option['options'] as $label => $value ) {
 								printf(
@@ -221,7 +223,7 @@ abstract class AbstractService extends Singleton {
 			if ( $key !== $option['key'] ) {
 				continue;
 			}
-			$key = "hamazon_{$option['key']}";
+			$key     = "hamazon_{$option['key']}";
 			$default = isset( $option['default'] ) ? $option['default'] : '';
 			return get_option( $key, $default );
 		}
@@ -232,12 +234,12 @@ abstract class AbstractService extends Singleton {
 	 */
 	public function rest_api_init() {
 		if ( $this->is_valid() ) {
-			register_rest_route( 'hamazon/v3', untrailingslashit( $this->name ), [
-				'method' => 'GET',
-				'callback' => [ $this, 'handle_rest_request' ],
-				'args' => $this->get_rest_arguments(),
+			register_rest_route( 'hamazon/v3', untrailingslashit( $this->name ), array(
+				'method'              => 'GET',
+				'callback'            => array( $this, 'handle_rest_request' ),
+				'args'                => $this->get_rest_arguments(),
 				'permission_callback' => null,
-			] );
+			) );
 		}
 	}
 

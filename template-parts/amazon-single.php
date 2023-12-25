@@ -19,39 +19,44 @@ if ( isset( $item['images']['large'] ) ) {
 	$image_url = $item['image'];
 }
 ?>
-<div class="tmkm-amazon-view wp-hamazon-amazon" data-store="amazon" data-asin="<?php echo esc_attr( $asin ) ?>">
+<div class="tmkm-amazon-view wp-hamazon-amazon" data-store="amazon" data-asin="<?php echo esc_attr( $asin ); ?>">
 	<p class="tmkm-amazon-img">
-		<a href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
-			<img class="tmkm-amazon-image" src="<?php echo esc_attr( $image_url ) ?>" alt="" />
+		<a href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="sponsored noreferrer noopener">
+			<img class="tmkm-amazon-image" src="<?php echo esc_attr( $image_url ); ?>" alt="" />
 		</a>
 	</p>
 	<p class="tmkm-amazon-title">
-		<a href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
-			<?php echo esc_html( $item['title'] ) ?>
+		<a href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="sponsored noreferrer noopener">
+			<?php echo esc_html( $item['title'] ); ?>
 			<?php if ( $item['category'] ) : ?>
-				<small class="tmkm-amazon-category"><?php echo esc_html( $item['category'] ) ?></small>
+				<small class="tmkm-amazon-category"><?php echo esc_html( $item['category'] ); ?></small>
 			<?php endif; ?>
 		</a>
 	</p>
 
 	<p class="tmkm-amazon-price price tmkm-amazon-row">
-		<span class="label tmkm-amazon-label"><?php esc_html_e( 'Price', 'hamazon' ) ?></span>
-		<em class="tmkm-amazon-value tmkm-amazon-price-number"><?php echo $item['price'] ? esc_html( $item['price'] ) : 'N/A' ?></em>
+		<span class="label tmkm-amazon-label"><?php esc_html_e( 'Price', 'hamazon' ); ?></span>
+		<em class="tmkm-amazon-value tmkm-amazon-price-number"><?php echo $item['price'] ? esc_html( $item['price'] ) : 'N/A'; ?></em>
 	</p>
 
 	<?php if ( $item['rank'] ) : ?>
 		<p class="tmkm-amazon-rank tmkm-amazon-row">
-			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Rank', 'hamazon' ) ?></span>
+			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Rank', 'hamazon' ); ?></span>
 			<em class="tmkm-amazon-value tmkm-amazon-rank">
-				<?php echo esc_html( sprintf( _x( '%s', 'Amazon Ranking', 'hamazon' ), number_format( $item['rank'] ) ) ); ?>
+				<?php
+				// phpcs:disable WordPress.WP.I18n.NoEmptyStrings
+				// translators: %s is ranking number.
+				echo esc_html( sprintf( _x( '%s', 'Amazon Ranking', 'hamazon' ), number_format( $item['rank'] ) ) );
+				?>
 			</em>
 		</p>
 	<?php endif; ?>
 
-	<?php if ( ! empty( $item['attributes']['contributors'] ) ) {
+	<?php
+	if ( ! empty( $item['attributes']['contributors'] ) ) {
 		foreach ( $item['attributes']['contributors'] as $role => $users ) {
 			if ( 3 < count( $users ) ) {
-				$users = array_slice( $users, 0, 3 );
+				$users   = array_slice( $users, 0, 3 );
 				$users[] = _x( 'and more', 'Amazon Contributors', 'hamazon' );
 			}
 			printf(
@@ -60,32 +65,35 @@ if ( isset( $item['images']['large'] ) ) {
 				esc_html( implode( ', ', $users ) )
 			);
 		}
-	} ?>
+	}
+	?>
 
-	<?php foreach( [ 'brand' => __( 'Publisher', 'hamazon' ), 'manufacturer' => __( 'Publisher', 'hamazon' ) ] as $key => $label ) {
-			if ( empty( $item['attributes'][ $key ] ) ) {
-				continue;
-			}
+	<?php
+	foreach ( array( 'brand' => __( 'Publisher', 'hamazon' ), 'manufacturer' => __( 'Publisher', 'hamazon' ) ) as $key => $label ) {
+		if ( empty( $item['attributes'][ $key ] ) ) {
+			continue;
+		}
 			printf(
 				'<p class="tmkm-amazon-brand tmkm-amazon-row"><span class="tmkm-amazon-label">%s</span><em class="tmkm-amazon-value tmkm-amazon-brand-name">%s</em></p>',
 				esc_html( $label ),
 				esc_html( $item['attributes'][ $key ] )
 			);
 			break;
-	} ?>
+	}
+	?>
 
 	<?php if ( ! empty( $item['date'] ) ) : ?>
 		<p class="tmkm-amazon-date tmkm-amazon-row">
-			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Released', 'hamazon' ) ?></span>
-			<em class="tmkm-amazon-value tmkm-amazon-rank"><?php echo esc_html( $item['date'] ) ?></em>
+			<span class="label tmkm-amazon-label"><?php esc_html_e( 'Released', 'hamazon' ); ?></span>
+			<em class="tmkm-amazon-value tmkm-amazon-rank"><?php echo esc_html( $item['date'] ); ?></em>
 		</p>
 	<?php endif; ?>
 
-	<?php echo $desc ?>
+	<?php echo $desc; ?>
 
 	<p class="tmkm-amazon-actions">
-		<a class="btn tmkm-amazon-btn tmkm-amazon-btn-amazon" href="<?php echo esc_url( $item['url'] ) ?>" target="_blank" rel="sponsored noreferrer noopener">
-			<?php esc_html_e( 'Open Amazon', 'hamazon' ) ?>
+		<a class="btn tmkm-amazon-btn tmkm-amazon-btn-amazon" href="<?php echo esc_url( $item['url'] ); ?>" target="_blank" rel="sponsored noreferrer noopener">
+			<?php esc_html_e( 'Open Amazon', 'hamazon' ); ?>
 		</a>
 	</p>
 	<p class="vendor tmkm-amazon-vendor">

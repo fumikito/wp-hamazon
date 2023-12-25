@@ -24,6 +24,7 @@
 		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments"/>
 		<exclude name="WordPress.Arrays.ArrayDeclarationSpacing.AssociativeArrayFound" />
+		<exclude name="WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase" />
 	</rule>
 
 	<rule ref="PHPCompatibility">

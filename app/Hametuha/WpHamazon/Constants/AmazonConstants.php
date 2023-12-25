@@ -17,6 +17,7 @@ use Tarosky\PlasticSearch\Api\Search;
 /**
  * Amazon constants holder
  * @package hamazon
+ * phpcs:disable WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase
  */
 class AmazonConstants extends StaticPattern {
 
@@ -28,7 +29,7 @@ class AmazonConstants extends StaticPattern {
 	public static function get_search_index() {
 		static $search_index = null;
 		if ( is_null( $search_index ) ) {
-			$search_index = [
+			$search_index = array(
 				'All'                     => __( 'All', 'hamazon' ),
 				'AmazonVideo'             => __( 'Prime Video', 'hamazon' ),
 				'Apparel'                 => __( 'Apparel', 'hamazon' ),
@@ -65,7 +66,7 @@ class AmazonConstants extends StaticPattern {
 				'Toys'                    => __( 'Toys', 'hamazon' ),
 				'VideoGames'              => __( 'Video Games', 'hamazon' ),
 				'Watches'                 => __( 'Watches', 'hamazon' ),
-			];
+			);
 		}
 
 		return $search_index;
@@ -90,8 +91,8 @@ class AmazonConstants extends StaticPattern {
 			return $config;
 		}
 		$api_instance = new DefaultApi( new \GuzzleHttp\Client(), $config );
-		$item_count = 10;
-		$page       = (int) min( 10, max( 1, $page ) );
+		$item_count   = 10;
+		$page         = (int) min( 10, max( 1, $page ) );
 
 		# Forming the request
 		$request = new SearchItemsRequest();
@@ -99,7 +100,7 @@ class AmazonConstants extends StaticPattern {
 		$request->setKeywords( $keyword );
 		$request->setItemCount( $item_count );
 		$request->setItemPage( $page );
-//		$request->setLanguagesOfPreference( AmazonLocales::get_language_locale() ); // This raises api error.
+		//      $request->setLanguagesOfPreference( AmazonLocales::get_language_locale() ); // This raises api error.
 		$request->setPartnerTag( self::get_partner_tag() );
 		$request->setPartnerType( PartnerType::ASSOCIATES );
 		$request->setResources( self::get_resources() );
@@ -112,24 +113,24 @@ class AmazonConstants extends StaticPattern {
 		# Sending the request
 		try {
 			$response = $api_instance->searchItems( $request );
-			$errors = $response->getErrors();
+			$errors   = $response->getErrors();
 			if ( $errors ) {
 				$error = new \WP_Error();
 				foreach ( $errors as $e ) {
-					$error->add( 'invalid_request', $e->getMessage(), [
+					$error->add( 'invalid_request', $e->getMessage(), array(
 						'response' => $e->getCode(),
-					] );
+					) );
 				}
 				return $error;
 			}
 
-			$items = $response->getSearchResult();
-			$total = $items ? $items->getTotalResultCount() : 0;
-			$results  = [
+			$items   = $response->getSearchResult();
+			$total   = $items ? $items->getTotalResultCount() : 0;
+			$results = array(
 				'total_page'   => ceil( $total / 10 ),
 				'total_result' => $items->getTotalResultCount(),
-				'items' => [],
-			];
+				'items'        => array(),
+			);
 			if ( $items ) {
 				foreach ( $items->getItems() as $item ) {
 					$results['items'][] = self::convert_item( $item );
@@ -139,7 +140,6 @@ class AmazonConstants extends StaticPattern {
 		} catch ( \Exception $exception ) {
 			return new \WP_Error( 'api_request', sprintf( '[%s] %s', $exception->getCode(), $exception->getMessage() ) );
 		}
-
 	}
 
 	/**
@@ -149,10 +149,10 @@ class AmazonConstants extends StaticPattern {
 	 * @return array
 	 */
 	public static function convert_item( $item ) {
-		$info = json_decode( $item, true );
-		$node = $item->getBrowseNodeInfo();
-		$atts  = self::get_attributes( $info );
-		$price = 'N/A';
+		$info   = json_decode( $item, true );
+		$node   = $item->getBrowseNodeInfo();
+		$atts   = self::get_attributes( $info );
+		$price  = 'N/A';
 		$offers = $item->getOffers();
 		if ( $item->getOffers() ) {
 			foreach ( $item->getOffers()->getListings() as $offer ) {
@@ -162,18 +162,18 @@ class AmazonConstants extends StaticPattern {
 		}
 		$date     = '';
 		$date_gmt = '';
-		foreach ( [
+		foreach ( array(
 			'ContentInfo' => 'PublicationDate',
 			'ProductInfo' => 'ReleaseDate',
-		] as $key => $sub_key ) {
+		) as $key => $sub_key ) {
 			if ( ! empty( $info['ItemInfo'][ $key ][ $sub_key ]['DisplayValue'] ) ) {
 				$date_gmt = $info['ItemInfo'][ $key ][ $sub_key ]['DisplayValue'];
-				$date = date_i18n( get_option( 'date_format' ), strtotime( $date_gmt ) );
+				$date     = date_i18n( get_option( 'date_format' ), strtotime( $date_gmt ) );
 				break;
 			}
 		}
 		$images = $item->getImages();
-		return apply_filters( 'hamazon_item_array', [
+		return apply_filters( 'hamazon_item_array', array(
 			'title'      => (string) $item->getItemInfo()->getTitle()->getDisplayValue(),
 			'rank'       => $node ? $item->getBrowseNodeInfo()->getWebsiteSalesRank()->getSalesRank() : '',
 			'category'   => $node ? $item->getBrowseNodeInfo()->getWebsiteSalesRank()->getDisplayName() : '',
@@ -183,12 +183,12 @@ class AmazonConstants extends StaticPattern {
 			'date'       => $date,
 			'date_gmt'   => $date_gmt,
 			'image'      => $images ? $images->getPrimary()->getMedium()->getURL() : '',
-			'images'     => [
+			'images'     => array(
 				'medium' => $images ? $images->getPrimary()->getMedium()->getURL() : '',
 				'large'  => $images ? $images->getPrimary()->getLarge()->getURL() : '',
-			],
+			),
 			'url'        => $item->getDetailPageURL(),
-		], $item );
+		), $item );
 	}
 
 	/**
@@ -199,23 +199,23 @@ class AmazonConstants extends StaticPattern {
 	 * @return array
 	 */
 	public static function get_attributes( $item ) {
-		$attributes = [];
+		$attributes = array();
 		// Set contributors
 		if ( ! empty( $item['ItemInfo']['ByLineInfo']['Contributors'] ) ) {
 			foreach ( $item['ItemInfo']['ByLineInfo']['Contributors'] as $contributor ) {
 				if ( ! isset( $attributes['contributors'] ) ) {
-					$attributes['contributors'] = [];
+					$attributes['contributors'] = array();
 				}
 				$name = $contributor['Name'];
 				$role = $contributor['Role'];
 				if ( ! isset( $attributes['contributors'][ $role ] ) ) {
-					$attributes['contributors'][ $role ] = [];
+					$attributes['contributors'][ $role ] = array();
 				}
 				$attributes['contributors'][ $role ][] = $name;
 			}
 		}
 		// Set brand & manufacturer
-		foreach ( [ 'Brand', 'Manufacturer' ] as $key ) {
+		foreach ( array( 'Brand', 'Manufacturer' ) as $key ) {
 			$attributes[ strtolower( $key ) ] = ! empty( $item['ItemInfo']['ByLineInfo'][ $key ] )
 				? $item['ItemInfo']['ByLineInfo'][ $key ]['DisplayValue'] : '';
 		}
@@ -250,7 +250,7 @@ class AmazonConstants extends StaticPattern {
 			$config
 		);
 
-		$item_ids = [ $asin ];
+		$item_ids = array( $asin );
 
 		# Forming the request
 		$request = new GetItemsRequest();
@@ -267,14 +267,14 @@ class AmazonConstants extends StaticPattern {
 
 		# Sending the request
 		try {
-			$response = $apiInstance->getItems($request);
-			$errors = $response->getErrors();
+			$response = $apiInstance->getItems( $request );
+			$errors   = $response->getErrors();
 			if ( $errors ) {
 				$error = new \WP_Error();
 				foreach ( $errors as $e ) {
-					$error->add( 'invalid_request', $e->getMessage(), [
+					$error->add( 'invalid_request', $e->getMessage(), array(
 						'response' => $e->getCode(),
-					] );
+					) );
 				}
 				return $error;
 			}
@@ -286,7 +286,7 @@ class AmazonConstants extends StaticPattern {
 				}
 			}
 			throw new \Exception( __( 'Sorry, but item not found.', 'hamazon' ) );
-		} catch ( \Exception $exception) {
+		} catch ( \Exception $exception ) {
 			return new \WP_Error( 'api_request', sprintf( '[%s] %s', $exception->getCode(), $exception->getMessage() ) );
 		}
 	}
@@ -299,7 +299,7 @@ class AmazonConstants extends StaticPattern {
 	 * @return bool
 	 */
 	private static function is_asin( $asin ) {
-		return (boolean) preg_match( '/^[0-9a-zA-Z]{10,13}$/', trim( $asin ) );
+		return (bool) preg_match( '/^[0-9a-zA-Z]{10,13}$/', trim( $asin ) );
 	}
 
 
@@ -312,7 +312,7 @@ class AmazonConstants extends StaticPattern {
 	 * @return string|\WP_Error
 	 * @since 3.0.0 May return WP_Error
 	 */
-	public static function format_amazon( $asin, $extra_atts = [] ) {
+	public static function format_amazon( $asin, $extra_atts = array() ) {
 		try {
 			if ( self::is_asin( $asin ) ) {
 				// Old format like [tmkm-amazon]000000000[/tmkm-amazon]
@@ -333,7 +333,6 @@ class AmazonConstants extends StaticPattern {
 				$item = self::get_item_by_asin( $asin );
 			}
 
-
 			if ( is_wp_error( $item ) ) {
 				return $item;
 			} else {
@@ -344,12 +343,12 @@ class AmazonConstants extends StaticPattern {
 				} else {
 					$desc = '';
 				}
-				$html = hamazon_template( 'amazon', 'single', [
+				$html = hamazon_template( 'amazon', 'single', array(
 					'item'       => $item,
 					'extra_atts' => $extra_atts,
 					'asin'       => $asin,
 					'desc'       => $desc,
-				] );
+				) );
 
 				/**
 				 * wp_hamazon_amazon
@@ -375,7 +374,7 @@ class AmazonConstants extends StaticPattern {
 	 * Get resources about product information.
 	 */
 	public static function get_resources() {
-		return apply_filters( 'hamazon_apa_resources', [
+		return apply_filters( 'hamazon_apa_resources', array(
 			SearchItemsResource::BROWSE_NODE_INFOWEBSITE_SALES_RANK,
 			SearchItemsResource::IMAGESPRIMARYLARGE,
 			SearchItemsResource::IMAGESPRIMARYMEDIUM,
@@ -390,7 +389,7 @@ class AmazonConstants extends StaticPattern {
 			SearchItemsResource::PARENT_ASIN,
 			SearchItemsResource::OFFERSLISTINGSPROGRAM_ELIGIBILITYIS_PRIME_EXCLUSIVE,
 			SearchItemsResource::OFFERSLISTINGSPROGRAM_ELIGIBILITYIS_PRIME_PANTRY,
-		] );
+		) );
 	}
 
 	/**
@@ -424,7 +423,7 @@ class AmazonConstants extends StaticPattern {
 	 * @return string
 	 */
 	public static function get_partner_tag() {
-		$service    = Amazon::get_instance();
+		$service = Amazon::get_instance();
 		return $service->get_option( 'associatesid' );
 	}
 
@@ -437,12 +436,11 @@ class AmazonConstants extends StaticPattern {
 	 */
 	protected static function validate_request( $request ) {
 		$invalid_properties = $request->listInvalidProperties();
-		$length              = count( $invalid_properties );
+		$length             = count( $invalid_properties );
 		if ( $length > 0 ) {
 			return new \WP_Error( 'invalid_property', __( 'Invalid properties for request.', 'hamazon' ) );
 		} else {
 			true;
 		}
 	}
-
 }

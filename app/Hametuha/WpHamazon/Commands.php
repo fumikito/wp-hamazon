@@ -21,11 +21,11 @@ class Commands extends \WP_CLI_Command {
 	 */
 	public function search( $args, $attr ) {
 		list( $query ) = $args;
-		$attr = wp_parse_args( $attr, [
+		$attr          = wp_parse_args( $attr, array(
 			'page'  => 1,
 			'index' => 'All',
-		] );
-		$result = AmazonConstants::search_with( $query, $attr['page'], $attr['index'] );
+		) );
+		$result        = AmazonConstants::search_with( $query, $attr['page'], $attr['index'] );
 		if ( is_wp_error( $result ) ) {
 			\WP_CLI::error( $result->get_error_message() );
 		}
@@ -33,12 +33,11 @@ class Commands extends \WP_CLI_Command {
 		\WP_CLI::line( '-------------' );
 		foreach ( $result['items'] as $item ) {
 			$table = new \cli\Table();
-			$table->setHeaders( [ 'Key', 'Value' ] );
-			foreach ( [ 'title', 'price', 'category', 'asin', 'date', 'url' ] as $key ) {
-				$table->addRow( [ ucfirst( $key ), $item[ $key ] ] );
+			$table->setHeaders( array( 'Key', 'Value' ) );
+			foreach ( array( 'title', 'price', 'category', 'asin', 'date', 'url' ) as $key ) {
+				$table->addRow( array( ucfirst( $key ), $item[ $key ] ) );
 			}
 			$table->display();
 		}
 	}
-
 }

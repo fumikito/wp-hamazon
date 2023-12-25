@@ -12,90 +12,90 @@ class AmazonLocales {
 	 * @return array
 	 */
 	public static function get_locales() {
-		$locales  = [
-			'AU'            => [
+		$locales  = array(
+			'AU' => array(
 				'label'  => 'Australia',
 				'region' => 'us-west-2',
 				'domain' => 'com.au',
-			],
-			'BZ'               => [
+			),
+			'BZ' => array(
 				'label'  => 'Brasil',
 				'domain' => 'com.br',
-			],
-			'CA'               => [
+			),
+			'CA' => array(
 				'label'  => 'Canada',
 				'domain' => 'ca',
-			],
-			'FR'               => [
+			),
+			'FR' => array(
 				'label'  => 'France',
 				'region' => 'eu-west-1',
 				'domain' => 'fr',
-			],
-			'DE'              => [
+			),
+			'DE' => array(
 				'label'  => 'Deautsch',
 				'region' => 'eu-west-1',
 				'domain' => 'de',
-			],
-			'IN'                => [
+			),
+			'IN' => array(
 				'label'  => 'India',
 				'region' => 'eu-west-1',
 				'domain' => 'in',
-			],
-			'IT'                => [
+			),
+			'IT' => array(
 				'label'  => 'Italia',
 				'region' => 'eu-west-1',
 				'domain' => 'it',
-			],
-			'JP'                => [
+			),
+			'JP' => array(
 				'label'  => '日本',
 				'region' => 'us-west-2',
 				'domain' => 'co.jp',
-			],
-			'MX'               => [
+			),
+			'MX' => array(
 				'label'  => 'México',
 				'domain' => 'com.mx',
-			],
-			'NL'          => [
+			),
+			'NL' => array(
 				'label'  => 'Nederland',
 				'region' => 'eu-west-1',
 				'domain' => 'nl',
-			],
-			'SP'            => [
+			),
+			'SP' => array(
 				'label'  => 'Singapore',
 				'region' => 'us-west-2',
 				'domain' => 'sg',
-			],
-			'ES'                => [
+			),
+			'ES' => array(
 				'label'  => 'España',
 				'region' => 'eu-west-1',
 				'domain' => 'es',
-			],
-			'TK'               => [
+			),
+			'TK' => array(
 				'label'  => 'Türkiye',
 				'region' => 'eu-west-1',
 				'domain' => 'com.tr',
-			],
-			'AE' => [
+			),
+			'AE' => array(
 				'label'  => 'الإمارات العربيّة المتّحدة',
 				'region' => 'eu-west-1',
 				'domain' => 'ae',
-			],
-			'UK'       => [
+			),
+			'UK' => array(
 				'label'  => 'United Kingdom',
 				'region' => 'eu-west-1',
 				'domain' => 'co.uk',
-			],
-			'US'        => [
-				'label'  => 'United States',
-			],
-		];
-		$filtered = [];
+			),
+			'US' => array(
+				'label' => 'United States',
+			),
+		);
+		$filtered = array();
 		foreach ( $locales as $locale => $option ) {
-			$filtered[ $locale ] = wp_parse_args( $option, [
+			$filtered[ $locale ] = wp_parse_args( $option, array(
 				'label'  => '',
 				'region' => 'us-east-1',
 				'domain' => 'com',
-			] );
+			) );
 		}
 
 		return $filtered;
@@ -108,7 +108,7 @@ class AmazonLocales {
 	 * @return array
 	 */
 	public static function get_locale_labels() {
-		$filtered = [];
+		$filtered = array();
 		foreach ( self::get_locales() as $key => $locale ) {
 			$filtered[ $locale['label'] ] = $key;
 		}
@@ -155,14 +155,14 @@ class AmazonLocales {
 	 * @return array
 	 */
 	public static function get_sort_orders() {
-		return [
+		return array(
 			'AvgCustomerReviews' => _x( 'Review Rank', 'Sort order', 'hamazon' ),
 			'Featured'           => _x( 'Featured', 'Sort order', 'hamazon' ),
 			'NewestArrival'      => _x( 'Newer', 'Sort order', 'hamazon' ),
 			'Price:HighToLow'    => _x( 'Higher Cost', 'Sort order', 'hamazon' ),
 			'Price:LowToHigh'    => _x( 'Cheaper Cost', 'Sort order', 'hamazon' ),
 			'Relevance'          => _x( 'Relevant', 'Sort order', 'hamazon' ),
-		];
+		);
 	}
 
 	/**
