@@ -41,7 +41,7 @@ jobs:
         run: composer validate
 
       - name: Install dependencies
-        run: composer install --no-progress --no-suggest
+        run: composer install --no-progress
 
       - name: Start MySQL
         run: |
@@ -67,7 +67,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Install dependencies
-        run: composer install --no-progress --no-suggest
+        run: composer install --no-progress
 
       - name: PHP Syntax Check
         run: composer lint
@@ -92,7 +92,7 @@ jobs:
           node-version: '16'
 
       - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-suggest
+        run: composer install --prefer-dist --no-progress
 
       - name: Install NPM Dependencies
         run: npm install
