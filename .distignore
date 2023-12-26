@@ -12,5 +12,4 @@ stylelint.config.js
 webpack.config.js
 bin/
 tests/
-src/
 .wordpress-org/

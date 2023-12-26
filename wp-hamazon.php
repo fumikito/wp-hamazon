@@ -5,7 +5,7 @@
  * Description: An affiliate plugin specialized for amazon. Forked from tmkm-amazon.
  * Author: Fumiki Takahashi
  * Author URI: https://takahashifumiki.com
- * Version: 5.1.2
+ * Version: 5.1.3
  * PHP Version: 7.2
  * Text Domain: hamazon
  * Domain Path: /languages/
