@@ -3,9 +3,9 @@
  * Plugin Name: Hamazon
  * Plugin URI: https://wordpress.org/plugins/wp-hamazon/
  * Description: An affiliate plugin specialized for amazon. Forked from tmkm-amazon.
- * Author: Gianism
- * Author URI: https://gianism.info
- * Version: 5.1.2
+ * Author: Fumiki Takahashi
+ * Author URI: https://takahashifumiki.com
+ * Version: 5.1.3
  * PHP Version: 7.2
  * Text Domain: hamazon
  * Domain Path: /languages/
