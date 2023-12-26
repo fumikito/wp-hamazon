@@ -5,8 +5,8 @@
  * Description: An affiliate plugin specialized for amazon. Forked from tmkm-amazon.
  * Author: Gianism
  * Author URI: https://gianism.info
- * Version: 5.0.2
- * PHP Version: 5.6
+ * Version: 5.1.2
+ * PHP Version: 7.2
  * Text Domain: hamazon
  * Domain Path: /languages/
  * License: GPL3 or Later
